@@ -29,6 +29,10 @@ app.secret_key = os.environ.get("FLASK_SECRET_KEY", "dev")
 SUPABASE_URL = os.environ.get("SUPABASE_URL", "https://ppewtznjwigjowgmhrge.supabase.co")
 SUPABASE_KEY = os.environ.get("SUPABASE_SERVICE_ROLE_KEY") or os.environ.get("SUPABASE_KEY")
 
+def require_supabase_key():
+    if not SUPABASE_KEY:
+        raise Exception("SUPABASE_SERVICE_ROLE_KEY (ou SUPABASE_KEY) não configurada nas variáveis de ambiente")
+
 # ==============================
 # FUNÇÃO BUSCAR USUÁRIO
 # ==============================
@@ -47,8 +51,7 @@ def supa_get_user(email):
         "limit": "1"
     }
 
-    if not SUPABASE_KEY:
-        raise Exception("Chave de serviço do Supabase não configurada")
+    require_supabase_key()
 
     r = requests.get(url, headers=headers, params=params)
 
@@ -135,6 +138,7 @@ def env_status():
     })
 
 def supa_set_password(email, new_password):
+    require_supabase_key()
     salt = bcrypt.gensalt()
     pw_hash = bcrypt.hashpw(new_password.encode(), salt).decode()
     url = f"{SUPABASE_URL}/rest/v1/admins"
@@ -157,6 +161,7 @@ def supa_set_password(email, new_password):
         return True
 
 def supa_insert_feedback(row):
+    require_supabase_key()
     url = f"{SUPABASE_URL}/rest/v1/feedbacks"
     headers = {
         "apikey": SUPABASE_KEY or "",
@@ -170,6 +175,7 @@ def supa_insert_feedback(row):
     return r.json()
 
 def supa_list_feedbacks(hotzone=None, page=1, page_size=10):
+    require_supabase_key()
     url = f"{SUPABASE_URL}/rest/v1/feedbacks"
     headers = {
         "apikey": SUPABASE_KEY or "",
