@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Admin — ALX Entregas</title>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+
+<style>
+
+/* =========================
+   RESET
+========================= */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    background:#06111d;
+    color:white;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+/* =========================
+   LAYOUT
+========================= */
+
+.admin-layout{
+    display:flex;
+    min-height:100vh;
+}
+
+/* =========================
+   SIDEBAR
+========================= */
+
+.sidebar{
+    width:280px;
+
+    background:
+    linear-gradient(
+        180deg,
+        #081120,
+        #0b1728
+    );
+
+    border-right:1px solid rgba(255,255,255,.06);
+
+    padding:30px 24px;
+
+    position:fixed;
+    top:0;
+    left:0;
+    bottom:0;
+}
+
+.logo-area{
+    text-align:center;
+    margin-bottom:45px;
+}
+
+.logo-area img{
+    width:120px;
+    margin-bottom:18px;
+}
+
+.logo-area h2{
+    font-size:24px;
+}
+
+.logo-area p{
+    margin-top:8px;
+    color:#94a3b8;
+    font-size:14px;
+}
+
+.sidebar-menu{
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+}
+
+.sidebar-menu a{
+    text-decoration:none;
+
+    padding:16px 18px;
+
+    border-radius:16px;
+
+    color:#dbe4ef;
+
+    background:rgba(255,255,255,.03);
+
+    border:1px solid rgba(255,255,255,.04);
+
+    transition:.25s;
+}
+
+.sidebar-menu a:hover{
+    background:rgba(37,99,235,.18);
+
+    border-color:rgba(37,99,235,.28);
+
+    transform:translateX(4px);
+}
+
+.sidebar-footer{
+    position:absolute;
+    bottom:30px;
+    left:24px;
+    right:24px;
+}
+
+/* =========================
+   MAIN
+========================= */
+
+.main{
+    margin-left:280px;
+
+    width:calc(100% - 280px);
+
+    padding:35px;
+}
+
+/* =========================
+   TOPBAR
+========================= */
+
+.topbar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    margin-bottom:35px;
+}
+
+.topbar h1{
+    font-size:38px;
+}
+
+.topbar p{
+    color:#94a3b8;
+    margin-top:6px;
+}
+
+/* =========================
+   BUTTONS
+========================= */
+
+.primary,
+.secondary{
+    border:none;
+
+    padding:14px 22px;
+
+    border-radius:16px;
+
+    text-decoration:none;
+
+    color:white;
+
+    font-weight:700;
+
+    cursor:pointer;
+
+    transition:.25s;
+}
+
+.primary{
+    background:
+    linear-gradient(
+        135deg,
+        #2563eb,
+        #38bdf8
+    );
+
+    box-shadow:0 15px 35px rgba(37,99,235,.25);
+}
+
+.primary:hover{
+    transform:translateY(-4px);
+}
+
+.secondary{
+    background:rgba(255,255,255,.06);
+
+    border:1px solid rgba(255,255,255,.08);
+}
+
+.secondary:hover{
+    background:rgba(255,255,255,.12);
+}
+
+/* =========================
+   CARDS
+========================= */
+
+.card{
+    background:
+    linear-gradient(
+        180deg,
+        rgba(255,255,255,.05),
+        rgba(255,255,255,.03)
+    );
+
+    border-radius:28px;
+
+    border:1px solid rgba(255,255,255,.06);
+
+    backdrop-filter:blur(18px);
+
+    padding:28px;
+
+    box-shadow:0 20px 50px rgba(0,0,0,.25);
+}
+
+.card-title{
+    margin-bottom:22px;
+}
+
+.card-title h3{
+    font-size:24px;
+}
+
+.card-title p{
+    color:#94a3b8;
+    margin-top:6px;
+}
+
+/* =========================
+   FILTERS
+========================= */
+
+.filters{
+    display:flex;
+    gap:18px;
+    flex-wrap:wrap;
+
+    margin-bottom:30px;
+}
+
+.filter-group{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+}
+
+.filter-group label{
+    font-size:14px;
+    color:#cbd5e1;
+}
+
+input,
+select{
+    min-width:220px;
+
+    padding:15px 18px;
+
+    border-radius:16px;
+
+    border:1px solid rgba(255,255,255,.06);
+
+    background:#0f172a;
+
+    color:white;
+
+    outline:none;
+}
+
+input:focus,
+select:focus{
+    border-color:#38bdf8;
+}
+
+/* =========================
+   CHART
+========================= */
+
+.chart-card{
+    margin-bottom:30px;
+}
+
+/* =========================
+   TABLE
+========================= */
+
+.table-wrapper{
+    overflow:auto;
+    border-radius:22px;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+thead{
+    background:rgba(255,255,255,.04);
+}
+
+th{
+    padding:18px;
+    text-align:left;
+    color:#cbd5e1;
+    font-size:14px;
+}
+
+td{
+    padding:18px;
+    border-top:1px solid rgba(255,255,255,.05);
+    color:#e2e8f0;
+}
+
+tbody tr{
+    transition:.2s;
+}
+
+tbody tr:hover{
+    background:rgba(255,255,255,.03);
+}
+
+/* =========================
+   PAGINATION
+========================= */
+
+.pagination{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    margin-top:25px;
+
+    flex-wrap:wrap;
+
+    gap:14px;
+}
+
+.pagination-info{
+    color:#94a3b8;
+}
+
+.pagination-actions{
+    display:flex;
+    gap:10px;
+}
+
+/* =========================
+   RESPONSIVO
+========================= */
+
+@media(max-width:1100px){
+
+    .sidebar{
+        display:none;
+    }
+
+    .main{
+        width:100%;
+        margin-left:0;
+    }
+
+}
+
+@media(max-width:700px){
+
+    .topbar{
+        flex-direction:column;
+        align-items:flex-start;
+        gap:20px;
+    }
+
+    .filters{
+        flex-direction:column;
+    }
+
+    input,
+    select{
+        width:100%;
+    }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="admin-layout">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+
+        <div class="logo-area">
+
+            <img src="/static/img/logo.png"
+                 alt="ALX">
+
+            <h2>
+                Painel Admin
+            </h2>
+
+            <p>
+                Gestão operacional ALX
+            </p>
+
+        </div>
+
+        <nav class="sidebar-menu">
+
+            <a href="#">
+                Dashboard
+            </a>
+
+            <a href="#">
+                Feedbacks
+            </a>
+
+            <a href="#">
+                Hotzones
+            </a>
+
+            <a href="#">
+                Relatórios
+            </a>
+
+            <a href="#">
+                Configurações
+            </a>
+
+        </nav>
+
+        <div class="sidebar-footer">
+
+            <a class="secondary"
+               style="display:block;text-align:center"
+               href="{{ url_for('logout') }}">
+
+                Sair
+
+            </a>
+
+        </div>
+
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main">
+
+        <!-- TOPBAR -->
+        <div class="topbar">
+
+            <div>
+
+                <h1>
+                    Área Administrativa
+                </h1>
+
+                <p>
+                    Gerencie feedbacks, métricas e relatórios da operação.
+                </p>
+
+            </div>
+
+            <button id="exportar-csv"
+                    class="primary">
+
+                Exportar CSV
+
+            </button>
+
+        </div>
+
+        <!-- CHART -->
+        <section class="card chart-card">
+
+            <div class="card-title">
+
+                <h3>
+                    Visão Geral
+                </h3>
+
+                <p>
+                    Estatísticas e indicadores operacionais.
+                </p>
+
+            </div>
+
+            <canvas id="chart"
+                    height="120"></canvas>
+
+        </section>
+
+        <!-- TABLE CARD -->
+        <section class="card">
+
+            <div class="card-title">
+
+                <h3>
+                    Feedbacks Recebidos
+                </h3>
+
+                <p>
+                    Lista de sugestões e reclamações enviadas.
+                </p>
+
+            </div>
+
+            <!-- FILTERS -->
+            <div class="filters">
+
+                <div class="filter-group">
+
+                    <label>
+                        Filtrar por Hotzone
+                    </label>
+
+                    <input id="filtro-hotzone"
+                           placeholder="Ex.: Centro">
+
+                </div>
+
+                <div class="filter-group">
+
+                    <label>
+                        Itens por página
+                    </label>
+
+                    <select id="page-size">
+
+                        <option>
+                            5
+                        </option>
+
+                        <option selected>
+                            10
+                        </option>
+
+                        <option>
+                            20
+                        </option>
+
+                        <option>
+                            50
+                        </option>
+
+                    </select>
+
+                </div>
+
+                <div class="filter-group"
+                     style="justify-content:end">
+
+                    <label style="opacity:0">
+                        botão
+                    </label>
+
+                    <button id="aplicar-filtro"
+                            class="primary">
+
+                        Aplicar filtro
+
+                    </button>
+
+                </div>
+
+            </div>
+
+            <!-- TABLE -->
+            <div class="table-wrapper">
+
+                <table>
+
+                    <thead id="thead"></thead>
+
+                    <tbody id="tabela"></tbody>
+
+                </table>
+
+            </div>
+
+            <!-- PAGINATION -->
+            <div class="pagination">
+
+                <div class="pagination-info">
+
+                    <span id="page-info">
+                        Página 1 de 1
+                    </span>
+
+                </div>
+
+                <div class="pagination-actions">
+
+                    <button id="prev-page"
+                            class="secondary">
+
+                        Anterior
+
+                    </button>
+
+                    <button id="next-page"
+                            class="primary">
+
+                        Próxima
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script src="{{ url_for('static', filename='admin.js') }}"></script>
+
+</body>
+</html>

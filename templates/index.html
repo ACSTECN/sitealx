@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>ALX Entregas — Sugestões e Reclamações</title>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+
+<style>
+
+/* =========================
+   RESET
+========================= */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    background:#06111d;
+    color:#fff;
+    font-family:Arial, Helvetica, sans-serif;
+    overflow-x:hidden;
+}
+
+.container{
+    width:92%;
+    max-width:1200px;
+    margin:auto;
+}
+
+/* =========================
+   HERO
+========================= */
+
+.hero{
+    position:relative;
+    min-height:70vh;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:70px 8%;
+    overflow:hidden;
+    background:
+    linear-gradient(rgba(4,10,20,.82), rgba(4,10,20,.82)),
+    url('/static/img/quem.jpg') center/cover;
+}
+
+.hero::after{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:linear-gradient(to top,#06111d,transparent);
+}
+
+.hero-content{
+    position:relative;
+    z-index:2;
+    max-width:620px;
+}
+
+.badge{
+    display:inline-block;
+    padding:8px 18px;
+    border-radius:50px;
+    background:rgba(0,153,255,.12);
+    border:1px solid rgba(0,153,255,.35);
+    color:#4ebcff;
+    font-size:13px;
+    margin-bottom:22px;
+    letter-spacing:.5px;
+}
+
+.hero h1{
+    font-size:64px;
+    line-height:1;
+    margin-bottom:22px;
+    font-weight:800;
+}
+
+.hero p{
+    font-size:19px;
+    color:#c2d0df;
+    line-height:1.8;
+    margin-bottom:35px;
+}
+
+.hero-buttons{
+    display:flex;
+    gap:16px;
+    flex-wrap:wrap;
+}
+
+/* =========================
+   BUTTONS
+========================= */
+
+.primary,
+.secondary{
+    padding:15px 28px;
+    border-radius:14px;
+    text-decoration:none;
+    font-weight:700;
+    transition:.25s;
+    border:none;
+    cursor:pointer;
+}
+
+.primary{
+    background:#0b84ff;
+    color:#fff;
+    box-shadow:0 0 30px rgba(11,132,255,.3);
+}
+
+.primary:hover{
+    transform:translateY(-3px);
+    background:#2490ff;
+}
+
+.secondary{
+    background:rgba(255,255,255,.06);
+    border:1px solid rgba(255,255,255,.12);
+    color:#fff;
+}
+
+.secondary:hover{
+    background:rgba(255,255,255,.12);
+}
+
+/* =========================
+   HERO CARD
+========================= */
+
+.hero-card{
+    position:relative;
+    z-index:2;
+    width:420px;
+    background:rgba(9,18,30,.75);
+    border:1px solid rgba(255,255,255,.08);
+    backdrop-filter:blur(16px);
+    border-radius:28px;
+    padding:35px;
+    box-shadow:0 20px 60px rgba(0,0,0,.35);
+}
+
+.hero-card h3{
+    font-size:28px;
+    margin-bottom:18px;
+}
+
+.hero-card p{
+    color:#b7c5d4;
+    line-height:1.8;
+}
+
+/* =========================
+   FORM
+========================= */
+
+.form-section{
+    margin-top:-70px;
+    position:relative;
+    z-index:10;
+    padding-bottom:80px;
+}
+
+.form-card{
+    background:#0b1627;
+    border-radius:32px;
+    padding:45px;
+    border:1px solid rgba(255,255,255,.06);
+    box-shadow:0 20px 60px rgba(0,0,0,.28);
+}
+
+.form-header{
+    margin-bottom:40px;
+}
+
+.form-header h2{
+    font-size:42px;
+    margin-bottom:12px;
+}
+
+.form-header p{
+    color:#aab7c6;
+    line-height:1.8;
+}
+
+/* GRID */
+
+.grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:22px;
+}
+
+label{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    font-size:14px;
+    color:#dce7f3;
+    margin-bottom:22px;
+}
+
+/* INPUTS */
+
+input,
+select,
+textarea{
+    width:100%;
+    border:none;
+    outline:none;
+    border-radius:16px;
+    padding:16px;
+    background:#101d31;
+    color:#fff;
+    font-size:15px;
+    border:1px solid rgba(255,255,255,.05);
+    transition:.2s;
+}
+
+input:focus,
+select:focus,
+textarea:focus{
+    border-color:#0b84ff;
+    box-shadow:0 0 0 4px rgba(11,132,255,.12);
+}
+
+/* RATING */
+
+.rating{
+    display:flex;
+    gap:14px;
+    margin-top:10px;
+    flex-wrap:wrap;
+}
+
+.rating label{
+    margin:0;
+}
+
+.rating-item{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    width:52px;
+    height:52px;
+    border-radius:14px;
+    background:#101d31;
+    border:1px solid rgba(255,255,255,.06);
+    cursor:pointer;
+    transition:.2s;
+    font-weight:700;
+}
+
+.rating-item:hover{
+    background:#0b84ff;
+}
+
+/* STATUS */
+
+.status{
+    margin-top:25px;
+    color:#8ec9ff;
+}
+
+/* INFO CARDS */
+
+.info-grid{
+    margin-top:40px;
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(240px, 1fr));
+    gap:20px;
+}
+
+.info-card{
+    background:#101d31;
+    border-radius:24px;
+    padding:28px;
+    border:1px solid rgba(255,255,255,.05);
+}
+
+.info-card h3{
+    margin-bottom:12px;
+    font-size:20px;
+}
+
+.info-card p{
+    color:#aab7c6;
+    line-height:1.7;
+}
+
+.info-card a{
+    color:#8ec9ff;
+    text-decoration:none;
+}
+
+/* FOOTER */
+
+.footer{
+    border-top:1px solid rgba(255,255,255,.06);
+    background:linear-gradient(180deg, rgba(6,17,29,0), rgba(16,29,49,.65));
+    color:#aab7c6;
+}
+
+.footer-inner{
+    width:92%;
+    max-width:1200px;
+    margin:auto;
+    padding:38px 0;
+    display:grid;
+    grid-template-columns:1.2fr 1fr 1fr;
+    gap:26px;
+    align-items:start;
+}
+
+.footer-brand{
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+}
+
+.footer-logo{
+    height:78px;
+    width:auto;
+    max-width:340px;
+    object-fit:contain;
+    object-position:center;
+    display:block;
+    filter:drop-shadow(0 10px 24px rgba(0,0,0,.35));
+}
+
+.footer-title{
+    font-size:18px;
+    font-weight:800;
+    color:#eaf3ff;
+    letter-spacing:.2px;
+}
+
+.footer-sub{
+    color:#93a4ba;
+    line-height:1.7;
+    max-width:420px;
+}
+
+.footer-block h4{
+    margin:0 0 12px 0;
+    font-size:14px;
+    text-transform:uppercase;
+    letter-spacing:.12em;
+    color:#93a4ba;
+}
+
+.footer-link{
+    display:flex;
+    gap:10px;
+    align-items:flex-start;
+    color:#dce6f2;
+    text-decoration:none;
+    line-height:1.6;
+    padding:8px 0;
+}
+
+.footer-link:hover{
+    color:#ffffff;
+}
+
+.footer-ico{
+    width:18px;
+    height:18px;
+    flex:0 0 18px;
+    margin-top:2px;
+    stroke:#8ec9ff;
+    stroke-width:2;
+    fill:none;
+}
+
+.footer-bottom{
+    width:92%;
+    max-width:1200px;
+    margin:auto;
+    padding:18px 0 26px;
+    border-top:1px solid rgba(255,255,255,.06);
+    display:flex;
+    justify-content:space-between;
+    gap:12px;
+    flex-wrap:wrap;
+}
+
+.footer-bottom small{
+    color:#7f92a6;
+}
+
+.footer-admin{
+    color:#7f92a6;
+    text-decoration:none;
+    opacity:.75;
+}
+
+.footer-admin:hover{
+    color:#dce6f2;
+    opacity:1;
+}
+
+/* RESPONSIVO */
+
+@media(max-width:980px){
+
+    .hero{
+        flex-direction:column;
+        align-items:flex-start;
+        gap:40px;
+        padding:60px 6%;
+    }
+
+    .hero h1{
+        font-size:46px;
+    }
+
+    .hero-card{
+        width:100%;
+    }
+
+    .grid{
+        grid-template-columns:1fr;
+    }
+
+    .info-grid{
+        grid-template-columns:1fr;
+    }
+
+    .form-card{
+        padding:28px;
+    }
+
+    .form-header h2{
+        font-size:34px;
+    }
+
+    .footer-inner{
+        grid-template-columns:1fr;
+    }
+
+    .footer-bottom{
+        justify-content:center;
+        text-align:center;
+    }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- HERO -->
+<header class="hero">
+
+    <div class="hero-content">
+
+        <div class="badge">
+            ALX • Feedback / Qualidade & Negociação
+        </div>
+
+        <h1>
+            Sua opinião melhora nossa operação
+        </h1>
+
+        <p>
+            Sugestões, reclamações e melhorias ajudam
+            nossa equipe a evoluir continuamente e
+            oferecer uma experiência melhor para todos.
+
+            <p>
+                Venha ser nosso Cliente, satisfação de + de 10 anos de Logistica na sua mão
+            </p>
+        </p>
+
+        <div class="hero-buttons">
+
+            <a href="#feedback-form" class="primary">
+                Enviar 
+            </a>
+
+            <a href="{{ url_for('home') }}" class="secondary">
+                Voltar ao início
+            </a>
+
+        </div>
+
+    </div>
+
+    <div class="hero-card">
+
+        <h3>
+            Atendimento mais rápido
+        </h3>
+
+        <p>
+            Nossa equipe acompanha todos os feedbacks
+            enviados para identificar melhorias em
+            hotzones, suporte, pagamentos e operação.
+        </p>
+
+    </div>
+
+</header>
+
+<!-- FORM -->
+<main class="container form-section">
+
+<section class="form-card">
+
+    <div class="form-header">
+
+        <h2>
+            Envie sua mensagem para a ALX
+        </h2>
+
+        <p>
+            Preencha as informações abaixo e nossa equipe
+            analisará sua Mensagem/Proposta.
+        </p>
+
+    </div>
+
+<form id="feedback-form"
+      method="post"
+      action="/api/feedback">
+
+    <div class="grid">
+
+        <label>
+            Nome completo
+            <input type="text"
+                   id="nome"
+                   name="nome"
+                   required>
+        </label>
+
+        <label>
+            CPF
+            <input type="text"
+                   id="cpf"
+                   name="cpf"
+                   placeholder="000.000.000-00"
+                   required>
+        </label>
+
+        <label>
+            Hotzone de atuação
+            <select id="hotzone"
+                    name="hotzone"
+                    required>
+                <option value="" selected>
+                    Selecione
+                </option>
+                <option value="SANTO AMARO">
+                    SANTO AMARO
+                </option>
+                <option value="MOOCA">
+                    MOOCA
+                </option>
+                <option value="PAULISTA">
+                    PAULISTA
+                </option>
+                <option value="NILÓPOLIS">
+                    NILÓPOLIS
+                </option>
+                <option value="BANGU">
+                    BANGU
+                </option>
+                <option value="SANTA CRUZ">
+                    SANTA CRUZ
+                </option>
+                <option value="OUTROS">
+                    OUTROS
+                </option>
+            </select>
+        </label>
+
+        <label>
+            Telefone
+            <input type="tel"
+                   id="telefone"
+                   name="telefone"
+                   placeholder="(00) 00000-0000"
+                   required>
+        </label>
+
+        <label>
+            Email
+            <input type="email"
+                   id="email"
+                   name="email"
+                   required>
+        </label>
+
+        <label>
+            Tipo
+            <select id="tipo"
+                    name="tipo"
+                    required>
+
+                <option value="sugestao">
+                    Sugestão
+                </option>
+
+                <option value="reclamacao">
+                    Reclamação
+                </option>
+
+                <option value="outros">
+                    Outros
+                </option>
+
+            </select>
+        </label>
+
+    </div>
+
+    <label>
+        Mensagem
+
+        <textarea id="mensagem"
+                  name="mensagem"
+                  rows="6"
+                  required></textarea>
+
+    </label>
+
+    <label>
+
+        Escala de satisfação
+
+        <div class="rating">
+
+            <label class="rating-item">
+                <input type="radio"
+                       name="satisfacao"
+                       value="1"
+                       hidden required>
+                1
+            </label>
+
+            <label class="rating-item">
+                <input type="radio"
+                       name="satisfacao"
+                       value="2"
+                       hidden>
+                2
+            </label>
+
+            <label class="rating-item">
+                <input type="radio"
+                       name="satisfacao"
+                       value="3"
+                       hidden>
+                3
+            </label>
+
+            <label class="rating-item">
+                <input type="radio"
+                       name="satisfacao"
+                       value="4"
+                       hidden>
+                4
+            </label>
+
+            <label class="rating-item">
+                <input type="radio"
+                       name="satisfacao"
+                       value="5"
+                       hidden>
+                5
+            </label>
+
+            <label class="rating-item">
+                <input type="radio"
+                       name="satisfacao"
+                       value="6"
+                       hidden>
+                6
+            </label>
+
+            <label class="rating-item">
+                <input type="radio"
+                       name="satisfacao"
+                       value="7"
+                       hidden>
+                7
+            </label>
+
+            <label class="rating-item">
+                <input type="radio"
+                       name="satisfacao"
+                       value="8"
+                       hidden>
+                8
+            </label>
+
+            <label class="rating-item">
+                <input type="radio"
+                       name="satisfacao"
+                       value="9"
+                       hidden>
+                9
+            </label>
+
+            <label class="rating-item">
+                <input type="radio"
+                       name="satisfacao"
+                       value="10"
+                       hidden>
+                10
+            </label>
+
+        </div>
+
+    </label>
+
+    <button type="submit" class="primary">
+        Enviar 
+    </button>
+
+</form>
+
+<div id="form-status"
+     class="status"
+     aria-live="polite"></div>
+
+<!-- INFO -->
+<div class="info-grid">
+
+    <div class="info-card">
+
+        <h3>
+            Operação
+        </h3>
+
+        <p>
+            Ajude a melhorar fluxos,
+            organização e atendimento.
+        </p>
+
+    </div>
+
+    <div class="info-card">
+
+        <h3>
+            Hotzones
+        </h3>
+
+        <p>
+            Compartilhe problemas e sugestões
+            relacionadas às regiões de atuação.
+        </p>
+
+    </div>
+
+    <div class="info-card">
+
+        <h3>
+            Atendimento
+        </h3>
+
+        <p>
+            Seu feedback é importante para
+            melhorar o suporte operacional.
+        </p>
+
+    </div>
+
+</div>
+
+</section>
+
+</main>
+
+<footer class="footer">
+
+    <div class="footer-inner">
+
+        <div class="footer-brand">
+
+            <img src="/static/img/logo.png"
+                 class="footer-logo"
+                 alt="ALX">
+
+            <div>
+                <div class="footer-title">
+                    ALX Entregas
+                </div>
+                <div class="footer-sub">
+                    Operador logístico com gestão operacional,
+                    suporte e tecnologia para conectar entregadores
+                    e plataformas com eficiência.
+                </div>
+            </div>
+
+        </div>
+
+        <div class="footer-block">
+
+            <h4>
+                Contato
+            </h4>
+
+            <a class="footer-link"
+               href="tel:+5511945615910">
+                <svg class="footer-ico"
+                     viewBox="0 0 24 24"
+                     aria-hidden="true">
+                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07A19.5 19.5 0 0 1 3.15 10.8 19.8 19.8 0 0 1 .08 2.18 2 2 0 0 1 2.06 0h3a2 2 0 0 1 2 1.72c.12.9.32 1.77.6 2.61a2 2 0 0 1-.45 2.11L6 7.91a16 16 0 0 0 10.09 10.09l1.47-1.21a2 2 0 0 1 2.11-.45c.84.28 1.71.48 2.61.6A2 2 0 0 1 22 16.92z"/>
+                </svg>
+                <span>
+                    Comercial: +55 11 94561-5910
+                </span>
+            </a>
+
+            <a class="footer-link"
+               href="tel:+5511968437483">
+                <svg class="footer-ico"
+                     viewBox="0 0 24 24"
+                     aria-hidden="true">
+                    <path d="M21 15a4 4 0 0 1-4 4H8l-5 4V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z"/>
+                </svg>
+                <span>
+                    Suporte (até 00:00): +55 11 96843-7483
+                    <span style="color:#93a4ba">• WhatsApp e Telegram</span>
+                </span>
+            </a>
+
+            <a class="footer-link"
+               href="mailto:alxexpresstransporte@gmail.com">
+                <svg class="footer-ico"
+                     viewBox="0 0 24 24"
+                     aria-hidden="true">
+                    <path d="M4 4h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/>
+                    <path d="M22 6l-10 7L2 6"/>
+                </svg>
+                <span>
+                    alxexpresstransporte@gmail.com
+                </span>
+            </a>
+
+        </div>
+
+        <div class="footer-block">
+
+            <h4>
+                Endereço
+            </h4>
+
+            <a class="footer-link"
+               href="https://www.google.com/maps/search/?api=1&query=CEP%2004249-070%20Rua%20Riga%20Sacom%C3%A3%20S%C3%A3o%20Paulo%20SP"
+               target="_blank"
+               rel="noopener">
+                <svg class="footer-ico"
+                     viewBox="0 0 24 24"
+                     aria-hidden="true">
+                    <path d="M21 10c0 6-9 13-9 13S3 16 3 10a9 9 0 0 1 18 0z"/>
+                    <path d="M12 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+                </svg>
+                <span>
+                    CEP 04249-070 • Rua Riga - Sacomã - São Paulo/SP
+                </span>
+            </a>
+
+        </div>
+
+    </div>
+
+    <div class="footer-bottom">
+
+        <small>
+            © <span id="year"></span> ALX Entregas
+        </small>
+
+        <a class="footer-admin"
+           href="{{ url_for('login_page') }}">
+            admin
+        </a>
+
+    </div>
+
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script src="{{ url_for('static', filename='config.js') }}"></script>
+
+<script src="{{ url_for('static', filename='app.js') }}"></script>
+
+</body>
+</html>

@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>ALX Entregas — Início</title>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+
+<style>
+
+/* =========================
+   RESET
+========================= */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    background:#06111d;
+    color:#fff;
+    font-family:Arial, Helvetica, sans-serif;
+    overflow-x:hidden;
+}
+
+/* =========================
+   TOPBAR
+========================= */
+
+.topbar{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    z-index:999;
+    background:rgba(6,17,29,.72);
+    backdrop-filter:blur(18px);
+    border-bottom:1px solid rgba(255,255,255,.06);
+}
+
+.topbar-inner{
+    width:92%;
+    max-width:1300px;
+    margin:auto;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:18px 0;
+}
+
+.logo{
+    height:48px;
+}
+
+.topbar-nav{
+    display:flex;
+    gap:30px;
+}
+
+.topbar-nav a{
+    color:#dce6f2;
+    text-decoration:none;
+    font-weight:600;
+    transition:.2s;
+}
+
+.topbar-nav a:hover{
+    color:#0b84ff;
+}
+
+.topbar-actions{
+    display:flex;
+    gap:14px;
+}
+
+/* =========================
+   BUTTONS
+========================= */
+
+.primary,
+.admin{
+    padding:12px 22px;
+    border-radius:14px;
+    text-decoration:none;
+    font-weight:700;
+    transition:.25s;
+}
+
+.primary{
+    background:#0b84ff;
+    color:#fff;
+    box-shadow:0 0 25px rgba(11,132,255,.25);
+}
+
+.primary:hover{
+    transform:translateY(-3px);
+    background:#2390ff;
+}
+
+.admin{
+    background:rgba(255,255,255,.06);
+    color:#fff;
+    border:1px solid rgba(255,255,255,.08);
+}
+
+.admin:hover{
+    background:rgba(255,255,255,.12);
+}
+
+/* =========================
+   CONTAINER
+========================= */
+
+.container{
+    width:92%;
+    max-width:1250px;
+    margin:auto;
+}
+
+/* =========================
+   SHOWCASE
+========================= */
+
+.hero-showcase{
+    padding:140px 0 100px;
+    position:relative;
+}
+
+.hero-showcase::before{
+    content:"";
+    position:absolute;
+    width:500px;
+    height:500px;
+    background:rgba(56,189,248,.08);
+    filter:blur(120px);
+    top:0;
+    left:-120px;
+    z-index:-1;
+}
+
+.showcase-wrapper{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:60px;
+    align-items:center;
+}
+
+.showcase-image{
+    position:relative;
+}
+
+.showcase-image img{
+    width:100%;
+    border-radius:32px;
+
+    border:1px solid rgba(255,255,255,.08);
+
+    box-shadow:
+    0 25px 60px rgba(0,0,0,.35),
+    0 0 0 1px rgba(255,255,255,.04);
+
+    transition:.35s ease;
+}
+
+.showcase-image img:hover{
+    transform:translateY(-6px) scale(1.01);
+}
+
+.showcase-badge{
+    position:absolute;
+    bottom:-20px;
+    right:-20px;
+    background:#0b84ff;
+    padding:22px;
+    border-radius:24px;
+    font-size:28px;
+    font-weight:800;
+    box-shadow:0 20px 40px rgba(11,132,255,.35);
+}
+
+.titulo{
+    font-size:52px;
+    line-height:1.1;
+    margin-bottom:24px;
+
+    background:linear-gradient(90deg,#fff,#93c5fd);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+}
+
+.typing{
+    color:#b9c8d8;
+    line-height:1.9;
+    font-size:18px;
+}
+
+/* =========================
+   INFO CARDS
+========================= */
+
+.info-section{
+    margin-top:70px;
+}
+
+.info-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:24px;
+}
+
+.info-card{
+    background:rgba(255,255,255,.05);
+
+    backdrop-filter:blur(16px);
+
+    border:1px solid rgba(255,255,255,.06);
+
+    border-radius:28px;
+
+    padding:34px;
+
+    transition:.3s;
+
+    box-shadow:0 15px 40px rgba(0,0,0,.25);
+}
+
+.info-card:hover{
+    transform:translateY(-8px);
+    border-color:rgba(56,189,248,.3);
+}
+
+.info-card h3{
+    font-size:24px;
+    margin-bottom:16px;
+}
+
+.info-card p{
+    color:#d1d5db;
+    line-height:1.8;
+}
+
+/* =========================
+   TRAJETORIA
+========================= */
+
+.trajetoria{
+    position:relative;
+
+    padding:120px 0;
+
+    background:
+    linear-gradient(
+        rgba(2,6,23,.82),
+        rgba(2,6,23,.90)
+    ),
+    url('/static/img/trajetoria.png');
+
+    background-size:cover;
+    background-position:center;
+    background-repeat:no-repeat;
+
+    overflow:hidden;
+}
+
+.trajetoria h2{
+    font-size:56px;
+    margin-bottom:70px;
+    text-align:center;
+
+    background:linear-gradient(90deg,#fff,#93c5fd);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+}
+
+.timeline{
+    position:relative;
+    max-width:1000px;
+    margin:auto;
+}
+
+.timeline::before{
+    content:"";
+    position:absolute;
+    left:50%;
+    top:0;
+    width:3px;
+    height:100%;
+    background:rgba(255,255,255,.08);
+    transform:translateX(-50%);
+}
+
+.timeline-item{
+    position:relative;
+    width:50%;
+    padding:20px 40px;
+}
+
+.timeline-item:nth-child(odd){
+    left:0;
+    text-align:right;
+}
+
+.timeline-item:nth-child(even){
+    left:50%;
+}
+
+.timeline-year{
+    display:inline-block;
+    padding:10px 18px;
+    border-radius:50px;
+    background:#0b84ff;
+    font-weight:800;
+    margin-bottom:18px;
+}
+
+.timeline-content{
+    background:#0d1727;
+    padding:28px;
+    border-radius:24px;
+    border:1px solid rgba(255,255,255,.05);
+    color:#c3cfdd;
+    line-height:1.8;
+    box-shadow:0 15px 40px rgba(0,0,0,.25);
+    transition:.25s;
+}
+
+.timeline-content:hover{
+    transform:translateX(6px);
+}
+
+/* =========================
+   CTA
+========================= */
+
+.cta-negocio{
+    margin:100px 0;
+    position:relative;
+    border-radius:36px;
+    overflow:hidden;
+    min-height:480px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.cta-bg{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+.cta-negocio::after{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:linear-gradient(rgba(4,10,20,.7),rgba(4,10,20,.88));
+}
+
+.cta-overlay{
+    position:relative;
+    z-index:5;
+    text-align:center;
+    max-width:760px;
+    padding:40px;
+
+    background:rgba(0,0,0,.25);
+
+    backdrop-filter:blur(12px);
+
+    border-radius:28px;
+
+    border:1px solid rgba(255,255,255,.08);
+}
+
+.cta-overlay h2{
+    font-size:58px;
+    margin-bottom:22px;
+}
+
+.cta-overlay p{
+    color:#d4dfeb;
+    font-size:20px;
+    line-height:1.8;
+    margin-bottom:35px;
+}
+
+.grande{
+    padding:18px 34px;
+    font-size:17px;
+}
+
+/* =========================
+   FOOTER
+========================= */
+
+.footer{
+    border-top:1px solid rgba(255,255,255,.06);
+    background:linear-gradient(180deg, rgba(6,17,29,0), rgba(16,29,49,.65));
+    color:#aab7c6;
+}
+
+.footer-inner{
+    width:92%;
+    max-width:1200px;
+    margin:auto;
+    padding:38px 0;
+    display:grid;
+    grid-template-columns:1.2fr 1fr 1fr;
+    gap:26px;
+    align-items:start;
+}
+
+.footer-brand{
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+}
+
+.footer-logo{
+    height:78px;
+    width:auto;
+    max-width:340px;
+    object-fit:contain;
+    object-position:center;
+    display:block;
+    filter:drop-shadow(0 10px 24px rgba(0,0,0,.35));
+}
+
+.footer-title{
+    font-size:18px;
+    font-weight:800;
+    color:#eaf3ff;
+    letter-spacing:.2px;
+}
+
+.footer-sub{
+    color:#93a4ba;
+    line-height:1.7;
+    max-width:420px;
+}
+
+.footer-block h4{
+    margin:0 0 12px 0;
+    font-size:14px;
+    text-transform:uppercase;
+    letter-spacing:.12em;
+    color:#93a4ba;
+}
+
+.footer-link{
+    display:flex;
+    gap:10px;
+    align-items:flex-start;
+    color:#dce6f2;
+    text-decoration:none;
+    line-height:1.6;
+    padding:8px 0;
+}
+
+.footer-link:hover{
+    color:#ffffff;
+}
+
+.footer-ico{
+    width:18px;
+    height:18px;
+    flex:0 0 18px;
+    margin-top:2px;
+    stroke:#8ec9ff;
+    stroke-width:2;
+    fill:none;
+}
+
+.footer-bottom{
+    width:92%;
+    max-width:1200px;
+    margin:auto;
+    padding:18px 0 26px;
+    border-top:1px solid rgba(255,255,255,.06);
+    display:flex;
+    justify-content:space-between;
+    gap:12px;
+    flex-wrap:wrap;
+}
+
+.footer-bottom small{
+    color:#7f92a6;
+}
+
+/* =========================
+   RESPONSIVO
+========================= */
+
+@media(max-width:1000px){
+
+    .topbar-nav{
+        display:none;
+    }
+
+    .showcase-wrapper{
+        grid-template-columns:1fr;
+    }
+
+    .timeline::before{
+        left:20px;
+    }
+
+    .timeline-item{
+        width:100%;
+        left:0 !important;
+        text-align:left !important;
+        padding-left:60px;
+    }
+
+    .info-grid{
+        grid-template-columns:1fr;
+    }
+
+    .titulo{
+        font-size:40px;
+    }
+
+    .trajetoria h2{
+        font-size:40px;
+    }
+
+    .cta-overlay h2{
+        font-size:38px;
+    }
+
+    .footer-inner{
+        grid-template-columns:1fr;
+    }
+
+    .footer-bottom{
+        justify-content:center;
+        text-align:center;
+    }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- TOPBAR -->
+<header class="topbar">
+
+  <div class="topbar-inner">
+
+    <div class="topbar-brand">
+      <img src="/static/img/logo.png"
+           class="logo"
+           alt="ALX">
+    </div>
+
+    <nav class="topbar-nav">
+
+      <a href="{{ url_for('home') }}">Início</a>
+
+      <a href="{{ url_for('sobre_page') }}">
+        Sobre
+      </a>
+
+      <a href="{{ url_for('fale_conosco') }}">
+        Contato
+      </a>
+
+    </nav>
+
+    <div class="topbar-actions">
+
+      <a class="primary"
+         href="{{ url_for('fale_conosco') }}">
+
+        Fale Conosco
+
+      </a>
+
+      <a class="admin"
+         href="{{ url_for('login_page') }}">
+
+        admin
+
+      </a>
+
+    </div>
+
+  </div>
+
+</header>
+
+<main class="container">
+
+<!-- BANNER ORIGINAL -->
+<section class="hero-slider hero-slider--full">
+
+    <div class="hero-slide is-active"
+         style="background-image:url('/static/img/quem.jpg')">
+
+        <div class="hero-slide-overlay"></div>
+
+    </div>
+
+    <div class="hero-slide"
+         style="background-image:url('/static/img/2evento.png')">
+
+        <div class="hero-slide-overlay"></div>
+
+    </div>
+
+    <div class="hero-slide"
+         style="background-image:url('/static/img/3evento.png')">
+
+        <div class="hero-slide-overlay"></div>
+
+    </div>
+
+    <div class="hero-dots">
+
+      <button class="hero-dot is-active"
+              type="button"></button>
+
+      <button class="hero-dot"
+              type="button"></button>
+
+      <button class="hero-dot"
+              type="button"></button>
+
+    </div>
+
+</section>
+
+<!-- INFO -->
+<section class="info-section">
+
+    <div class="info-grid">
+
+        <div class="info-card">
+
+            <h3>
+                Operação Inteligente
+            </h3>
+
+            <p>
+                Gestão logística moderna com foco
+                em produtividade e eficiência operacional.
+            </p>
+
+        </div>
+
+        <div class="info-card">
+
+            <h3>
+                Suporte Contínuo
+            </h3>
+
+            <p>
+                Acompanhamento rápido e suporte
+                constante para toda operação.
+            </p>
+
+        </div>
+
+        <div class="info-card">
+
+            <h3>
+                Tecnologia Integrada
+            </h3>
+
+            <p>
+                Plataforma conectada para garantir
+                eficiência e controle das entregas.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- SHOWCASE -->
+<section class="hero-showcase">
+
+    <div class="showcase-wrapper">
+
+        <div class="showcase-text">
+
+            <h2 class="titulo">
+                Conheça um pouco da ALX
+            </h2>
+
+            <p class="typing">
+
+                A ALX nasceu com o objetivo de transformar
+                operações logísticas através de organização,
+                tecnologia e acompanhamento contínuo.
+
+                Atuamos conectando entregadores e plataformas
+                para gerar mais eficiência e crescimento.
+
+            </p>
+
+        </div>
+
+        <div class="showcase-image">
+
+            <img src="/static/img/empresa.jpg">
+
+            <div class="showcase-badge" data-count-to="10">
+                +<span class="showcase-count">0</span> anos
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- TRAJETORIA -->
+<section class="trajetoria">
+
+    <h2>
+        Nossa trajetória
+    </h2>
+
+    <div class="timeline">
+
+      <div class="timeline-item">
+
+        <div class="timeline-year">
+          2012
+        </div>
+
+        <div class="timeline-content">
+          Fundação da ALX com foco em desenvolvimento
+          individual e crescimento no mercado logístico.
+        </div>
+
+      </div>
+
+      <div class="timeline-item">
+
+        <div class="timeline-year">
+          2019
+        </div>
+
+        <div class="timeline-content">
+          Início da parceria com iFood, ampliando
+          a operação e presença no delivery.
+        </div>
+
+      </div>
+
+      <div class="timeline-item">
+
+        <div class="timeline-year">
+          2023
+        </div>
+
+        <div class="timeline-content">
+          Expansão com entrada na 99Food,
+          consolidando a ALX como operador logístico.
+        </div>
+
+      </div>
+
+    </div>
+
+</section>
+
+<!-- CTA -->
+<section class="cta-negocio">
+
+    <img src="/static/img/negocios.png"
+         class="cta-bg">
+
+    <div class="cta-overlay">
+
+      <h2>
+        Venha ser cliente ALX
+      </h2>
+
+      <p>
+        Leve sua operação de entregas para outro nível
+        com rapidez, tecnologia e suporte completo.
+      </p>
+
+      <a class="primary grande"
+         href="{{ url_for('site_public') }}">
+
+        Quero ser cliente
+
+      </a>
+
+    </div>
+
+</section>
+
+</main>
+
+<footer class="footer">
+
+  <div class="footer-inner">
+
+    <div class="footer-brand">
+
+      <img src="/static/img/logo.png"
+           class="footer-logo"
+           alt="ALX">
+
+      <div>
+        <div class="footer-title">
+          ALX Entregas
+        </div>
+        <div class="footer-sub">
+          Operador logístico com gestão operacional,
+          suporte e tecnologia para conectar entregadores
+          e plataformas com eficiência.
+        </div>
+      </div>
+
+    </div>
+
+    <div class="footer-block">
+
+      <h4>
+        Contato
+      </h4>
+
+      <a class="footer-link"
+         href="tel:+5511945615910">
+        <svg class="footer-ico"
+             viewBox="0 0 24 24"
+             aria-hidden="true">
+          <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07A19.5 19.5 0 0 1 3.15 10.8 19.8 19.8 0 0 1 .08 2.18 2 2 0 0 1 2.06 0h3a2 2 0 0 1 2 1.72c.12.9.32 1.77.6 2.61a2 2 0 0 1-.45 2.11L6 7.91a16 16 0 0 0 10.09 10.09l1.47-1.21a2 2 0 0 1 2.11-.45c.84.28 1.71.48 2.61.6A2 2 0 0 1 22 16.92z"/>
+        </svg>
+        <span>
+          Comercial: +55 11 94561-5910
+        </span>
+      </a>
+
+      <a class="footer-link"
+         href="tel:+5511968437483">
+        <svg class="footer-ico"
+             viewBox="0 0 24 24"
+             aria-hidden="true">
+          <path d="M21 15a4 4 0 0 1-4 4H8l-5 4V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z"/>
+        </svg>
+        <span>
+          Suporte (até 00:00): +55 11 96843-7483
+          <span style="color:#93a4ba">• WhatsApp e Telegram</span>
+        </span>
+      </a>
+
+      <a class="footer-link"
+         href="mailto:alxexpresstransporte@gmail.com">
+        <svg class="footer-ico"
+             viewBox="0 0 24 24"
+             aria-hidden="true">
+          <path d="M4 4h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/>
+          <path d="M22 6l-10 7L2 6"/>
+        </svg>
+        <span>
+          alxexpresstransporte@gmail.com
+        </span>
+      </a>
+
+    </div>
+
+    <div class="footer-block">
+
+      <h4>
+        Endereço
+      </h4>
+
+      <a class="footer-link"
+         href="https://www.google.com/maps/search/?api=1&query=CEP%2004249-070%20Rua%20Riga%20Sacom%C3%A3%20S%C3%A3o%20Paulo%20SP"
+         target="_blank"
+         rel="noopener">
+        <svg class="footer-ico"
+             viewBox="0 0 24 24"
+             aria-hidden="true">
+          <path d="M21 10c0 6-9 13-9 13S3 16 3 10a9 9 0 0 1 18 0z"/>
+          <path d="M12 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+        </svg>
+        <span>
+          CEP 04249-070 • Rua Riga - Sacomã - São Paulo/SP
+        </span>
+      </a>
+
+    </div>
+
+  </div>
+
+  <div class="footer-bottom">
+
+    <small>
+      © <span id="year"></span> ALX Entregas
+    </small>
+
+  </div>
+
+</footer>
+
+<script src="{{ url_for('static', filename='app.js') }}"></script>
+<script src="{{ url_for('static', filename='home.js') }}"></script>
+
+</body>
+</html>
