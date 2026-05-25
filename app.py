@@ -40,33 +40,75 @@ def require_supabase_key():
     if not SUPABASE_KEY:
         raise Exception("SUPABASE_SERVICE_ROLE_KEY (ou SUPABASE_KEY) não configurada nas variáveis de ambiente")
 
-# ==============================
-# FUNÇÃO BUSCAR USUÁRIO
-# ==============================
-def supa_get_user(email):
-    url = f"{SUPABASE_URL}/rest/v1/admins"
+def normalize_bool(v):
+    if isinstance(v, bool):
+        return v
+    if isinstance(v, (int, float)):
+        return bool(v)
+    s = ("" if v is None else str(v)).strip().lower()
+    if s in ("true", "1", "t", "yes", "y", "sim", "verdadeiro"):
+        return True
+    if s in ("false", "0", "f", "no", "n", "nao", "não", "falso"):
+        return False
+    return None
 
+def _supa_try_get_admin(table, email, email_field):
+    url = f"{SUPABASE_URL}/rest/v1/{table}"
     headers = {
         "apikey": SUPABASE_KEY or "",
         "Authorization": f"Bearer {SUPABASE_KEY or ''}",
         "Content-Type": "application/json"
     }
-
     params = {
-        "select": "email,password_hash,active",
-        "email": f"eq.{email}",
+        "select": "*",
+        email_field: f"eq.{email}",
         "limit": "1"
     }
-
-    require_supabase_key()
-
     r = requests.get(url, headers=headers, params=params)
-
+    if r.status_code == 404:
+        return None
     if r.status_code != 200:
         raise Exception(r.text)
-
     data = r.json()
     return data[0] if data else None
+
+def supa_find_admin(email):
+    require_supabase_key()
+    table_candidates = []
+    env_table = normalize_env_value(os.environ.get("ADMIN_TABLE"))
+    if env_table:
+        table_candidates.append(env_table)
+    table_candidates.extend(["admins", "administradores", "Administradores"])
+    email_fields = ["email", "e-mail", "E-mail"]
+    for table in table_candidates:
+        for email_field in email_fields:
+            try:
+                row = _supa_try_get_admin(table, email, email_field)
+            except Exception:
+                continue
+            if row:
+                return {"table": table, "email_field": email_field, "row": row}
+    return None
+
+def normalize_admin_row(row):
+    email = row.get("email") or row.get("e-mail") or row.get("E-mail")
+    password_hash = row.get("password_hash") or row.get("password") or row.get("senha")
+    active = (
+        normalize_bool(row.get("active")) if "active" in row
+        else normalize_bool(row.get("ativo")) if "ativo" in row
+        else normalize_bool(row.get("Ativo")) if "Ativo" in row
+        else True
+    )
+    return {"email": email, "password_hash": password_hash, "active": active}
+
+# ==============================
+# FUNÇÃO BUSCAR USUÁRIO
+# ==============================
+def supa_get_user(email):
+    found = supa_find_admin(email)
+    if not found:
+        return None
+    return normalize_admin_row(found["row"])
 
 
 # ==============================
@@ -148,21 +190,31 @@ def supa_set_password(email, new_password):
     require_supabase_key()
     salt = bcrypt.gensalt()
     pw_hash = bcrypt.hashpw(new_password.encode(), salt).decode()
-    url = f"{SUPABASE_URL}/rest/v1/admins"
+    found = supa_find_admin(email)
+    table = (found or {}).get("table") or "admins"
+    email_field = (found or {}).get("email_field") or "email"
+    row = (found or {}).get("row") or {}
+    active_field = "active" if "active" in row else "ativo" if "ativo" in row else "Ativo" if "Ativo" in row else None
+    url = f"{SUPABASE_URL}/rest/v1/{table}"
     headers = {
         "apikey": SUPABASE_KEY or "",
         "Authorization": f"Bearer {SUPABASE_KEY or ''}",
         "Content-Type": "application/json",
         "Prefer": "return=representation"
     }
-    existing = supa_get_user(email)
-    if existing:
-        r = requests.patch(url, headers=headers, params={"email": f"eq.{email}"}, json={"password_hash": pw_hash, "active": True})
+    if found:
+        patch_payload = {"password_hash": pw_hash}
+        if active_field:
+            patch_payload[active_field] = True
+        r = requests.patch(url, headers=headers, params={email_field: f"eq.{email}"}, json=patch_payload)
         if r.status_code not in (200, 204):
             raise Exception(r.text)
         return True
     else:
-        r = requests.post(url, headers=headers, json={"email": email, "active": True, "password_hash": pw_hash})
+        insert_payload = {email_field: email, "password_hash": pw_hash}
+        if active_field:
+            insert_payload[active_field] = True
+        r = requests.post(url, headers=headers, json=insert_payload)
         if r.status_code not in (200, 201):
             raise Exception(r.text)
         return True
