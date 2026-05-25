@@ -26,8 +26,15 @@ load_env()
 app = Flask(__name__)
 app.secret_key = os.environ.get("FLASK_SECRET_KEY", "dev")
 
-SUPABASE_URL = os.environ.get("SUPABASE_URL", "https://ppewtznjwigjowgmhrge.supabase.co")
-SUPABASE_KEY = os.environ.get("SUPABASE_SERVICE_ROLE_KEY") or os.environ.get("SUPABASE_KEY")
+def normalize_env_value(value):
+    v = (value or "").strip()
+    if (v.startswith('"') and v.endswith('"')) or (v.startswith("'") and v.endswith("'")):
+        v = v[1:-1].strip()
+    return v
+
+SUPABASE_URL = normalize_env_value(os.environ.get("SUPABASE_URL")) or "https://ppewtznjwigjowgmhrge.supabase.co"
+SUPABASE_URL = SUPABASE_URL.rstrip("/")
+SUPABASE_KEY = normalize_env_value(os.environ.get("SUPABASE_SERVICE_ROLE_KEY") or os.environ.get("SUPABASE_KEY"))
 
 def require_supabase_key():
     if not SUPABASE_KEY:
