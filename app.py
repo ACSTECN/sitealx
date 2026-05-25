@@ -78,7 +78,7 @@ def supa_find_admin(email):
     env_table = normalize_env_value(os.environ.get("ADMIN_TABLE"))
     if env_table:
         table_candidates.append(env_table)
-    table_candidates.extend(["admins", "administradores", "Administradores"])
+    table_candidates.extend(["admins", "administradores", "Administradores", "administrador", "Administrador"])
     email_fields = ["email", "e-mail", "E-mail"]
     for table in table_candidates:
         for email_field in email_fields:
@@ -194,7 +194,16 @@ def supa_set_password(email, new_password):
     table = (found or {}).get("table") or "admins"
     email_field = (found or {}).get("email_field") or "email"
     row = (found or {}).get("row") or {}
-    active_field = "active" if "active" in row else "ativo" if "ativo" in row else "Ativo" if "Ativo" in row else None
+    if "active" in row:
+        active_field = "active"
+    elif "ativo" in row:
+        active_field = "ativo"
+    elif "Ativo" in row:
+        active_field = "Ativo"
+    elif str(table).lower() in ("administradores", "administrador"):
+        active_field = "Ativo"
+    else:
+        active_field = None
     url = f"{SUPABASE_URL}/rest/v1/{table}"
     headers = {
         "apikey": SUPABASE_KEY or "",
