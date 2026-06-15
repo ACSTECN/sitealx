@@ -201,7 +201,132 @@ body{
 /* =========================
    CARDS
 ========================= */
+/* =========================
+   HEADER FEEDBACKS
+========================= */
 
+.feedback-header{
+
+    display:flex;
+    align-items:center;
+    gap:20px;
+
+    margin-bottom:30px;
+
+    padding-bottom:25px;
+
+    border-bottom:1px solid rgba(255,255,255,.08);
+
+}
+
+.feedback-icon{
+
+    width:70px;
+    height:70px;
+
+    border-radius:20px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    font-size:30px;
+
+    background:
+    linear-gradient(
+        135deg,
+        #2563eb,
+        #38bdf8
+    );
+
+    box-shadow:
+    0 15px 40px rgba(37,99,235,.30);
+
+}
+
+.feedback-text h3{
+
+    font-size:30px;
+    font-weight:700;
+
+    margin-bottom:6px;
+
+}
+
+.feedback-text p{
+
+    color:#94a3b8;
+
+    font-size:15px;
+
+    line-height:1.6;
+
+}
+
+
+/* Quantidade de feedbacks */
+
+.feedback-badge{
+
+    margin-top:10px;
+
+    display:inline-flex;
+
+    align-items:center;
+
+    gap:8px;
+
+    padding:8px 16px;
+
+    border-radius:30px;
+
+    background:rgba(37,99,235,.12);
+
+    border:1px solid rgba(56,189,248,.25);
+
+    color:#7dd3fc;
+
+    font-size:13px;
+
+    font-weight:600;
+
+}
+.tipo-badge{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+
+    padding:7px 12px;
+
+    border-radius:999px;
+
+    font-size:12px;
+    font-weight:700;
+}
+
+.tipo-badge.sugestao{
+    background:rgba(34,197,94,.15);
+    color:#86efac;
+    border:1px solid rgba(34,197,94,.25);
+}
+
+.tipo-badge.reclamacao{
+    background:rgba(239,68,68,.15);
+    color:#fca5a5;
+    border:1px solid rgba(239,68,68,.25);
+}
+
+.tipo-badge.outros{
+    background:rgba(59,130,246,.15);
+    color:#93c5fd;
+    border:1px solid rgba(59,130,246,.25);
+}
+
+.stars{
+    color:#facc15;
+    font-size:14px;
+    white-space:nowrap;
+}
 .card{
     background:
     linear-gradient(
@@ -481,16 +606,26 @@ tbody tr:hover{
         <!-- CHART -->
         <section class="card chart-card">
 
-            <div class="card-title">
+<!-- HEADER FEEDBACKS -->
+            <div class="feedback-header">
 
-                <h3>
-                    Visão Geral
-                </h3>
+                <div class="feedback-icon">
+                    💬
+                </div>
 
-                <p>
-                    Estatísticas e indicadores operacionais.
-                </p>
+                <div class="feedback-text">
 
+                    <h3>
+                        Feedbacks Recebidos
+                    </h3>
+
+                    <p>
+                        Sugestões, reclamações e avaliações enviadas pelos usuários da plataforma.
+                    </p>
+
+                </div>
+
+            </div>
             </div>
 
             <canvas id="chart"
