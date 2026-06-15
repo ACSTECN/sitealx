@@ -293,7 +293,7 @@ def api_feedback():
     nome = (data.get("nome_completo") or data.get("nome") or "").strip()
     cpf = "".join([c for c in (data.get("cpf") or "") if c.isdigit()])
     hotzone = (data.get("hotzone") or "").strip()
-    allowed_hotzones = {"SANTO AMARO", "MOOCA", "PAULISTA", "NILÓPOLIS", "BANGU", "SANTA CRUZ", "OUTROS"}
+    allowed_hotzones = {"SANTO AMARO", "MOOCA", "PAULISTA", "NILÓPOLIS", "BANGU", "SANTA CRUZ", "TIJUCA", "ZONA SUL", "OUTROS"}
     if hotzone and hotzone not in allowed_hotzones:
         hotzone = "OUTROS"
     telefone = (data.get("telefone") or "").strip()
