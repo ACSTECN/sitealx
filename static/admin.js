@@ -100,6 +100,8 @@ function renderTable(rows) {
   }
   rows.forEach(r => {
     const tr = document.createElement("tr");
+    // Converte satisfação do banco (1-5) para 1-10
+    const satisfaçãoExibida = (r.satisfacao || 1) * 2;
     const cells = [
       new Date(r.created_at).toLocaleString("pt-BR"),
       r.nome_completo || r["nome completo"] || "",
@@ -108,7 +110,7 @@ function renderTable(rows) {
       r.telefone,
       r.email,
       formatTipo(r.tipo),
-      r.satisfacao,
+      satisfaçãoExibida,
       r.mensagem
     ];
     cells.forEach(c => {
@@ -124,9 +126,11 @@ function renderTable(rows) {
 
 function renderChart(rows) {
   console.log("renderChart called");
-  const counts = [0,0,0,0,0,0,0,0,0,0];
+  const counts = [0,0,0,0,0,0,0,0,0,0]; // 1-10
   rows.forEach(r => {
-    const i = (r.satisfacao || 0) - 1;
+    const satisfaçãoDb = r.satisfacao || 1; // 1-5
+    const satisfação1a10 = satisfaçãoDb * 2;
+    const i = satisfação1a10 - 1;
     if (i >=0 && i < 10) counts[i]++;
   });
   const canvas = document.getElementById("chart");
@@ -145,6 +149,7 @@ function renderChart(rows) {
     },
     options: {
       responsive: true,
+      maintainAspectRatio: true,
       plugins: { legend: { display: false } },
       scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }
     }
