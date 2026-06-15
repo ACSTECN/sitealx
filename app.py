@@ -368,8 +368,12 @@ def api_admin_feedbacks():
         page, page_size = 1, 10
     try:
         result = supa_list_feedbacks(hotzone=hotzone or None, page=page, page_size=page_size)
-        return jsonify({"ok": True, **result})
+        print("api_admin_feedbacks result:", result)
+        response = jsonify({"ok": True, **result})
+        print("api_admin_feedbacks response:", response.get_json())
+        return response
     except Exception as e:
+        print("api_admin_feedbacks error:", str(e))
         return jsonify({"ok": False, "error": str(e)}), 500
 
 
