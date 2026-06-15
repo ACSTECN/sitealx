@@ -360,20 +360,21 @@ def api_feedback_demo():
 def api_admin_feedbacks():
     if not session.get("user"):
         return jsonify({"ok": False, "error": "Not authorized"}), 403
-    hotzone = (request.args.get("hotzone") or "").strip()
+    hotzone = request.args.get("hotzone", "").strip()
     try:
-        page = int(request.args.get("page") or "1")
-        page_size = int(request.args.get("page_size") or "10")
+        page = int(request.args.get("page", "1"))
+        page_size = int(request.args.get("page_size", "10"))
     except:
         page, page_size = 1, 10
     try:
-        result = supa_list_feedbacks(hotzone=hotzone or None, page=page, page_size=page_size)
-        print("api_admin_feedbacks result:", result)
-        response = jsonify({"ok": True, **result})
-        print("api_admin_feedbacks response:", response.get_json())
-        return response
+        # Só passamos hotzone se não for vazio
+        result = supa_list_feedbacks(
+            hotzone=hotzone if hotzone else None,
+            page=page,
+            page_size=page_size
+        )
+        return jsonify({"ok": True, **result})
     except Exception as e:
-        print("api_admin_feedbacks error:", str(e))
         return jsonify({"ok": False, "error": str(e)}), 500
 
 
