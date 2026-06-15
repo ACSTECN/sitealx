@@ -32,48 +32,54 @@ function formatCPF(cpf) {
 }
 
 async function loadData() {
-  console.log("loadData called");
+  console.log("=== loadData started ===");
   tabela.innerHTML = "<tr><td>Carregando...</td></tr>";
   const filtro = filtroHotzone.value.trim();
   const pageSize = parseInt(pageSizeSel.value || "10", 10);
   const url = `/api/admin/feedbacks?hotzone=${encodeURIComponent(filtro)}&page=${page}&page_size=${pageSize}`;
-  console.log("Fetching:", url);
+  console.log("Fetching URL:", url);
   let dataResp;
   try {
     const r = await fetch(url);
     console.log("Response status:", r.status);
-    dataResp = await r.json();
-    console.log("dataResp:", dataResp);
+    const text = await r.text();
+    console.log("Response raw text:", text);
+    dataResp = JSON.parse(text);
+    console.log("Parsed dataResp:", dataResp);
   } catch (e) {
-    console.error("Fetch error:", e);
-    tabela.innerHTML = "<tr><td>Erro de rede</td></tr>";
+    console.error("Fetch/parse error:", e);
+    tabela.innerHTML = "<tr><td>Erro de rede: " + e.message + "</td></tr>";
     return;
   }
+
   let rows;
   let total;
-  if (Array.isArray(dataResp)) {
-    // Se o backend retornar o array diretamente
-    rows = dataResp;
-    total = rows.length;
-  } else if (dataResp.ok) {
-    // Se o backend retornar o formato esperado
+  if (dataResp.ok) {
+    console.log("Got ok: true response");
     rows = dataResp.data || [];
     total = dataResp.total || rows.length;
+  } else if (Array.isArray(dataResp)) {
+    console.log("Got direct array response");
+    rows = dataResp;
+    total = rows.length;
   } else if (Array.isArray(dataResp.error)) {
-    // Se o "error" for o array (caso estranho que está acontecendo)
+    console.log("Got error that is an array");
     rows = dataResp.error;
     total = rows.length;
   } else {
-    // Outro erro
+    console.error("Unknown error response:", dataResp);
     tabela.innerHTML = `<tr><td>Erro: ${dataResp.error || "desconhecido"}</td></tr>`;
     return;
   }
+
+  console.log("Using rows:", rows);
   totalPages = Math.max(1, Math.ceil(total / pageSize));
   pageInfo.textContent = `Página ${page} de ${totalPages}`;
   currentRows = rows;
   renderHeader();
   renderTable(currentRows);
   renderChart(rows);
+  console.log("=== loadData complete ===");
 }
 
 function renderHeader() {
