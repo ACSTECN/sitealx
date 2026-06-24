@@ -258,7 +258,7 @@ def supa_list_feedbacks(hotzone=None, page=1, page_size=10):
         "offset": str(max(0, (page - 1) * page_size)),
     }
     if hotzone:
-        params["hotzone"] = f"eq.{hotzone}"
+        params["hotzone"] = f"ilike.*{hotzone}*"
     r = requests.get(url, headers=headers, params=params)
     if r.status_code != 200:
         raise Exception(r.text)
