@@ -10,17 +10,6 @@ const exportBtn=document.getElementById("exportar-csv");
 let chart;
 let page=1;let totalPages=1;
 let currentRows=[];
-
-const tipoLabels = {
-  "sugestao": "Sugestão",
-  "reclamacao": "Reclamação",
-  "outros": "Outros"
-};
-
-function formatTipo(tipo) {
-  return tipoLabels[tipo] || tipo;
-}
-
 async function loadData(){
   tabela.innerHTML="<tr><td>Carregando...</td></tr>";
   const filtro=filtroHotzone.value.trim();
@@ -52,7 +41,7 @@ function renderHeader(){
     const th=document.createElement("th");
     th.textContent=h;
     th.style.textAlign="left";
-    th.style.padding="16px";
+    th.style.padding="8px";
     tr.appendChild(th);
   });
   thead.appendChild(tr);
@@ -62,22 +51,12 @@ function renderTable(rows){
   if(!rows.length){tabela.innerHTML="<tr><td>Nenhum dado encontrado</td></tr>";return}
   rows.forEach(r=>{
     const tr=document.createElement("tr");
-    const cells=[
-      new Date(r.created_at).toLocaleString("pt-BR"),
-      r.nome_completo,
-      r.cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4"),
-      r.hotzone,
-      r.telefone,
-      r.email,
-      formatTipo(r.tipo),
-      r.satisfacao,
-      r.mensagem
-    ];
+    const cells=[new Date(r.created_at).toLocaleString(),r.nome_completo,r.cpf,r.hotzone,r.telefone,r.email,r.tipo,r.satisfacao,r.mensagem];
     cells.forEach(c=>{
       const td=document.createElement("td");
       td.textContent=c;
-      td.style.padding="16px";
-      td.style.verticalAlign="top";
+      td.style.padding="8px";
+      td.style.borderBottom="1px solid #e5e7eb";
       tr.appendChild(td);
     });
     tabela.appendChild(tr);
@@ -90,7 +69,7 @@ function renderChart(rows){
   if(!canvas)return;
   const ctx=canvas.getContext("2d");
   if(chart)chart.destroy();
-  chart=new Chart(ctx,{type:"bar",data:{labels:["1","2","3","4","5","6","7","8","9","10"],datasets:[{label:"Satisfação",data:counts,backgroundColor:["#ef4444","#f97316","#f59e0b","#fcd34d","#fde047","#a3e635","#34d399","#22c55e","#16a34a","#15803d"]}]},options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,ticks:{stepSize:1}}}}});
+  chart=new Chart(ctx,{type:"bar",data:{labels:["1","2","3","4","5","6","7","8","9","10"],datasets:[{label:"Satisfação",data:counts,backgroundColor:["#ef4444","#f97316","#f59e0b","#fcd34d","#fde047","#a3e635","#34d399","#22c55e","#16a34a","#15803d"]}]} ,options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,ticks:{stepSize:1}}}}});
 }
 if(aplicarFiltro){aplicarFiltro.addEventListener("click",()=>{page=1;loadData()})}
 if(prevBtn){prevBtn.addEventListener("click",()=>{page=Math.max(1,page-1);loadData()})}
@@ -99,13 +78,13 @@ if(pageSizeSel){pageSizeSel.addEventListener("change",()=>{page=1;loadData()})}
 if(exportBtn){exportBtn.addEventListener("click",()=>{
   const headers=["Data","Nome","CPF","Hotzone","Telefone","Email","Tipo","Satisfação","Mensagem"];
   const lines=[headers.join(";")].concat(currentRows.map(r=>[
-    new Date(r.created_at).toLocaleString("pt-BR").replace(/;/g,","),
+    new Date(r.created_at).toLocaleString().replace(/;/g,","),
     (r.nome_completo||"").replace(/;/g,","),
     r.cpf||"",
     r.hotzone||"",
     r.telefone||"",
     r.email||"",
-    formatTipo(r.tipo||""),
+    r.tipo||"",
     r.satisfacao||"",
     (r.mensagem||"").replace(/\\n/g," ").replace(/;/g,",")
   ].join(";")));
@@ -116,3 +95,17 @@ if(exportBtn){exportBtn.addEventListener("click",()=>{
   document.body.appendChild(a);a.click();a.remove();
 })}
 document.addEventListener("DOMContentLoaded",loadData);
+document.addEventListener("DOMContentLoaded", function () {
+
+    const slides = document.querySelectorAll(".slide");
+    let index = 0;
+
+    setInterval(() => {
+        slides[index].classList.remove("active");
+
+        index = (index + 1) % slides.length;
+
+        slides[index].classList.add("active");
+    }, 3000);
+
+});
