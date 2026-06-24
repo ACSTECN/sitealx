@@ -171,13 +171,56 @@ body::after{
 }
 
 /* =========================
-   ACCESS LINKS
+   FORM
 ========================= */
 
-.access-links{
+form{
     display:flex;
     flex-direction:column;
-    gap:16px;
+    gap:22px;
+}
+
+label{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+
+    color:#dbe4ef;
+
+    font-size:14px;
+}
+
+/* INPUT */
+
+.input-group{
+    position:relative;
+}
+
+.input-group input{
+    width:100%;
+
+    padding:18px 18px 18px 20px;
+
+    border-radius:18px;
+
+    border:1px solid rgba(255,255,255,.08);
+
+    background:rgba(255,255,255,.05);
+
+    color:white;
+
+    font-size:15px;
+
+    outline:none;
+
+    transition:.25s;
+}
+
+.input-group input:focus{
+    border-color:#38bdf8;
+
+    box-shadow:
+    0 0 0 4px rgba(56,189,248,.12);
 }
 
 /* =========================
@@ -210,41 +253,12 @@ body::after{
     transition:.25s;
 
     box-shadow:0 15px 35px rgba(37,99,235,.35);
-    text-decoration:none;
-    display:block;
-    text-align:center;
 }
 
 .primary:hover{
     transform:translateY(-4px);
 
     box-shadow:0 20px 40px rgba(37,99,235,.45);
-}
-
-.secondary-link{
-    border:1px solid rgba(255,255,255,.10);
-    padding:18px;
-    border-radius:18px;
-    background:rgba(255,255,255,.05);
-    color:#dbe4ef;
-    font-size:16px;
-    font-weight:700;
-    text-decoration:none;
-    text-align:center;
-    transition:.25s;
-}
-
-.secondary-link:hover{
-    transform:translateY(-4px);
-    background:rgba(255,255,255,.10);
-}
-
-.access-note{
-    margin-top:18px;
-    color:#cbd5e1;
-    text-align:center;
-    line-height:1.7;
-    font-size:14px;
 }
 
 /* =========================
@@ -273,20 +287,6 @@ body::after{
     color:#94a3b8;
 
     font-size:13px;
-}
-
-.store-badges{
-    display:flex;
-    justify-content:center;
-    gap:14px;
-    flex-wrap:wrap;
-    margin-bottom:16px;
-}
-
-.store-badges img{
-    height:50px;
-    width:auto;
-    display:block;
 }
 
 /* =========================
@@ -326,47 +326,61 @@ body::after{
             </h2>
 
             <p>
-                Escolha abaixo a area logada
-                para acessar a plataforma.
+                Faça login para acessar
+                o gerenciamento interno da ALX.
             </p>
 
         </div>
 
-        <div class="access-links">
+        <!-- FORM -->
+        <form id="login-form">
 
-            <a class="primary"
-               href="https://alunos-lovat.vercel.app/login"
-               target="_blank"
-               rel="noopener">
-                Area Logada Aluno
-            </a>
+            <label>
 
-            <a class="secondary-link"
-               href="https://gerenciaralunos.vercel.app/login"
-               target="_blank"
-               rel="noopener">
-                Area Logada Personal
-            </a>
+                Email
 
-        </div>
+                <div class="input-group">
 
-        <div class="access-note">
-            Acesso direto para aluno e personal.
-        </div>
+                    <input id="login-email"
+                           type="email"
+                           placeholder="Digite seu email"
+                           required>
+
+                </div>
+
+            </label>
+
+            <label>
+
+                Senha
+
+                <div class="input-group">
+
+                    <input id="login-senha"
+                           type="password"
+                           placeholder="Digite sua senha"
+                           required>
+
+                </div>
+
+            </label>
+
+            <button class="primary"
+                    type="submit">
+
+                Entrar no painel
+
+            </button>
+
+        </form>
+
+        <!-- STATUS -->
+        <div id="login-status"
+             class="status"
+             aria-live="polite"></div>
 
         <!-- FOOTER -->
         <div class="login-footer">
-            <div class="store-badges">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/78/Google_Play_Store_badge_EN.svg/200px-Google_Play_Store_badge_EN.svg.png"
-                     alt="Disponivel no Google Play">
-                <a href="https://apps.apple.com/br/app/fitbody-pro/id6760191189"
-                   target="_blank"
-                   rel="noopener">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Download_on_the_App_Store_Badge.svg/200px-Download_on_the_App_Store_Badge.svg.png"
-                         alt="Baixar na App Store">
-                </a>
-            </div>
-
 
             © ALX Entregas
 
@@ -375,6 +389,8 @@ body::after{
     </section>
 
 </div>
+
+<script src="{{ url_for('static', filename='login.js') }}"></script>
 
 </body>
 </html>
