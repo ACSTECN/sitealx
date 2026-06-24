@@ -49,25 +49,13 @@ async function loadData() {
     tabela.innerHTML = "<tr><td>Erro de rede</td></tr>";
     return;
   }
-  let rows;
-  let total;
-  if (Array.isArray(dataResp)) {
-    // Se o backend retornar o array diretamente
-    rows = dataResp;
-    total = rows.length;
-  } else if (dataResp.ok) {
-    // Se o backend retornar o formato esperado
-    rows = dataResp.data || [];
-    total = dataResp.total || rows.length;
-  } else if (Array.isArray(dataResp.error)) {
-    // Se o "error" for o array (caso estranho que está acontecendo)
-    rows = dataResp.error;
-    total = rows.length;
-  } else {
-    // Outro erro
+  if (!dataResp.ok) {
+    console.error("dataResp not ok:", dataResp);
     tabela.innerHTML = `<tr><td>Erro: ${dataResp.error || "desconhecido"}</td></tr>`;
     return;
   }
+  const rows = dataResp.data || [];
+  const total = dataResp.total || rows.length;
   totalPages = Math.max(1, Math.ceil(total / pageSize));
   pageInfo.textContent = `Página ${page} de ${totalPages}`;
   currentRows = rows;
