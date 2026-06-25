@@ -115,6 +115,8 @@ body{
     bottom:30px;
     left:24px;
     right:24px;
+    display:grid;
+    gap:12px;
 }
 
 /* =========================
@@ -438,6 +440,14 @@ tbody tr:hover{
         </nav>
 
         <div class="sidebar-footer">
+
+            <a class="secondary"
+               style="display:block;text-align:center"
+               href="{{ url_for('site_public') }}">
+
+                Voltar para o site
+
+            </a>
 
             <a class="secondary"
                style="display:block;text-align:center"
