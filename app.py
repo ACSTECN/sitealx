@@ -147,8 +147,8 @@ def resolve_admin_field_names(table, row=None):
 
     hierarchy_candidates = [
         normalize_env_value(os.environ.get("ADMIN_HIERARCHY_FIELD")),
-        "hierarquia",
         "hierarchy",
+        "hierarquia",
         "role",
         "nivel",
         "hier",
@@ -163,6 +163,81 @@ def resolve_admin_field_names(table, row=None):
         "password_field": password_field,
         "hierarchy_field": hierarchy_field,
     }
+
+
+def build_supabase_headers(prefer_representation=True):
+    headers = {
+        "apikey": SUPABASE_KEY or "",
+        "Authorization": f"Bearer {SUPABASE_KEY or ''}",
+        "Content-Type": "application/json",
+    }
+    if prefer_representation:
+        headers["Prefer"] = "return=representation"
+    return headers
+
+
+def candidate_hierarchy_fields(row=None):
+    row = row or {}
+    candidates = [
+        normalize_env_value(os.environ.get("ADMIN_HIERARCHY_FIELD")),
+        "hierarchy",
+        "hierarquia",
+        "role",
+        "nivel",
+        "hier",
+    ]
+    ordered = []
+    for field in candidates:
+        if not field:
+            continue
+        if field in row and field not in ordered:
+            ordered.append(field)
+    for field in candidates:
+        if field and field not in ordered:
+            ordered.append(field)
+    return ordered
+
+
+def is_missing_column_error(response_text, field_name):
+    text = (response_text or "").lower()
+    return "could not find" in text and str(field_name or "").lower() in text
+
+
+def supa_write_admin_payload(table, email_field, email_filter, payload, method="PATCH"):
+    url = f"{SUPABASE_URL}/rest/v1/{table}"
+    headers = build_supabase_headers(prefer_representation=True)
+    params = {email_field: f"eq.{email_filter}"} if email_filter else None
+
+    if method == "PATCH":
+        request_fn = lambda body: requests.patch(url, headers=headers, params=params, json=body)
+    else:
+        request_fn = lambda body: requests.post(url, headers=headers, json=body)
+
+    hierarchy_fields = candidate_hierarchy_fields()
+    hierarchy_field = next((field for field in hierarchy_fields if field in payload), None)
+
+    attempt_payloads = []
+    if hierarchy_field:
+        for field in hierarchy_fields:
+            body = dict(payload)
+            value = body.pop(hierarchy_field)
+            body[field] = value
+            attempt_payloads.append((field, body))
+    else:
+        attempt_payloads.append((None, dict(payload)))
+
+    last_error = None
+    for field_name, body in attempt_payloads:
+        r = request_fn(body)
+        if r.status_code in (200, 201, 204):
+            rows = r.json() if r.text.strip() else []
+            return {"rows": rows, "hierarchy_field": field_name}
+        if field_name and is_missing_column_error(r.text, field_name):
+            last_error = r.text
+            continue
+        raise Exception(r.text)
+
+    raise Exception(last_error or "Nao foi possivel gravar a hierarquia na tabela admins")
 
 # ==============================
 # FUNÇÃO BUSCAR USUÁRIO
@@ -260,28 +335,17 @@ def supa_set_password(email, new_password):
     email_field = (found or {}).get("email_field") or fields["email_field"]
     active_field = fields["active_field"]
     password_field = fields["password_field"]
-    url = f"{SUPABASE_URL}/rest/v1/{table}"
-    headers = {
-        "apikey": SUPABASE_KEY or "",
-        "Authorization": f"Bearer {SUPABASE_KEY or ''}",
-        "Content-Type": "application/json",
-        "Prefer": "return=representation"
-    }
     if found:
         patch_payload = {password_field: pw_hash}
         if active_field:
             patch_payload[active_field] = True
-        r = requests.patch(url, headers=headers, params={email_field: f"eq.{email}"}, json=patch_payload)
-        if r.status_code not in (200, 204):
-            raise Exception(r.text)
+        supa_write_admin_payload(table, email_field, email, patch_payload, method="PATCH")
         return True
     else:
         insert_payload = {email_field: email, password_field: pw_hash}
         if active_field:
             insert_payload[active_field] = True
-        r = requests.post(url, headers=headers, json=insert_payload)
-        if r.status_code not in (200, 201):
-            raise Exception(r.text)
+        supa_write_admin_payload(table, email_field, None, insert_payload, method="POST")
         return True
 
 
@@ -303,31 +367,17 @@ def supa_upsert_admin_user(email, password, hierarchy):
     password_field = fields["password_field"]
     hierarchy_field = fields["hierarchy_field"]
 
-    url = f"{SUPABASE_URL}/rest/v1/{table}"
-    headers = {
-        "apikey": SUPABASE_KEY or "",
-        "Authorization": f"Bearer {SUPABASE_KEY or ''}",
-        "Content-Type": "application/json",
-        "Prefer": "return=representation"
-    }
-
     payload = {
         password_field: pw_hash,
         hierarchy_field: hierarchy,
-    }
-    if active_field:
-        payload[active_field] = True
-
-    if found:
-        r = requests.patch(url, headers=headers, params={email_field: f"eq.{email}"}, json=payload)
-        if r.status_code not in (200, 204):
-            raise Exception(r.text)
-        response_rows = r.json() if r.text.strip() else [dict(row, **payload)]
+        write_result = supa_write_admin_payload(table, email_field, email, payload, method="PATCH")
+        resolved_hierarchy_field = write_result["hierarchy_field"] or hierarchy_field
+        response_rows = write_result["rows"] or [dict(row, **payload)]
         result_row = response_rows[0] if response_rows else dict(row, **payload)
         return {
             "created": False,
             "email": result_row.get(email_field, email),
-            "hierarchy": result_row.get(hierarchy_field, hierarchy),
+            "hierarchy": result_row.get(resolved_hierarchy_field, hierarchy),
             "active": normalize_bool(result_row.get(active_field)) if active_field else True,
         }
 
@@ -335,15 +385,14 @@ def supa_upsert_admin_user(email, password, hierarchy):
         email_field: email,
         **payload,
     }
-    r = requests.post(url, headers=headers, json=insert_payload)
-    if r.status_code not in (200, 201):
-        raise Exception(r.text)
-    response_rows = r.json() if r.text.strip() else [insert_payload]
+    write_result = supa_write_admin_payload(table, email_field, None, insert_payload, method="POST")
+    resolved_hierarchy_field = write_result["hierarchy_field"] or hierarchy_field
+    response_rows = write_result["rows"] or [insert_payload]
     result_row = response_rows[0] if response_rows else insert_payload
     return {
         "created": True,
         "email": result_row.get(email_field, email),
-        "hierarchy": result_row.get(hierarchy_field, hierarchy),
+        "hierarchy": result_row.get(resolved_hierarchy_field, hierarchy),
         "active": normalize_bool(result_row.get(active_field)) if active_field else True,
     }
 
@@ -352,11 +401,7 @@ def supa_list_admin_users():
     require_supabase_key()
     table = get_admin_table_name()
     url = f"{SUPABASE_URL}/rest/v1/{table}"
-    headers = {
-        "apikey": SUPABASE_KEY or "",
-        "Authorization": f"Bearer {SUPABASE_KEY or ''}",
-        "Content-Type": "application/json",
-    }
+    headers = build_supabase_headers(prefer_representation=False)
     params = {
         "select": "*",
         "order": "created_at.desc",
@@ -409,21 +454,13 @@ def supa_update_admin_user(original_email, email, hierarchy, password=None):
     if active_field and active_field not in payload and active_field in row:
         payload[active_field] = normalize_bool(row.get(active_field))
 
-    url = f"{SUPABASE_URL}/rest/v1/{table}"
-    headers = {
-        "apikey": SUPABASE_KEY or "",
-        "Authorization": f"Bearer {SUPABASE_KEY or ''}",
-        "Content-Type": "application/json",
-        "Prefer": "return=representation"
-    }
-    r = requests.patch(url, headers=headers, params={email_field: f"eq.{original_email}"}, json=payload)
-    if r.status_code not in (200, 204):
-        raise Exception(r.text)
-    response_rows = r.json() if r.text.strip() else [dict(row, **payload)]
+    write_result = supa_write_admin_payload(table, email_field, original_email, payload, method="PATCH")
+    resolved_hierarchy_field = write_result["hierarchy_field"] or hierarchy_field
+    response_rows = write_result["rows"] or [dict(row, **payload)]
     result_row = response_rows[0] if response_rows else dict(row, **payload)
     return {
         "email": result_row.get(email_field, email),
-        "hierarchy": result_row.get(hierarchy_field, hierarchy),
+        "hierarchy": result_row.get(resolved_hierarchy_field, hierarchy),
         "active": normalize_bool(result_row.get(active_field)) if active_field else True,
         "created_at": result_row.get("created_at"),
     }
@@ -445,12 +482,7 @@ def supa_set_admin_active(email, active):
         raise ValueError("Campo de status não encontrado na tabela de admins")
 
     url = f"{SUPABASE_URL}/rest/v1/{table}"
-    headers = {
-        "apikey": SUPABASE_KEY or "",
-        "Authorization": f"Bearer {SUPABASE_KEY or ''}",
-        "Content-Type": "application/json",
-        "Prefer": "return=representation"
-    }
+    headers = build_supabase_headers(prefer_representation=True)
     r = requests.patch(url, headers=headers, params={email_field: f"eq.{email}"}, json={active_field: bool(active)})
     if r.status_code not in (200, 204):
         raise Exception(r.text)
@@ -476,12 +508,7 @@ def supa_delete_admin_user(email):
     fields = resolve_admin_field_names(table, row)
     email_field = found.get("email_field") or fields["email_field"]
     url = f"{SUPABASE_URL}/rest/v1/{table}"
-    headers = {
-        "apikey": SUPABASE_KEY or "",
-        "Authorization": f"Bearer {SUPABASE_KEY or ''}",
-        "Content-Type": "application/json",
-        "Prefer": "return=representation"
-    }
+    headers = build_supabase_headers(prefer_representation=True)
     r = requests.delete(url, headers=headers, params={email_field: f"eq.{email}"})
     if r.status_code not in (200, 204):
         raise Exception(r.text)
@@ -505,9 +532,7 @@ def supa_list_feedbacks(hotzone=None, page=1, page_size=10):
     require_supabase_key()
     url = f"{SUPABASE_URL}/rest/v1/feedbacks"
     headers = {
-        "apikey": SUPABASE_KEY or "",
-        "Authorization": f"Bearer {SUPABASE_KEY or ''}",
-        "Content-Type": "application/json",
+        **build_supabase_headers(prefer_representation=False),
         "Prefer": "count=exact"
     }
     params = {
