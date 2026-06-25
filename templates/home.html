@@ -552,6 +552,140 @@ body{
     cursor:not-allowed;
 }
 
+.commercial-section{
+    padding:24px 0 10px;
+}
+
+.commercial-grid{
+    display:grid;
+    grid-template-columns:1.1fr .9fr;
+    gap:24px;
+}
+
+.commercial-main,
+.commercial-side{
+    border-radius:30px;
+    border:1px solid rgba(255,255,255,.06);
+    box-shadow:0 18px 40px rgba(0,0,0,.22);
+}
+
+.commercial-main{
+    padding:36px;
+    background:linear-gradient(135deg, rgba(11,132,255,.16), rgba(12,23,40,.94));
+}
+
+.commercial-main h3{
+    font-size:34px;
+    margin-bottom:14px;
+}
+
+.commercial-main p{
+    color:#d9e6f2;
+    line-height:1.9;
+    margin-bottom:24px;
+}
+
+.commercial-points{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:16px;
+}
+
+.commercial-point{
+    padding:18px;
+    border-radius:20px;
+    background:rgba(255,255,255,.05);
+    border:1px solid rgba(255,255,255,.06);
+}
+
+.commercial-point strong{
+    display:block;
+    margin-bottom:8px;
+}
+
+.commercial-point span{
+    color:#c1d1e0;
+    line-height:1.8;
+    font-size:14px;
+}
+
+.commercial-side{
+    padding:32px;
+    background:#0d1727;
+}
+
+.commercial-side h3{
+    font-size:28px;
+    margin-bottom:18px;
+}
+
+.commercial-list{
+    display:grid;
+    gap:14px;
+}
+
+.commercial-item{
+    padding:18px;
+    border-radius:20px;
+    background:rgba(255,255,255,.04);
+    border:1px solid rgba(255,255,255,.06);
+}
+
+.commercial-item strong{
+    display:block;
+    margin-bottom:8px;
+}
+
+.commercial-item span{
+    color:#aebfd1;
+    line-height:1.8;
+    font-size:14px;
+}
+
+.proof-section{
+    padding:60px 0 10px;
+}
+
+.proof-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:22px;
+}
+
+.proof-card{
+    background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+    border-radius:28px;
+    border:1px solid rgba(255,255,255,.06);
+    padding:30px;
+    box-shadow:0 18px 40px rgba(0,0,0,.22);
+}
+
+.proof-card h3{
+    font-size:22px;
+    margin-bottom:12px;
+}
+
+.proof-card p{
+    color:#b7c6d6;
+    line-height:1.85;
+    margin-bottom:18px;
+}
+
+.proof-tags{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+}
+
+.proof-tags span{
+    padding:8px 12px;
+    border-radius:999px;
+    background:rgba(255,255,255,.05);
+    border:1px solid rgba(255,255,255,.08);
+    color:#dbe9f6;
+    font-size:12px;
+}
+
 /* =========================
    CTA
 ========================= */
@@ -721,7 +855,9 @@ body{
 
     .metrics-grid,
     .tech-grid,
-    .portal-grid{
+    .portal-grid,
+    .commercial-grid,
+    .proof-grid{
         grid-template-columns:1fr 1fr;
     }
 
@@ -787,7 +923,10 @@ body{
 
     .metrics-grid,
     .tech-grid,
-    .portal-grid{
+    .portal-grid,
+    .commercial-grid,
+    .proof-grid,
+    .commercial-points{
         grid-template-columns:1fr;
     }
 
@@ -844,7 +983,7 @@ body{
       <a class="admin"
          href="{{ url_for('login_page') }}">
 
-        admin
+        Área Admin
 
       </a>
 
@@ -903,28 +1042,28 @@ body{
         <div class="metric-card">
             <div class="metric-value">+10 anos</div>
             <div class="metric-label">
-                de operação logística com visão prática, crescimento e acompanhamento contínuo.
+                de vivência operacional transformando rotina em estrutura com mais clareza e consistência.
             </div>
         </div>
 
         <div class="metric-card">
             <div class="metric-value">24/7</div>
             <div class="metric-label">
-                de ritmo operacional com suporte humano, alinhamento e resposta rápida.
+                de ritmo logístico com suporte, orientação e leitura rápida do que precisa de atenção.
             </div>
         </div>
 
         <div class="metric-card">
             <div class="metric-value">SLA</div>
             <div class="metric-label">
-                foco em performance, padronização de processos e leitura de indicadores.
+                foco em padrão, performance e previsibilidade para profissionalizar a operação.
             </div>
         </div>
 
         <div class="metric-card">
             <div class="metric-value">Dados</div>
             <div class="metric-label">
-                tecnologia aplicada para decisão mais inteligente, previsível e escalável.
+                tecnologia aplicada para decisões melhores, mais percepção de valor e mais escala.
             </div>
         </div>
 
@@ -944,8 +1083,7 @@ body{
             </h3>
 
             <p>
-                Gestão logística moderna com foco
-                em produtividade e eficiência operacional.
+                Gestão logística com leitura prática do dia a dia, mais controle e menos improviso.
             </p>
 
         </div>
@@ -957,8 +1095,7 @@ body{
             </h3>
 
             <p>
-                Acompanhamento rápido e suporte
-                constante para toda operação.
+                Presença operacional para orientar, alinhar e sustentar a qualidade da rotina.
             </p>
 
         </div>
@@ -970,8 +1107,7 @@ body{
             </h3>
 
             <p>
-                Plataforma conectada para garantir
-                eficiência e controle das entregas.
+                Estrutura digital que ajuda a operação a parecer mais forte, organizada e preparada.
             </p>
 
         </div>
@@ -992,15 +1128,14 @@ body{
             </div>
 
             <h2 class="titulo">
-                Uma estrutura pensada para vender confiança
+                Uma marca operacional que comunica organização, força e tecnologia
             </h2>
 
             <p class="typing">
 
-                A ALX combina gestão operacional, processos claros
-                e leitura de dados para transformar uma operação
-                simples em uma estrutura profissional, escalável
-                e comercialmente mais forte.
+                A ALX combina gestão operacional, processo e presença digital para que a empresa
+                não pareça apenas funcional, mas profissional, confiável e pronta para crescer
+                com mais valor percebido pelo mercado.
 
             </p>
 
@@ -1061,7 +1196,7 @@ body{
         <div class="tech-card">
             <h3>Visão de Controle</h3>
             <p>
-                Painéis, rotinas operacionais e acompanhamento contínuo para reduzir improviso e aumentar previsibilidade.
+                Painéis, rotinas e acompanhamento para reduzir improviso e aumentar previsibilidade operacional.
             </p>
             <div class="tech-bullets">
                 <span>Indicadores</span>
@@ -1073,7 +1208,7 @@ body{
         <div class="tech-card">
             <h3>Experiência Profissional</h3>
             <p>
-                Comunicação mais limpa, imagem mais moderna e presença digital com cara de operação estruturada.
+                Comunicação mais limpa, imagem mais moderna e presença digital com cara de empresa preparada.
             </p>
             <div class="tech-bullets">
                 <span>Credibilidade</span>
@@ -1085,7 +1220,7 @@ body{
         <div class="tech-card">
             <h3>Escala com Inteligência</h3>
             <p>
-                Estrutura pensada para suportar crescimento com suporte, tecnologia e visão de longo prazo.
+                Estrutura pensada para sustentar crescimento com suporte, tecnologia e visão de longo prazo.
             </p>
             <div class="tech-bullets">
                 <span>Expansão</span>
@@ -1094,6 +1229,128 @@ body{
             </div>
         </div>
 
+    </div>
+
+</section>
+
+<!-- PROVAS -->
+<section class="proof-section">
+
+    <span class="section-kicker">
+        Diferenciais
+    </span>
+
+    <h2 class="section-heading">
+        Sinais de uma operação que quer jogar em outro nível
+    </h2>
+
+    <p class="section-text">
+        O mercado percebe quando existe intenção real de construir uma estrutura melhor. A ALX comunica isso
+        com mais presença visual, mais clareza e mais foco em rotina, suporte e profissionalismo.
+    </p>
+
+    <div class="proof-grid">
+        <div class="proof-card">
+            <h3>Rotina com padrão</h3>
+            <p>
+                A empresa passa a funcionar com uma narrativa mais coerente entre operação, atendimento e apresentação.
+            </p>
+            <div class="proof-tags">
+                <span>Organização</span>
+                <span>Padronização</span>
+                <span>Eficiência</span>
+            </div>
+        </div>
+
+        <div class="proof-card">
+            <h3>Visual com presença</h3>
+            <p>
+                O site deixa de parecer apenas informativo e passa a se comportar como peça comercial da marca.
+            </p>
+            <div class="proof-tags">
+                <span>Marca</span>
+                <span>Imagem</span>
+                <span>Credibilidade</span>
+            </div>
+        </div>
+
+        <div class="proof-card">
+            <h3>Expansão mais pronta</h3>
+            <p>
+                A estrutura digital já começa a preparar novas áreas, novos públicos e próximos passos da operação.
+            </p>
+            <div class="proof-tags">
+                <span>Escala</span>
+                <span>Estrutura</span>
+                <span>Crescimento</span>
+            </div>
+        </div>
+    </div>
+
+</section>
+
+<!-- COMERCIAL -->
+<section class="commercial-section">
+
+    <span class="section-kicker">
+        Percepção de Valor
+    </span>
+
+    <h2 class="section-heading">
+        A operação fica melhor quando também parece melhor
+    </h2>
+
+    <p class="section-text">
+        Uma empresa mais comercializável precisa transmitir estrutura antes mesmo da conversa acontecer.
+        Por isso, a ALX reforça não só a operação, mas também a forma como ela é percebida por clientes,
+        parceiros e entregadores.
+    </p>
+
+    <div class="commercial-grid">
+        <div class="commercial-main">
+            <h3>Mais do que logística: uma apresentação de marca mais forte.</h3>
+            <p>
+                Quando organização, linguagem, tecnologia e imagem caminham juntas, a operação passa a vender
+                mais confiança. Isso melhora a leitura da marca e aumenta a percepção de profissionalismo.
+            </p>
+
+            <div class="commercial-points">
+                <div class="commercial-point">
+                    <strong>Clareza comercial</strong>
+                    <span>Comunicação mais limpa para apresentar a ALX como estrutura, não improviso.</span>
+                </div>
+                <div class="commercial-point">
+                    <strong>Imagem premium</strong>
+                    <span>Design e narrativa com mais presença, mais seriedade e mais valor percebido.</span>
+                </div>
+                <div class="commercial-point">
+                    <strong>Base para crescer</strong>
+                    <span>Uma operação organizada facilita expansão e construção de novos acessos.</span>
+                </div>
+                <div class="commercial-point">
+                    <strong>Marca mais confiável</strong>
+                    <span>Parceiros e clientes enxergam mais consistência quando tudo conversa entre si.</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="commercial-side">
+            <h3>O que isso fortalece</h3>
+            <div class="commercial-list">
+                <div class="commercial-item">
+                    <strong>Negociação</strong>
+                    <span>Uma marca mais bem apresentada entra em conversa comercial com mais peso.</span>
+                </div>
+                <div class="commercial-item">
+                    <strong>Confiança</strong>
+                    <span>Visual, rotina e linguagem alinhados reduzem percepção de amadorismo.</span>
+                </div>
+                <div class="commercial-item">
+                    <strong>Retenção</strong>
+                    <span>Quem entra em uma estrutura mais organizada tende a perceber mais valor no processo.</span>
+                </div>
+            </div>
+        </div>
     </div>
 
 </section>
@@ -1172,7 +1429,7 @@ body{
             <span class="portal-tag">Interno</span>
             <h3>Área Administrativa</h3>
             <p>
-                Acesso ao painel interno para acompanhamento de feedbacks, operação e gestão da ALX.
+                Acesso ao painel interno para feedbacks, leitura da operação e acompanhamento da gestão.
             </p>
             <a class="portal-action"
                href="{{ url_for('login_page') }}">

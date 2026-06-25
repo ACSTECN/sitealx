@@ -1,20 +1,11 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-
 <title>Login Admin — ALX Entregas</title>
-
 <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-
 <style>
-
-/* =========================
-   RESET
-========================= */
-
 *{
     margin:0;
     padding:0;
@@ -23,374 +14,412 @@
 
 body{
     min-height:100vh;
-
-    display:flex;
-    align-items:center;
-    justify-content:center;
-
-    overflow:hidden;
-
     font-family:Arial, Helvetica, sans-serif;
-
+    color:#fff;
     background:
-    linear-gradient(
-        rgba(2,6,23,.82),
-        rgba(2,6,23,.92)
-    ),
-    url('/static/img/quem.jpg');
-
-    background-size:cover;
-    background-position:center;
+        radial-gradient(circle at top left, rgba(56,189,248,.18), transparent 28%),
+        radial-gradient(circle at bottom right, rgba(37,99,235,.18), transparent 24%),
+        linear-gradient(rgba(3,10,21,.86), rgba(3,10,21,.94)),
+        url('/static/img/quem.jpg') center/cover;
 }
 
-/* =========================
-   BACKGROUND EFFECT
-========================= */
-
-body::before{
-    content:"";
-
-    position:absolute;
-
-    width:600px;
-    height:600px;
-
-    background:rgba(56,189,248,.12);
-
-    border-radius:50%;
-
-    filter:blur(120px);
-
-    top:-200px;
-    left:-180px;
+.page{
+    width:min(1280px, 92%);
+    margin:0 auto;
+    min-height:100vh;
+    display:grid;
+    grid-template-columns:1.1fr .9fr;
+    gap:34px;
+    align-items:center;
+    padding:40px 0;
 }
 
-body::after{
-    content:"";
-
-    position:absolute;
-
-    width:500px;
-    height:500px;
-
-    background:rgba(37,99,235,.10);
-
-    border-radius:50%;
-
-    filter:blur(120px);
-
-    bottom:-200px;
-    right:-180px;
-}
-
-/* =========================
-   LOGIN CARD
-========================= */
-
-.login-wrapper{
+.brand-panel,
+.login-card{
     position:relative;
-    z-index:10;
+    overflow:hidden;
+    border-radius:36px;
+    border:1px solid rgba(255,255,255,.08);
+    background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03));
+    backdrop-filter:blur(22px);
+    -webkit-backdrop-filter:blur(22px);
+    box-shadow:0 24px 80px rgba(0,0,0,.32);
+}
 
-    width:100%;
-    max-width:460px;
+.brand-panel{
+    padding:52px;
+}
 
-    padding:20px;
+.brand-panel::before,
+.login-card::before{
+    content:"";
+    position:absolute;
+    width:260px;
+    height:260px;
+    border-radius:50%;
+    background:rgba(56,189,248,.12);
+    filter:blur(24px);
+    top:-130px;
+    right:-70px;
+}
+
+.eyebrow{
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    padding:10px 16px;
+    border-radius:999px;
+    border:1px solid rgba(56,189,248,.28);
+    background:rgba(56,189,248,.10);
+    color:#bdeeff;
+    font-size:12px;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    margin-bottom:24px;
+}
+
+.brand-logo{
+    width:140px;
+    margin-bottom:26px;
+}
+
+.brand-panel h1{
+    font-size:54px;
+    line-height:1.02;
+    margin-bottom:20px;
+    max-width:620px;
+}
+
+.brand-panel p{
+    max-width:640px;
+    color:#c3d1df;
+    line-height:1.9;
+    font-size:18px;
+}
+
+.brand-grid{
+    display:grid;
+    grid-template-columns:repeat(2, 1fr);
+    gap:18px;
+    margin-top:34px;
+}
+
+.brand-card{
+    padding:22px;
+    border-radius:24px;
+    background:rgba(255,255,255,.04);
+    border:1px solid rgba(255,255,255,.06);
+}
+
+.brand-card strong{
+    display:block;
+    margin-bottom:10px;
+    font-size:18px;
+    color:#fff;
+}
+
+.brand-card span{
+    color:#aac0d4;
+    line-height:1.75;
+    font-size:14px;
+}
+
+.access-strip{
+    margin-top:28px;
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:14px;
+}
+
+.access-chip{
+    padding:16px;
+    border-radius:18px;
+    background:rgba(255,255,255,.05);
+    border:1px solid rgba(255,255,255,.07);
+    text-align:center;
+}
+
+.access-chip strong{
+    display:block;
+    margin-bottom:8px;
+    font-size:15px;
+}
+
+.access-chip span{
+    font-size:13px;
+    line-height:1.6;
+    color:#9bb0c4;
 }
 
 .login-card{
-    position:relative;
-
-    overflow:hidden;
-
-    padding:50px;
-
-    border-radius:34px;
-
-    background:
-    linear-gradient(
-        180deg,
-        rgba(255,255,255,.08),
-        rgba(255,255,255,.04)
-    );
-
-    backdrop-filter:blur(24px);
-    -webkit-backdrop-filter:blur(24px);
-
-    border:1px solid rgba(255,255,255,.08);
-
-    box-shadow:
-    0 25px 60px rgba(0,0,0,.45),
-    0 0 0 1px rgba(255,255,255,.04);
+    padding:44px;
 }
 
-/* detalhe brilho */
-
-.login-card::before{
-    content:"";
-
-    position:absolute;
-
-    width:220px;
-    height:220px;
-
-    background:rgba(56,189,248,.10);
-
-    border-radius:50%;
-
-    top:-120px;
-    right:-100px;
+.login-head{
+    margin-bottom:28px;
 }
 
-/* =========================
-   LOGO
-========================= */
-
-.logo-area{
-    text-align:center;
-    margin-bottom:35px;
-}
-
-.logo-area img{
-    width:120px;
+.login-head img{
+    width:110px;
     margin-bottom:20px;
 }
 
-.logo-area h2{
-    font-size:34px;
+.login-head h2{
+    font-size:36px;
     margin-bottom:10px;
-
-    background:linear-gradient(90deg,#fff,#93c5fd);
-
+    background:linear-gradient(90deg, #fff, #bfe4ff);
     -webkit-background-clip:text;
     -webkit-text-fill-color:transparent;
 }
 
-.logo-area p{
-    color:#cbd5e1;
-    line-height:1.7;
+.login-head p{
+    color:#c3d1df;
+    line-height:1.8;
 }
 
-/* =========================
-   FORM
-========================= */
+.portal-shortcuts{
+    display:grid;
+    gap:14px;
+    margin-bottom:28px;
+}
+
+.portal-item{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:18px;
+    padding:18px 20px;
+    border-radius:20px;
+    background:rgba(255,255,255,.04);
+    border:1px solid rgba(255,255,255,.06);
+}
+
+.portal-item strong{
+    display:block;
+    margin-bottom:6px;
+    font-size:16px;
+}
+
+.portal-item span{
+    color:#a7bdd1;
+    font-size:13px;
+    line-height:1.65;
+}
+
+.portal-pill{
+    padding:10px 14px;
+    border-radius:999px;
+    background:rgba(56,189,248,.10);
+    border:1px solid rgba(56,189,248,.22);
+    color:#d9f7ff;
+    font-size:12px;
+    white-space:nowrap;
+}
 
 form{
     display:flex;
     flex-direction:column;
-    gap:22px;
+    gap:20px;
 }
 
 label{
     display:flex;
     flex-direction:column;
     gap:10px;
-
     color:#dbe4ef;
-
     font-size:14px;
-}
-
-/* INPUT */
-
-.input-group{
-    position:relative;
 }
 
 .input-group input{
     width:100%;
-
     padding:18px 18px 18px 20px;
-
     border-radius:18px;
-
     border:1px solid rgba(255,255,255,.08);
-
     background:rgba(255,255,255,.05);
-
-    color:white;
-
+    color:#fff;
     font-size:15px;
-
     outline:none;
-
     transition:.25s;
 }
 
 .input-group input:focus{
     border-color:#38bdf8;
-
-    box-shadow:
-    0 0 0 4px rgba(56,189,248,.12);
+    box-shadow:0 0 0 4px rgba(56,189,248,.12);
 }
 
-/* =========================
-   BUTTON
-========================= */
+.form-note{
+    margin-top:-4px;
+    color:#90a4bb;
+    font-size:13px;
+    line-height:1.7;
+}
 
 .primary{
-    margin-top:10px;
-
+    margin-top:6px;
     border:none;
-
     padding:18px;
-
     border-radius:18px;
-
-    background:
-    linear-gradient(
-        135deg,
-        #2563eb,
-        #38bdf8
-    );
-
-    color:white;
-
+    background:linear-gradient(135deg, #2563eb, #38bdf8);
+    color:#fff;
     font-size:16px;
     font-weight:700;
-
     cursor:pointer;
-
     transition:.25s;
-
     box-shadow:0 15px 35px rgba(37,99,235,.35);
 }
 
 .primary:hover{
     transform:translateY(-4px);
-
     box-shadow:0 20px 40px rgba(37,99,235,.45);
 }
 
-/* =========================
-   STATUS
-========================= */
-
 .status{
-    margin-top:22px;
-
+    margin-top:20px;
     text-align:center;
-
     color:#93c5fd;
-
     font-size:14px;
 }
 
-/* =========================
-   FOOTER
-========================= */
-
 .login-footer{
-    margin-top:28px;
-
+    margin-top:26px;
     text-align:center;
-
     color:#94a3b8;
-
     font-size:13px;
 }
 
-/* =========================
-   RESPONSIVO
-========================= */
+@media(max-width:1080px){
+    .page{
+        grid-template-columns:1fr;
+        padding:26px 0;
+    }
 
-@media(max-width:600px){
-
+    .brand-panel,
     .login-card{
-        padding:35px 28px;
+        padding:34px;
     }
-
-    .logo-area h2{
-        font-size:28px;
-    }
-
 }
 
+@media(max-width:720px){
+    .brand-panel h1{
+        font-size:38px;
+    }
+
+    .brand-grid,
+    .access-strip{
+        grid-template-columns:1fr;
+    }
+
+    .portal-item{
+        flex-direction:column;
+        align-items:flex-start;
+    }
+
+    .login-head h2{
+        font-size:30px;
+    }
+}
 </style>
-
 </head>
-
 <body>
+<main class="page">
+    <section class="brand-panel">
+        <div class="eyebrow">Ambiente Interno ALX</div>
+        <img src="/static/img/logo.png" alt="ALX" class="brand-logo">
+        <h1>Uma entrada mais profissional para a operação administrativa.</h1>
+        <p>
+            O painel da ALX concentra gestão, acompanhamento e leitura operacional em um ambiente
+            pensado para dar mais controle, mais organização e uma percepção mais forte de estrutura.
+        </p>
 
-<div class="login-wrapper">
-
-    <section class="login-card">
-
-        <!-- LOGO -->
-        <div class="logo-area">
-
-            <img src="/static/img/logo.png"
-                 alt="ALX">
-
-            <h2>
-                Painel Administrativo
-            </h2>
-
-            <p>
-                Faça login para acessar
-                o gerenciamento interno da ALX.
-            </p>
-
+        <div class="brand-grid">
+            <div class="brand-card">
+                <strong>Gestão com clareza</strong>
+                <span>Painel preparado para centralizar feedbacks, rotina operacional e leitura rápida do que importa.</span>
+            </div>
+            <div class="brand-card">
+                <strong>Imagem mais sólida</strong>
+                <span>Uma área interna com mais presença visual transmite tecnologia, organização e confiança.</span>
+            </div>
+            <div class="brand-card">
+                <strong>Operação escalável</strong>
+                <span>Quanto mais padronizado o acesso interno, mais fácil fica crescer com controle.</span>
+            </div>
+            <div class="brand-card">
+                <strong>Tom premium</strong>
+                <span>Layout mais refinado para combinar com uma operação que quer parecer grande e pronta.</span>
+            </div>
         </div>
 
-        <!-- FORM -->
-        <form id="login-form">
-
-            <label>
-
-                Email
-
-                <div class="input-group">
-
-                    <input id="login-email"
-                           type="email"
-                           placeholder="Digite seu email"
-                           required>
-
-                </div>
-
-            </label>
-
-            <label>
-
-                Senha
-
-                <div class="input-group">
-
-                    <input id="login-senha"
-                           type="password"
-                           placeholder="Digite sua senha"
-                           required>
-
-                </div>
-
-            </label>
-
-            <button class="primary"
-                    type="submit">
-
-                Entrar no painel
-
-            </button>
-
-        </form>
-
-        <!-- STATUS -->
-        <div id="login-status"
-             class="status"
-             aria-live="polite"></div>
-
-        <!-- FOOTER -->
-        <div class="login-footer">
-
-            © ALX Entregas
-
+        <div class="access-strip">
+            <div class="access-chip">
+                <strong>Admin</strong>
+                <span>Acesso real para gestão interna.</span>
+            </div>
+            <div class="access-chip">
+                <strong>Entregador</strong>
+                <span>Espaço previsto para breve.</span>
+            </div>
+            <div class="access-chip">
+                <strong>Expansão</strong>
+                <span>Estrutura pensada para próximos portais.</span>
+            </div>
         </div>
-
     </section>
 
-</div>
+    <section class="login-card">
+        <div class="login-head">
+            <img src="/static/img/logo.png" alt="ALX">
+            <h2>Painel Administrativo</h2>
+            <p>
+                Faça login para acessar a gestão interna da ALX, acompanhar a operação e manter o padrão de qualidade da empresa.
+            </p>
+        </div>
+
+        <div class="portal-shortcuts">
+            <div class="portal-item">
+                <div>
+                    <strong>Área Administrativa</strong>
+                    <span>Acesso ativo para usuários autorizados do painel interno.</span>
+                </div>
+                <div class="portal-pill">Ativo</div>
+            </div>
+            <div class="portal-item">
+                <div>
+                    <strong>Área Logada Entregador</strong>
+                    <span>Canal reservado para comunicações, rotina e acompanhamento do entregador.</span>
+                </div>
+                <div class="portal-pill">Em breve</div>
+            </div>
+        </div>
+
+        <form id="login-form">
+            <label>
+                Email
+                <div class="input-group">
+                    <input id="login-email" type="email" placeholder="Digite seu email" required>
+                </div>
+            </label>
+
+            <label>
+                Senha
+                <div class="input-group">
+                    <input id="login-senha" type="password" placeholder="Digite sua senha" required>
+                </div>
+            </label>
+
+            <div class="form-note">
+                Este acesso é restrito ao ambiente administrativo da ALX.
+            </div>
+
+            <button class="primary" type="submit">Entrar no painel</button>
+        </form>
+
+        <div id="login-status" class="status" aria-live="polite"></div>
+
+        <div class="login-footer">© ALX Entregas</div>
+    </section>
+</main>
 
 <script src="{{ url_for('static', filename='login.js') }}"></script>
-
 </body>
 </html>
