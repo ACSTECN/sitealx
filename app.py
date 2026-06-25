@@ -359,7 +359,7 @@ def supa_upsert_admin_user(email, password, hierarchy):
     salt = bcrypt.gensalt()
     pw_hash = bcrypt.hashpw(password.encode(), salt).decode()
     found = supa_find_admin(email)
-    table = (found or {}).get("table") or normalize_env_value(os.environ.get("ADMIN_TABLE")) or "admins"
+    table = (found or {}).get("table") or get_admin_table_name()
     row = (found or {}).get("row") or {}
     fields = resolve_admin_field_names(table, row)
     email_field = (found or {}).get("email_field") or fields["email_field"]
@@ -370,6 +370,11 @@ def supa_upsert_admin_user(email, password, hierarchy):
     payload = {
         password_field: pw_hash,
         hierarchy_field: hierarchy,
+    }
+    if active_field:
+        payload[active_field] = True
+
+    if found:
         write_result = supa_write_admin_payload(table, email_field, email, payload, method="PATCH")
         resolved_hierarchy_field = write_result["hierarchy_field"] or hierarchy_field
         response_rows = write_result["rows"] or [dict(row, **payload)]
