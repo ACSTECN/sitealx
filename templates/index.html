@@ -228,6 +228,30 @@ textarea:focus{
     box-shadow:0 0 0 4px rgba(11,132,255,.12);
 }
 
+.file-upload{
+    margin-top:2px;
+    padding:20px;
+    border-radius:20px;
+    background:#101d31;
+    border:1px dashed rgba(142,201,255,.35);
+}
+
+.file-upload input[type="file"]{
+    padding:12px;
+    background:rgba(255,255,255,.03);
+    border:1px solid rgba(255,255,255,.06);
+}
+
+.file-help{
+    color:#93a4ba;
+    font-size:13px;
+    line-height:1.7;
+}
+
+.file-upload.is-hidden{
+    display:none;
+}
+
 .rating{
     display:flex;
     gap:12px;
@@ -550,7 +574,7 @@ textarea:focus{
                 </p>
             </div>
 
-            <form id="feedback-form" method="post" action="/api/feedback">
+            <form id="feedback-form" method="post" action="/api/feedback" enctype="multipart/form-data">
                 <div class="grid">
                     <label>
                         Nome completo
@@ -599,6 +623,14 @@ textarea:focus{
                 <label>
                     Mensagem
                     <textarea id="mensagem" name="mensagem" rows="6" required></textarea>
+                </label>
+
+                <label id="anexo-wrapper" class="file-upload">
+                    Anexo da sugestão
+                    <input type="file" id="anexo" name="anexo" accept=".pdf,.jpg,.jpeg,.png,.webp">
+                    <span class="file-help">
+                        Para sugestões, você pode enviar 1 arquivo em PDF, JPG, JPEG, PNG ou WEBP com até 10 MB.
+                    </span>
                 </label>
 
                 <label>

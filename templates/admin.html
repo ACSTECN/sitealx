@@ -241,10 +241,9 @@ body{
 ========================= */
 
 .filters{
-    display:flex;
+    display:grid;
+    grid-template-columns:repeat(4, minmax(0, 1fr));
     gap:18px;
-    flex-wrap:wrap;
-
     margin-bottom:30px;
 }
 
@@ -261,8 +260,7 @@ body{
 
 input,
 select{
-    min-width:220px;
-
+    width:100%;
     padding:15px 18px;
 
     border-radius:16px;
@@ -279,6 +277,38 @@ select{
 input:focus,
 select:focus{
     border-color:#38bdf8;
+}
+
+.filter-actions{
+    display:flex;
+    align-items:flex-end;
+    gap:12px;
+    flex-wrap:wrap;
+}
+
+.filter-actions button{
+    min-width:160px;
+}
+
+.filters-summary{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:16px;
+    flex-wrap:wrap;
+    padding:0 0 18px;
+    color:#94a3b8;
+}
+
+.info-chip{
+    display:inline-flex;
+    align-items:center;
+    padding:8px 12px;
+    border-radius:999px;
+    background:rgba(56,189,248,.10);
+    border:1px solid rgba(56,189,248,.18);
+    color:#cfeeff;
+    font-size:13px;
 }
 
 /* =========================
@@ -482,6 +512,7 @@ td{
     padding:18px;
     border-top:1px solid rgba(255,255,255,.05);
     color:#e2e8f0;
+    vertical-align:top;
 }
 
 tbody tr{
@@ -490,6 +521,43 @@ tbody tr{
 
 tbody tr:hover{
     background:rgba(255,255,255,.03);
+}
+
+.feedback-message{
+    max-width:340px;
+    line-height:1.7;
+    color:#dbe7f3;
+    white-space:normal;
+    word-break:break-word;
+}
+
+.feedback-meta{
+    display:grid;
+    gap:6px;
+    min-width:110px;
+}
+
+.feedback-attachment{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    padding:10px 14px;
+    border-radius:12px;
+    text-decoration:none;
+    color:#dff4ff;
+    background:rgba(37,99,235,.18);
+    border:1px solid rgba(56,189,248,.18);
+    font-size:13px;
+    font-weight:700;
+}
+
+.feedback-attachment:hover{
+    background:rgba(37,99,235,.28);
+}
+
+.table-empty{
+    text-align:center;
+    color:#94a3b8;
 }
 
 /* =========================
@@ -536,6 +604,10 @@ tbody tr:hover{
         grid-template-columns:1fr;
     }
 
+    .filters{
+        grid-template-columns:repeat(2, minmax(0, 1fr));
+    }
+
 }
 
 @media(max-width:700px){
@@ -547,7 +619,7 @@ tbody tr:hover{
     }
 
     .filters{
-        flex-direction:column;
+        grid-template-columns:1fr;
     }
 
     .admin-user-form{
@@ -839,55 +911,144 @@ tbody tr:hover{
                         Filtrar por Hotzone
                     </label>
 
-                    <input id="filtro-hotzone"
-                           placeholder="Ex.: Centro">
+                    <select id="filtro-hotzone">
+                        <option value="">Todas</option>
+                        <option value="SANTO AMARO">SANTO AMARO</option>
+                        <option value="MOOCA">MOOCA</option>
+                        <option value="PAULISTA">PAULISTA</option>
+                        <option value="NILÓPOLIS">NILÓPOLIS</option>
+                        <option value="BANGU">BANGU</option>
+                        <option value="SANTA CRUZ">SANTA CRUZ</option>
+                        <option value="OUTROS">OUTROS</option>
+                    </select>
 
                 </div>
 
                 <div class="filter-group">
 
                     <label>
-                        Itens por página
+                        Tipo
                     </label>
 
-                    <select id="page-size">
-
-                        <option>
-                            5
-                        </option>
-
-                        <option selected>
-                            10
-                        </option>
-
-                        <option>
-                            20
-                        </option>
-
-                        <option>
-                            50
-                        </option>
-
+                    <select id="filtro-tipo">
+                        <option value="">Todos</option>
+                        <option value="sugestao">Sugestão</option>
+                        <option value="reclamacao">Reclamação</option>
+                        <option value="outros">Outros</option>
                     </select>
 
                 </div>
 
-                <div class="filter-group"
-                     style="justify-content:end">
-
-                    <label style="opacity:0">
-                        botão
+                <div class="filter-group">
+                    <label>
+                        Busca geral
                     </label>
+                    <input id="filtro-busca"
+                           placeholder="Nome, email, CPF, telefone ou mensagem">
+                </div>
+
+                <div class="filter-group">
+                    <label>
+                        Anexo
+                    </label>
+                    <select id="filtro-anexo">
+                        <option value="">Todos</option>
+                        <option value="with">Com anexo</option>
+                        <option value="without">Sem anexo</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label>
+                        Satisfação mínima
+                    </label>
+                    <select id="filtro-satisfacao-min">
+                        <option value="">Qualquer</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label>
+                        Satisfação máxima
+                    </label>
+                    <select id="filtro-satisfacao-max">
+                        <option value="">Qualquer</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label>
+                        Data inicial
+                    </label>
+                    <input id="filtro-data-inicial"
+                           type="date">
+                </div>
+
+                <div class="filter-group">
+                    <label>
+                        Data final
+                    </label>
+                    <input id="filtro-data-final"
+                           type="date">
+                </div>
+
+                <div class="filter-group">
+                    <label>
+                        Ordenação
+                    </label>
+                    <select id="filtro-ordenacao">
+                        <option value="created_at.desc">Mais recentes</option>
+                        <option value="created_at.asc">Mais antigos</option>
+                        <option value="satisfacao.desc,created_at.desc">Maior satisfação</option>
+                        <option value="satisfacao.asc,created_at.desc">Menor satisfação</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label>
+                        Itens por página
+                    </label>
+                    <select id="page-size">
+                        <option>5</option>
+                        <option selected>10</option>
+                        <option>20</option>
+                        <option>50</option>
+                    </select>
+                </div>
+
+                <div class="filter-actions">
 
                     <button id="aplicar-filtro"
                             class="primary">
-
                         Aplicar filtro
-
                     </button>
 
+                    <button id="limpar-filtro"
+                            class="muted-btn"
+                            type="button">
+                        Limpar
+                    </button>
                 </div>
 
+            </div>
+
+            <div class="filters-summary">
+                <span id="feedback-summary">
+                    Carregando feedbacks...
+                </span>
+                <span class="info-chip" id="feedback-active-filters">
+                    Sem filtros aplicados
+                </span>
             </div>
 
             <!-- TABLE -->

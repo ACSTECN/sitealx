@@ -1,8 +1,14 @@
+import json
 import os
+import uuid
+from datetime import datetime
+from urllib.parse import quote
+
 from flask import Flask, render_template, request, jsonify, session, redirect, url_for
 import requests
 import bcrypt
 from dotenv import load_dotenv
+from werkzeug.utils import secure_filename
 
 ENV_SOURCE = None
 
@@ -35,6 +41,18 @@ def normalize_env_value(value):
 SUPABASE_URL = normalize_env_value(os.environ.get("SUPABASE_URL")) or "https://ppewtznjwigjowgmhrge.supabase.co"
 SUPABASE_URL = SUPABASE_URL.rstrip("/")
 SUPABASE_KEY = normalize_env_value(os.environ.get("SUPABASE_SERVICE_ROLE_KEY") or os.environ.get("SUPABASE_KEY"))
+SUPABASE_STORAGE_BUCKET = normalize_env_value(os.environ.get("SUPABASE_STORAGE_BUCKET")) or "feedback-anexos"
+FEEDBACK_ATTACHMENT_MAX_MB = int(normalize_env_value(os.environ.get("FEEDBACK_ATTACHMENT_MAX_MB")) or "10")
+FEEDBACK_ATTACHMENT_MAX_BYTES = FEEDBACK_ATTACHMENT_MAX_MB * 1024 * 1024
+FEEDBACK_ATTACHMENT_ALLOWED_EXTENSIONS = {".pdf", ".jpg", ".jpeg", ".png", ".webp"}
+FEEDBACK_ATTACHMENT_ALLOWED_MIME_TYPES = {
+    "application/pdf",
+    "image/jpeg",
+    "image/png",
+    "image/webp",
+}
+ATTACHMENT_MARKER_START = "[[ALX_ATTACHMENT]]"
+ATTACHMENT_MARKER_END = "[[/ALX_ATTACHMENT]]"
 
 def require_supabase_key():
     if not SUPABASE_KEY:
@@ -174,6 +192,148 @@ def build_supabase_headers(prefer_representation=True):
     if prefer_representation:
         headers["Prefer"] = "return=representation"
     return headers
+
+
+def expects_json_response():
+    return request.is_json or request.headers.get("X-Requested-With") == "XMLHttpRequest"
+
+
+def append_attachment_marker(message, attachment_meta):
+    if not attachment_meta:
+        return message or ""
+    payload = {
+        "name": attachment_meta.get("name"),
+        "path": attachment_meta.get("path"),
+        "mime": attachment_meta.get("mime"),
+        "size": attachment_meta.get("size"),
+    }
+    return f"{(message or '').rstrip()}\n\n{ATTACHMENT_MARKER_START}{json.dumps(payload, ensure_ascii=True)}{ATTACHMENT_MARKER_END}"
+
+
+def extract_attachment_marker(message):
+    text = message or ""
+    start = text.find(ATTACHMENT_MARKER_START)
+    end = text.find(ATTACHMENT_MARKER_END)
+    if start == -1 or end == -1 or end < start:
+        return None
+    raw_json = text[start + len(ATTACHMENT_MARKER_START):end]
+    try:
+        data = json.loads(raw_json)
+    except Exception:
+        return None
+    if not isinstance(data, dict):
+        return None
+    return {
+        "name": data.get("name"),
+        "path": data.get("path"),
+        "mime": data.get("mime"),
+        "size": data.get("size"),
+    }
+
+
+def strip_attachment_marker(message):
+    text = message or ""
+    start = text.find(ATTACHMENT_MARKER_START)
+    end = text.find(ATTACHMENT_MARKER_END)
+    if start == -1 or end == -1 or end < start:
+        return text.strip()
+    return (text[:start] + text[end + len(ATTACHMENT_MARKER_END):]).strip()
+
+
+def attachment_column_error(response_text):
+    text = (response_text or "").lower()
+    return "could not find" in text and "anexo_" in text
+
+
+def storage_headers(content_type="application/octet-stream"):
+    return {
+        "apikey": SUPABASE_KEY or "",
+        "Authorization": f"Bearer {SUPABASE_KEY or ''}",
+        "Content-Type": content_type,
+    }
+
+
+def upload_feedback_attachment(file_storage):
+    require_supabase_key()
+    if not file_storage or not getattr(file_storage, "filename", ""):
+        return None
+
+    original_name = file_storage.filename or ""
+    safe_name = secure_filename(original_name)
+    if not safe_name:
+        raise ValueError("Arquivo invalido")
+
+    extension = os.path.splitext(safe_name)[1].lower()
+    mime_type = (file_storage.mimetype or "application/octet-stream").lower()
+    if extension not in FEEDBACK_ATTACHMENT_ALLOWED_EXTENSIONS or mime_type not in FEEDBACK_ATTACHMENT_ALLOWED_MIME_TYPES:
+        raise ValueError("Envie apenas PDF, JPG, JPEG, PNG ou WEBP")
+
+    content = file_storage.read()
+    file_storage.stream.seek(0)
+    size = len(content)
+    if size == 0:
+        raise ValueError("O arquivo enviado esta vazio")
+    if size > FEEDBACK_ATTACHMENT_MAX_BYTES:
+        raise ValueError(f"O arquivo deve ter no maximo {FEEDBACK_ATTACHMENT_MAX_MB} MB")
+
+    object_path = f"feedbacks/{datetime.utcnow():%Y/%m/%d}/{uuid.uuid4().hex}_{safe_name}"
+    encoded_path = quote(object_path, safe="/")
+    url = f"{SUPABASE_URL}/storage/v1/object/{SUPABASE_STORAGE_BUCKET}/{encoded_path}"
+    headers = {
+        **storage_headers(mime_type),
+        "x-upsert": "false",
+    }
+    response = requests.post(url, headers=headers, data=content)
+    if response.status_code not in (200, 201):
+        raise Exception(response.text)
+
+    return {
+        "name": original_name,
+        "path": object_path,
+        "mime": mime_type,
+        "size": size,
+    }
+
+
+def create_signed_storage_url(object_path, expires_in=3600):
+    require_supabase_key()
+    if not object_path:
+        return None
+    encoded_path = quote(object_path, safe="/")
+    url = f"{SUPABASE_URL}/storage/v1/object/sign/{SUPABASE_STORAGE_BUCKET}/{encoded_path}"
+    response = requests.post(url, headers=build_supabase_headers(prefer_representation=False), json={"expiresIn": expires_in})
+    if response.status_code != 200:
+        return None
+    data = response.json() or {}
+    signed_url = data.get("signedURL") or data.get("signedUrl") or data.get("url")
+    if not signed_url:
+        return None
+    if signed_url.startswith("http://") or signed_url.startswith("https://"):
+        return signed_url
+    if signed_url.startswith("/"):
+        return f"{SUPABASE_URL}/storage/v1{signed_url}"
+    return f"{SUPABASE_URL}/storage/v1/{signed_url}"
+
+
+def normalize_feedback_row(row):
+    marker_meta = extract_attachment_marker(row.get("mensagem"))
+    attachment_name = row.get("anexo_nome") or (marker_meta or {}).get("name")
+    attachment_path = row.get("anexo_path") or (marker_meta or {}).get("path")
+    attachment_type = row.get("anexo_tipo") or (marker_meta or {}).get("mime")
+    attachment_size = row.get("anexo_tamanho") or (marker_meta or {}).get("size")
+    attachment_url = row.get("anexo_url")
+    if attachment_path:
+        attachment_url = create_signed_storage_url(attachment_path) or attachment_url
+    return {
+        **row,
+        "mensagem": strip_attachment_marker(row.get("mensagem")),
+        "anexo_nome": attachment_name,
+        "anexo_path": attachment_path,
+        "anexo_tipo": attachment_type,
+        "anexo_tamanho": attachment_size,
+        "anexo_url": attachment_url,
+        "tem_anexo": bool(attachment_name or attachment_path or attachment_url),
+    }
 
 
 def candidate_hierarchy_fields(row=None):
@@ -519,35 +679,89 @@ def supa_delete_admin_user(email):
         raise Exception(r.text)
     return True
 
-def supa_insert_feedback(row):
+def supa_insert_feedback(row, attachment_meta=None):
     require_supabase_key()
     url = f"{SUPABASE_URL}/rest/v1/feedbacks"
     headers = {
-        "apikey": SUPABASE_KEY or "",
-        "Authorization": f"Bearer {SUPABASE_KEY or ''}",
-        "Content-Type": "application/json",
+        **build_supabase_headers(prefer_representation=True),
         "Prefer": "return=representation"
     }
-    r = requests.post(url, headers=headers, json=row)
-    if r.status_code not in (200, 201):
-        raise Exception(r.text)
-    return r.json()
+    payload = dict(row)
+    if attachment_meta:
+        payload["mensagem"] = append_attachment_marker(payload.get("mensagem"), attachment_meta)
+        payload["anexo_nome"] = attachment_meta.get("name")
+        payload["anexo_path"] = attachment_meta.get("path")
+        payload["anexo_tipo"] = attachment_meta.get("mime")
+        payload["anexo_tamanho"] = attachment_meta.get("size")
 
-def supa_list_feedbacks(hotzone=None, page=1, page_size=10):
+    r = requests.post(url, headers=headers, json=payload)
+    if r.status_code in (200, 201):
+        created_rows = r.json() or []
+        return [normalize_feedback_row(item) for item in created_rows]
+
+    if attachment_meta and attachment_column_error(r.text):
+        fallback_payload = dict(row)
+        fallback_payload["mensagem"] = append_attachment_marker(fallback_payload.get("mensagem"), attachment_meta)
+        fallback_response = requests.post(url, headers=headers, json=fallback_payload)
+        if fallback_response.status_code not in (200, 201):
+            raise Exception(fallback_response.text)
+        created_rows = fallback_response.json() or []
+        return [normalize_feedback_row(item) for item in created_rows]
+
+    raise Exception(r.text)
+
+
+def supa_list_feedbacks(
+    hotzone=None,
+    tipo=None,
+    busca=None,
+    satisfacao_min=None,
+    satisfacao_max=None,
+    data_inicial=None,
+    data_final=None,
+    attachment_mode=None,
+    order_by="created_at.desc",
+    page=1,
+    page_size=10
+):
     require_supabase_key()
     url = f"{SUPABASE_URL}/rest/v1/feedbacks"
     headers = {
         **build_supabase_headers(prefer_representation=False),
         "Prefer": "count=exact"
     }
-    params = {
-        "select": "*",
-        "order": "created_at.desc",
-        "limit": str(page_size),
-        "offset": str(max(0, (page - 1) * page_size)),
-    }
+    params = [
+        ("select", "*"),
+        ("order", order_by or "created_at.desc"),
+        ("limit", str(page_size)),
+        ("offset", str(max(0, (page - 1) * page_size))),
+    ]
     if hotzone:
-        params["hotzone"] = f"ilike.*{hotzone}*"
+        params.append(("hotzone", f"eq.{hotzone}"))
+    if tipo:
+        params.append(("tipo", f"eq.{tipo}"))
+    if busca:
+        busca_safe = busca.replace(",", " ").strip()
+        search_terms = ",".join([
+            f"nome_completo.ilike.*{busca_safe}*",
+            f"email.ilike.*{busca_safe}*",
+            f"cpf.ilike.*{busca_safe}*",
+            f"telefone.ilike.*{busca_safe}*",
+            f"mensagem.ilike.*{busca_safe}*",
+        ])
+        params.append(("or", f"({search_terms})"))
+    if satisfacao_min is not None:
+        params.append(("satisfacao", f"gte.{satisfacao_min}"))
+    if satisfacao_max is not None:
+        params.append(("satisfacao", f"lte.{satisfacao_max}"))
+    if data_inicial:
+        params.append(("created_at", f"gte.{data_inicial}T00:00:00"))
+    if data_final:
+        params.append(("created_at", f"lte.{data_final}T23:59:59"))
+    if attachment_mode == "with":
+        params.append(("mensagem", "ilike.*ALX_ATTACHMENT*"))
+    elif attachment_mode == "without":
+        params.append(("mensagem", "not.ilike.*ALX_ATTACHMENT*"))
     r = requests.get(url, headers=headers, params=params)
     if r.status_code != 200:
         raise Exception(r.text)
@@ -558,7 +772,8 @@ def supa_list_feedbacks(hotzone=None, page=1, page_size=10):
             total = int(cr.split("/")[-1])
         except:
             total = None
-    return {"data": r.json(), "total": total}
+    rows = [normalize_feedback_row(item) for item in (r.json() or [])]
+    return {"data": rows, "total": total}
 @app.post("/api/admin/reset_password")
 def reset_password():
     data = request.json or {}
@@ -578,7 +793,7 @@ def reset_password():
 @app.post("/api/feedback")
 def api_feedback():
     data = request.get_json(silent=True) or request.form.to_dict() or {}
-    print("api_feedback_in", data)
+    attachment = request.files.get("anexo")
     nome = (data.get("nome_completo") or data.get("nome") or "").strip()
     cpf = "".join([c for c in (data.get("cpf") or "") if c.isdigit()])
     hotzone = (data.get("hotzone") or "").strip()
@@ -602,7 +817,12 @@ def api_feedback():
     satisfacao_db = (satisfacao + 1) // 2
     if not all([nome, cpf, hotzone, telefone, email, mensagem]):
         return jsonify({"ok": False, "error": "Dados incompletos"}), 400
+    if attachment and getattr(attachment, "filename", "") and tipo != "sugestao":
+        return jsonify({"ok": False, "error": "O anexo esta disponivel apenas para sugestoes"}), 400
     try:
+        attachment_meta = None
+        if attachment and getattr(attachment, "filename", ""):
+            attachment_meta = upload_feedback_attachment(attachment)
         payload = {
             "nome_completo": nome,
             "cpf": cpf,
@@ -613,15 +833,11 @@ def api_feedback():
             "mensagem": mensagem,
             "satisfacao": satisfacao_db
         }
-        print("api_feedback_payload", payload)
-        created = supa_insert_feedback(payload)
-        print("api_feedback_out", created)
-        if request.is_json:
+        created = supa_insert_feedback(payload, attachment_meta=attachment_meta)
+        if expects_json_response():
             return jsonify({"ok": True, "message": "Sugestão enviada com sucesso", "data": created})
-        else:
-            return redirect(url_for("home") + "?sent=1")
+        return redirect(url_for("home") + "?sent=1")
     except Exception as e:
-        print("api_feedback_error", str(e))
         return jsonify({"ok": False, "error": str(e)}), 500
 
 @app.get("/api/feedback/demo")
@@ -650,13 +866,35 @@ def api_admin_feedbacks():
     if not session.get("user"):
         return jsonify({"ok": False, "error": "Not authorized"}), 403
     hotzone = (request.args.get("hotzone") or "").strip()
+    tipo = (request.args.get("tipo") or "").strip()
+    busca = (request.args.get("busca") or "").strip()
+    attachment_mode = (request.args.get("attachment_mode") or "").strip()
+    sort = (request.args.get("sort") or "created_at.desc").strip() or "created_at.desc"
+    data_inicial = (request.args.get("data_inicial") or "").strip()
+    data_final = (request.args.get("data_final") or "").strip()
     try:
         page = int(request.args.get("page") or "1")
         page_size = int(request.args.get("page_size") or "10")
+        satisfacao_min = request.args.get("satisfacao_min")
+        satisfacao_max = request.args.get("satisfacao_max")
+        satisfacao_min = int(satisfacao_min) if satisfacao_min not in (None, "") else None
+        satisfacao_max = int(satisfacao_max) if satisfacao_max not in (None, "") else None
     except:
-        page, page_size = 1, 10
+        page, page_size, satisfacao_min, satisfacao_max = 1, 10, None, None
     try:
-        result = supa_list_feedbacks(hotzone=hotzone or None, page=page, page_size=page_size)
+        result = supa_list_feedbacks(
+            hotzone=hotzone or None,
+            tipo=tipo or None,
+            busca=busca or None,
+            satisfacao_min=satisfacao_min,
+            satisfacao_max=satisfacao_max,
+            data_inicial=data_inicial or None,
+            data_final=data_final or None,
+            attachment_mode=attachment_mode or None,
+            order_by=sort,
+            page=page,
+            page_size=page_size
+        )
         return jsonify({"ok": True, **result})
     except Exception as e:
         return jsonify({"ok": False, "error": str(e)}), 500
