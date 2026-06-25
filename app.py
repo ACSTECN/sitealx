@@ -99,7 +99,66 @@ def normalize_admin_row(row):
         else normalize_bool(row.get("Ativo")) if "Ativo" in row
         else True
     )
-    return {"email": email, "password_hash": password_hash, "active": active}
+    hierarchy = (
+        row.get("hierarquia")
+        or row.get("hierarchy")
+        or row.get("role")
+        or row.get("nivel")
+        or row.get("hier")
+    )
+    return {"email": email, "password_hash": password_hash, "active": active, "hierarchy": hierarchy}
+
+
+def resolve_admin_field_names(table, row=None):
+    row = row or {}
+
+    if "email" in row:
+        email_field = "email"
+    elif "e-mail" in row:
+        email_field = "e-mail"
+    elif "E-mail" in row:
+        email_field = "E-mail"
+    else:
+        email_field = "email"
+
+    if "active" in row:
+        active_field = "active"
+    elif "ativo" in row:
+        active_field = "ativo"
+    elif "Ativo" in row:
+        active_field = "Ativo"
+    elif str(table).lower() in ("administradores", "administrador"):
+        active_field = "Ativo"
+    else:
+        active_field = "active"
+
+    if "password_hash" in row:
+        password_field = "password_hash"
+    elif "password" in row:
+        password_field = "password"
+    elif "senha" in row:
+        password_field = "senha"
+    else:
+        password_field = "password_hash"
+
+    hierarchy_candidates = [
+        normalize_env_value(os.environ.get("ADMIN_HIERARCHY_FIELD")),
+        "hierarquia",
+        "hierarchy",
+        "role",
+        "nivel",
+        "hier",
+    ]
+    hierarchy_field = next((field for field in hierarchy_candidates if field and field in row), None)
+    if not hierarchy_field:
+        hierarchy_field = next((field for field in hierarchy_candidates if field), "hierarquia")
+
+    return {
+        "email_field": email_field,
+        "active_field": active_field,
+        "password_field": password_field,
+        "hierarchy_field": hierarchy_field,
+    }
 
 # ==============================
 # FUNÇÃO BUSCAR USUÁRIO
@@ -192,18 +251,11 @@ def supa_set_password(email, new_password):
     pw_hash = bcrypt.hashpw(new_password.encode(), salt).decode()
     found = supa_find_admin(email)
     table = (found or {}).get("table") or "admins"
-    email_field = (found or {}).get("email_field") or "email"
     row = (found or {}).get("row") or {}
-    if "active" in row:
-        active_field = "active"
-    elif "ativo" in row:
-        active_field = "ativo"
-    elif "Ativo" in row:
-        active_field = "Ativo"
-    elif str(table).lower() in ("administradores", "administrador"):
-        active_field = "Ativo"
-    else:
-        active_field = None
+    fields = resolve_admin_field_names(table, row)
+    email_field = (found or {}).get("email_field") or fields["email_field"]
+    active_field = fields["active_field"]
+    password_field = fields["password_field"]
     url = f"{SUPABASE_URL}/rest/v1/{table}"
     headers = {
         "apikey": SUPABASE_KEY or "",
@@ -212,7 +264,7 @@ def supa_set_password(email, new_password):
         "Prefer": "return=representation"
     }
     if found:
-        patch_payload = {"password_hash": pw_hash}
+        patch_payload = {password_field: pw_hash}
         if active_field:
             patch_payload[active_field] = True
         r = requests.patch(url, headers=headers, params={email_field: f"eq.{email}"}, json=patch_payload)
@@ -220,13 +272,76 @@ def supa_set_password(email, new_password):
             raise Exception(r.text)
         return True
     else:
-        insert_payload = {email_field: email, "password_hash": pw_hash}
+        insert_payload = {email_field: email, password_field: pw_hash}
         if active_field:
             insert_payload[active_field] = True
         r = requests.post(url, headers=headers, json=insert_payload)
         if r.status_code not in (200, 201):
             raise Exception(r.text)
         return True
+
+
+def supa_upsert_admin_user(email, password, hierarchy):
+    require_supabase_key()
+    email = (email or "").strip().lower()
+    hierarchy = (hierarchy or "").strip()
+    if not email or not password or not hierarchy:
+        raise ValueError("Email, senha e hierarquia são obrigatórios")
+
+    salt = bcrypt.gensalt()
+    pw_hash = bcrypt.hashpw(password.encode(), salt).decode()
+    found = supa_find_admin(email)
+    table = (found or {}).get("table") or normalize_env_value(os.environ.get("ADMIN_TABLE")) or "admins"
+    row = (found or {}).get("row") or {}
+    fields = resolve_admin_field_names(table, row)
+    email_field = (found or {}).get("email_field") or fields["email_field"]
+    active_field = fields["active_field"]
+    password_field = fields["password_field"]
+    hierarchy_field = fields["hierarchy_field"]
+
+    url = f"{SUPABASE_URL}/rest/v1/{table}"
+    headers = {
+        "apikey": SUPABASE_KEY or "",
+        "Authorization": f"Bearer {SUPABASE_KEY or ''}",
+        "Content-Type": "application/json",
+        "Prefer": "return=representation"
+    }
+
+    payload = {
+        password_field: pw_hash,
+        hierarchy_field: hierarchy,
+    }
+    if active_field:
+        payload[active_field] = True
+
+    if found:
+        r = requests.patch(url, headers=headers, params={email_field: f"eq.{email}"}, json=payload)
+        if r.status_code not in (200, 204):
+            raise Exception(r.text)
+        response_rows = r.json() if r.text.strip() else [dict(row, **payload)]
+        result_row = response_rows[0] if response_rows else dict(row, **payload)
+        return {
+            "created": False,
+            "email": result_row.get(email_field, email),
+            "hierarchy": result_row.get(hierarchy_field, hierarchy),
+            "active": normalize_bool(result_row.get(active_field)) if active_field else True,
+        }
+
+    insert_payload = {
+        email_field: email,
+        **payload,
+    }
+    r = requests.post(url, headers=headers, json=insert_payload)
+    if r.status_code not in (200, 201):
+        raise Exception(r.text)
+    response_rows = r.json() if r.text.strip() else [insert_payload]
+    result_row = response_rows[0] if response_rows else insert_payload
+    return {
+        "created": True,
+        "email": result_row.get(email_field, email),
+        "hierarchy": result_row.get(hierarchy_field, hierarchy),
+        "active": normalize_bool(result_row.get(active_field)) if active_field else True,
+    }
 
 def supa_insert_feedback(row):
     require_supabase_key()
@@ -369,6 +484,35 @@ def api_admin_feedbacks():
     try:
         result = supa_list_feedbacks(hotzone=hotzone or None, page=page, page_size=page_size)
         return jsonify({"ok": True, **result})
+    except Exception as e:
+        return jsonify({"ok": False, "error": str(e)}), 500
+
+
+@app.post("/api/admin/users")
+def api_admin_users_create():
+    if not session.get("user"):
+        return jsonify({"ok": False, "error": "Not authorized"}), 403
+
+    data = request.get_json(silent=True) or {}
+    email = (data.get("email") or "").strip().lower()
+    password = data.get("password") or ""
+    hierarchy = (data.get("hierarquia") or data.get("hierarchy") or "").strip()
+
+    if not email or not password or not hierarchy:
+        return jsonify({"ok": False, "error": "Informe email, senha e hierarquia"}), 400
+    if "@" not in email:
+        return jsonify({"ok": False, "error": "Email inválido"}), 400
+    if len(password) < 6:
+        return jsonify({"ok": False, "error": "A senha deve ter pelo menos 6 caracteres"}), 400
+
+    try:
+        result = supa_upsert_admin_user(email, password, hierarchy)
+        action = "criado" if result["created"] else "atualizado"
+        return jsonify({
+            "ok": True,
+            "message": f"Login {action} com sucesso",
+            "data": result
+        })
     except Exception as e:
         return jsonify({"ok": False, "error": str(e)}), 500
 

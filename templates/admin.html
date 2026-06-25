@@ -289,6 +289,72 @@ select:focus{
     margin-bottom:30px;
 }
 
+.admin-grid{
+    display:grid;
+    grid-template-columns:1.1fr .9fr;
+    gap:24px;
+    margin-bottom:30px;
+}
+
+.stack{
+    display:grid;
+    gap:16px;
+}
+
+.helper-card{
+    padding:22px;
+    border-radius:22px;
+    background:rgba(255,255,255,.03);
+    border:1px solid rgba(255,255,255,.05);
+}
+
+.helper-card h4{
+    font-size:18px;
+    margin-bottom:10px;
+}
+
+.helper-card p{
+    color:#a8b6c8;
+    line-height:1.75;
+    font-size:14px;
+}
+
+.admin-user-form{
+    display:grid;
+    grid-template-columns:repeat(2, minmax(0, 1fr));
+    gap:18px;
+}
+
+.admin-user-form .full{
+    grid-column:1 / -1;
+}
+
+.admin-user-form label{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    color:#cbd5e1;
+    font-size:14px;
+}
+
+.form-note{
+    color:#90a4bb;
+    line-height:1.75;
+    font-size:13px;
+}
+
+.inline-actions{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    flex-wrap:wrap;
+}
+
+.form-status{
+    color:#8ec9ff;
+    font-size:14px;
+}
+
 /* =========================
    TABLE
 ========================= */
@@ -368,6 +434,10 @@ tbody tr:hover{
         margin-left:0;
     }
 
+    .admin-grid{
+        grid-template-columns:1fr;
+    }
+
 }
 
 @media(max-width:700px){
@@ -380,6 +450,10 @@ tbody tr:hover{
 
     .filters{
         flex-direction:column;
+    }
+
+    .admin-user-form{
+        grid-template-columns:1fr;
     }
 
     input,
@@ -505,6 +579,93 @@ tbody tr:hover{
 
             <canvas id="chart"
                     height="120"></canvas>
+
+        </section>
+
+        <section class="admin-grid">
+
+            <section class="card">
+
+                <div class="card-title">
+
+                    <h3>
+                        Criar Login
+                    </h3>
+
+                    <p>
+                        Cadastre ou atualize acessos administrativos no Supabase com email, senha e hierarquia.
+                    </p>
+
+                </div>
+
+                <form id="admin-user-form"
+                      class="admin-user-form">
+
+                    <label>
+                        Email
+                        <input id="novo-admin-email"
+                               type="email"
+                               placeholder="usuario@empresa.com"
+                               required>
+                    </label>
+
+                    <label>
+                        Hierarquia
+                        <input id="novo-admin-hierarquia"
+                               type="text"
+                               placeholder="admin"
+                               required>
+                    </label>
+
+                    <label class="full">
+                        Senha
+                        <input id="novo-admin-senha"
+                               type="password"
+                               placeholder="Digite a senha do novo acesso"
+                               required>
+                    </label>
+
+                    <div class="full form-note">
+                        Se o email já existir, o sistema atualiza a senha e a hierarquia desse login.
+                    </div>
+
+                    <div class="full inline-actions">
+                        <button id="criar-admin-btn"
+                                type="submit"
+                                class="primary">
+                            Salvar Login
+                        </button>
+
+                        <span id="admin-user-status"
+                              class="form-status"
+                              aria-live="polite"></span>
+                    </div>
+
+                </form>
+
+            </section>
+
+            <aside class="stack">
+
+                <section class="card helper-card">
+                    <h4>
+                        Como funciona
+                    </h4>
+                    <p>
+                        O cadastro grava no banco `admins`, aplica hash na senha com `bcrypt` e mantém o login ativo.
+                    </p>
+                </section>
+
+                <section class="card helper-card">
+                    <h4>
+                        Exemplo de hierarquia
+                    </h4>
+                    <p>
+                        Você pode usar valores como `admin`, `supervisor`, `gestor` ou o padrão que quiser adotar no painel.
+                    </p>
+                </section>
+
+            </aside>
 
         </section>
 

@@ -7,6 +7,11 @@ const prevBtn=document.getElementById("prev-page");
 const nextBtn=document.getElementById("next-page");
 const pageInfo=document.getElementById("page-info");
 const exportBtn=document.getElementById("exportar-csv");
+const adminUserForm=document.getElementById("admin-user-form");
+const adminUserStatus=document.getElementById("admin-user-status");
+const adminUserEmail=document.getElementById("novo-admin-email");
+const adminUserPassword=document.getElementById("novo-admin-senha");
+const adminUserHierarchy=document.getElementById("novo-admin-hierarquia");
 let chart;
 let page=1;let totalPages=1;
 let currentRows=[];
@@ -94,6 +99,40 @@ if(exportBtn){exportBtn.addEventListener("click",()=>{
   a.download="feedbacks.csv";
   document.body.appendChild(a);a.click();a.remove();
 })}
+async function handleAdminUserSubmit(e){
+  e.preventDefault();
+  if(!adminUserForm||!adminUserStatus)return;
+  const email=(adminUserEmail?.value||"").trim().toLowerCase();
+  const password=adminUserPassword?.value||"";
+  const hierarquia=(adminUserHierarchy?.value||"").trim();
+  if(!email||!password||!hierarquia){
+    adminUserStatus.textContent="Preencha email, senha e hierarquia.";
+    adminUserStatus.style.color="#fca5a5";
+    return;
+  }
+  adminUserStatus.textContent="Salvando login...";
+  adminUserStatus.style.color="#93c5fd";
+  try{
+    const r=await fetch("/api/admin/users",{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({email,password,hierarquia})
+    });
+    const j=await r.json();
+    if(!r.ok||!j.ok){
+      adminUserStatus.textContent=j.error||"Erro ao salvar login.";
+      adminUserStatus.style.color="#fca5a5";
+      return;
+    }
+    adminUserStatus.textContent=j.message||"Login salvo com sucesso.";
+    adminUserStatus.style.color="#86efac";
+    adminUserForm.reset();
+  }catch(err){
+    adminUserStatus.textContent="Erro de rede ao salvar login.";
+    adminUserStatus.style.color="#fca5a5";
+  }
+}
+if(adminUserForm){adminUserForm.addEventListener("submit",handleAdminUserSubmit)}
 document.addEventListener("DOMContentLoaded",loadData);
 document.addEventListener("DOMContentLoaded", function () {
 
