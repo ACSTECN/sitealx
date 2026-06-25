@@ -273,6 +273,25 @@ label{
     box-shadow:0 20px 40px rgba(37,99,235,.45);
 }
 
+.secondary{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:16px 18px;
+    border-radius:18px;
+    text-decoration:none;
+    font-weight:700;
+    background:rgba(255,255,255,.06);
+    border:1px solid rgba(255,255,255,.08);
+    color:#e7f2ff;
+    transition:.25s;
+}
+
+.secondary:hover{
+    transform:translateY(-3px);
+    background:rgba(255,255,255,.12);
+}
+
 .status{
     margin-top:20px;
     text-align:center;
@@ -412,6 +431,7 @@ label{
             </div>
 
             <button class="primary" type="submit">Entrar no painel</button>
+            <a class="secondary" href="{{ url_for('site_public') }}">Voltar para o site</a>
         </form>
 
         <div id="login-status" class="status" aria-live="polite"></div>
