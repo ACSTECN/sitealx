@@ -355,6 +355,104 @@ select:focus{
     font-size:14px;
 }
 
+.muted-btn{
+    background:rgba(255,255,255,.05);
+    border:1px solid rgba(255,255,255,.08);
+    color:#dbe7f3;
+    padding:12px 18px;
+    border-radius:14px;
+    font-weight:700;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.muted-btn:hover{
+    background:rgba(255,255,255,.10);
+}
+
+.danger-btn{
+    background:rgba(239,68,68,.12);
+    border:1px solid rgba(239,68,68,.25);
+    color:#fecaca;
+    padding:12px 18px;
+    border-radius:14px;
+    font-weight:700;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.danger-btn:hover{
+    background:rgba(239,68,68,.18);
+}
+
+.user-table-card{
+    margin-bottom:30px;
+}
+
+.user-table-wrapper{
+    overflow:auto;
+    border-radius:22px;
+    margin-top:18px;
+}
+
+.user-table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+.user-table th,
+.user-table td{
+    padding:16px;
+    border-top:1px solid rgba(255,255,255,.05);
+    text-align:left;
+    vertical-align:top;
+}
+
+.user-table th{
+    color:#cbd5e1;
+    font-size:14px;
+    background:rgba(255,255,255,.04);
+}
+
+.user-actions{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+}
+
+.user-actions button{
+    padding:10px 12px;
+    border-radius:12px;
+    font-size:13px;
+}
+
+.status-badge{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    padding:8px 12px;
+    border-radius:999px;
+    font-size:12px;
+    font-weight:700;
+}
+
+.status-badge.active{
+    background:rgba(34,197,94,.14);
+    border:1px solid rgba(34,197,94,.24);
+    color:#bbf7d0;
+}
+
+.status-badge.inactive{
+    background:rgba(239,68,68,.14);
+    border:1px solid rgba(239,68,68,.24);
+    color:#fecaca;
+}
+
+.empty-state{
+    color:#94a3b8;
+    padding:18px 0 4px;
+}
+
 /* =========================
    TABLE
 ========================= */
@@ -626,7 +724,7 @@ tbody tr:hover{
                     </label>
 
                     <div class="full form-note">
-                        Se o email já existir, o sistema atualiza a senha e a hierarquia desse login.
+                        No modo novo cadastro, a senha é obrigatória. Ao editar, você pode deixar a senha em branco para manter a atual.
                     </div>
 
                     <div class="full inline-actions">
@@ -634,6 +732,13 @@ tbody tr:hover{
                                 type="submit"
                                 class="primary">
                             Salvar Login
+                        </button>
+
+                        <button id="cancelar-admin-edit"
+                                type="button"
+                                class="muted-btn"
+                                style="display:none">
+                            Cancelar edição
                         </button>
 
                         <span id="admin-user-status"
@@ -666,6 +771,42 @@ tbody tr:hover{
                 </section>
 
             </aside>
+
+        </section>
+
+        <section class="card user-table-card">
+
+            <div class="card-title">
+
+                <h3>
+                    Logins Cadastrados
+                </h3>
+
+                <p>
+                    Liste, edite, ative, desative ou exclua os acessos administrativos cadastrados no Supabase.
+                </p>
+
+            </div>
+
+            <div id="admin-users-empty"
+                 class="empty-state">
+                Carregando logins...
+            </div>
+
+            <div class="user-table-wrapper">
+                <table class="user-table">
+                    <thead>
+                        <tr>
+                            <th>Email</th>
+                            <th>Hierarquia</th>
+                            <th>Status</th>
+                            <th>Criado em</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="admin-users-table"></tbody>
+                </table>
+            </div>
 
         </section>
 

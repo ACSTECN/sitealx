@@ -109,6 +109,10 @@ def normalize_admin_row(row):
     return {"email": email, "password_hash": password_hash, "active": active, "hierarchy": hierarchy}
 
 
+def get_admin_table_name():
+    return normalize_env_value(os.environ.get("ADMIN_TABLE")) or "admins"
+
+
 def resolve_admin_field_names(table, row=None):
     row = row or {}
 
@@ -343,6 +347,146 @@ def supa_upsert_admin_user(email, password, hierarchy):
         "active": normalize_bool(result_row.get(active_field)) if active_field else True,
     }
 
+
+def supa_list_admin_users():
+    require_supabase_key()
+    table = get_admin_table_name()
+    url = f"{SUPABASE_URL}/rest/v1/{table}"
+    headers = {
+        "apikey": SUPABASE_KEY or "",
+        "Authorization": f"Bearer {SUPABASE_KEY or ''}",
+        "Content-Type": "application/json",
+    }
+    params = {
+        "select": "*",
+        "order": "created_at.desc",
+    }
+    r = requests.get(url, headers=headers, params=params)
+    if r.status_code != 200:
+        raise Exception(r.text)
+
+    rows = r.json() or []
+    result = []
+    for row in rows:
+        fields = resolve_admin_field_names(table, row)
+        result.append({
+            "email": row.get(fields["email_field"]),
+            "hierarchy": row.get(fields["hierarchy_field"]),
+            "active": normalize_bool(row.get(fields["active_field"])) if fields["active_field"] else True,
+            "created_at": row.get("created_at"),
+        })
+    return result
+
+
+def supa_update_admin_user(original_email, email, hierarchy, password=None):
+    require_supabase_key()
+    original_email = (original_email or "").strip().lower()
+    email = (email or "").strip().lower()
+    hierarchy = (hierarchy or "").strip()
+    password = password or ""
+    if not original_email or not email or not hierarchy:
+        raise ValueError("Email original, email e hierarquia são obrigatórios")
+
+    found = supa_find_admin(original_email)
+    if not found:
+        raise ValueError("Login não encontrado")
+
+    table = found["table"]
+    row = found["row"] or {}
+    fields = resolve_admin_field_names(table, row)
+    email_field = found.get("email_field") or fields["email_field"]
+    hierarchy_field = fields["hierarchy_field"]
+    password_field = fields["password_field"]
+    active_field = fields["active_field"]
+
+    payload = {
+        email_field: email,
+        hierarchy_field: hierarchy,
+    }
+    if password:
+        salt = bcrypt.gensalt()
+        payload[password_field] = bcrypt.hashpw(password.encode(), salt).decode()
+    if active_field and active_field not in payload and active_field in row:
+        payload[active_field] = normalize_bool(row.get(active_field))
+
+    url = f"{SUPABASE_URL}/rest/v1/{table}"
+    headers = {
+        "apikey": SUPABASE_KEY or "",
+        "Authorization": f"Bearer {SUPABASE_KEY or ''}",
+        "Content-Type": "application/json",
+        "Prefer": "return=representation"
+    }
+    r = requests.patch(url, headers=headers, params={email_field: f"eq.{original_email}"}, json=payload)
+    if r.status_code not in (200, 204):
+        raise Exception(r.text)
+    response_rows = r.json() if r.text.strip() else [dict(row, **payload)]
+    result_row = response_rows[0] if response_rows else dict(row, **payload)
+    return {
+        "email": result_row.get(email_field, email),
+        "hierarchy": result_row.get(hierarchy_field, hierarchy),
+        "active": normalize_bool(result_row.get(active_field)) if active_field else True,
+        "created_at": result_row.get("created_at"),
+    }
+
+
+def supa_set_admin_active(email, active):
+    require_supabase_key()
+    email = (email or "").strip().lower()
+    found = supa_find_admin(email)
+    if not found:
+        raise ValueError("Login não encontrado")
+
+    table = found["table"]
+    row = found["row"] or {}
+    fields = resolve_admin_field_names(table, row)
+    email_field = found.get("email_field") or fields["email_field"]
+    active_field = fields["active_field"]
+    if not active_field:
+        raise ValueError("Campo de status não encontrado na tabela de admins")
+
+    url = f"{SUPABASE_URL}/rest/v1/{table}"
+    headers = {
+        "apikey": SUPABASE_KEY or "",
+        "Authorization": f"Bearer {SUPABASE_KEY or ''}",
+        "Content-Type": "application/json",
+        "Prefer": "return=representation"
+    }
+    r = requests.patch(url, headers=headers, params={email_field: f"eq.{email}"}, json={active_field: bool(active)})
+    if r.status_code not in (200, 204):
+        raise Exception(r.text)
+    response_rows = r.json() if r.text.strip() else [dict(row, **{active_field: bool(active)})]
+    result_row = response_rows[0] if response_rows else dict(row, **{active_field: bool(active)})
+    return {
+        "email": result_row.get(email_field, email),
+        "hierarchy": result_row.get(fields["hierarchy_field"]),
+        "active": normalize_bool(result_row.get(active_field)),
+        "created_at": result_row.get("created_at"),
+    }
+
+
+def supa_delete_admin_user(email):
+    require_supabase_key()
+    email = (email or "").strip().lower()
+    found = supa_find_admin(email)
+    if not found:
+        raise ValueError("Login não encontrado")
+
+    table = found["table"]
+    row = found["row"] or {}
+    fields = resolve_admin_field_names(table, row)
+    email_field = found.get("email_field") or fields["email_field"]
+    url = f"{SUPABASE_URL}/rest/v1/{table}"
+    headers = {
+        "apikey": SUPABASE_KEY or "",
+        "Authorization": f"Bearer {SUPABASE_KEY or ''}",
+        "Content-Type": "application/json",
+        "Prefer": "return=representation"
+    }
+    r = requests.delete(url, headers=headers, params={email_field: f"eq.{email}"})
+    if r.status_code not in (200, 204):
+        raise Exception(r.text)
+    return True
+
 def supa_insert_feedback(row):
     require_supabase_key()
     url = f"{SUPABASE_URL}/rest/v1/feedbacks"
@@ -513,6 +657,76 @@ def api_admin_users_create():
             "message": f"Login {action} com sucesso",
             "data": result
         })
+    except Exception as e:
+        return jsonify({"ok": False, "error": str(e)}), 500
+
+
+@app.get("/api/admin/users")
+def api_admin_users_list():
+    if not session.get("user"):
+        return jsonify({"ok": False, "error": "Not authorized"}), 403
+    try:
+        return jsonify({"ok": True, "data": supa_list_admin_users()})
+    except Exception as e:
+        return jsonify({"ok": False, "error": str(e)}), 500
+
+
+@app.put("/api/admin/users")
+def api_admin_users_update():
+    if not session.get("user"):
+        return jsonify({"ok": False, "error": "Not authorized"}), 403
+
+    data = request.get_json(silent=True) or {}
+    original_email = (data.get("original_email") or "").strip().lower()
+    email = (data.get("email") or "").strip().lower()
+    hierarchy = (data.get("hierarquia") or data.get("hierarchy") or "").strip()
+    password = data.get("password") or ""
+
+    if not original_email or not email or not hierarchy:
+        return jsonify({"ok": False, "error": "Informe email original, email e hierarquia"}), 400
+    if "@" not in email:
+        return jsonify({"ok": False, "error": "Email inválido"}), 400
+    if password and len(password) < 6:
+        return jsonify({"ok": False, "error": "A senha deve ter pelo menos 6 caracteres"}), 400
+
+    try:
+        result = supa_update_admin_user(original_email, email, hierarchy, password=password)
+        return jsonify({"ok": True, "message": "Login atualizado com sucesso", "data": result})
+    except Exception as e:
+        return jsonify({"ok": False, "error": str(e)}), 500
+
+
+@app.patch("/api/admin/users/status")
+def api_admin_users_status():
+    if not session.get("user"):
+        return jsonify({"ok": False, "error": "Not authorized"}), 403
+
+    data = request.get_json(silent=True) or {}
+    email = (data.get("email") or "").strip().lower()
+    active = normalize_bool(data.get("active"))
+    if not email or active is None:
+        return jsonify({"ok": False, "error": "Informe email e status"}), 400
+
+    try:
+        result = supa_set_admin_active(email, active)
+        return jsonify({"ok": True, "message": "Status atualizado com sucesso", "data": result})
+    except Exception as e:
+        return jsonify({"ok": False, "error": str(e)}), 500
+
+
+@app.delete("/api/admin/users")
+def api_admin_users_delete():
+    if not session.get("user"):
+        return jsonify({"ok": False, "error": "Not authorized"}), 403
+
+    data = request.get_json(silent=True) or {}
+    email = (data.get("email") or "").strip().lower()
+    if not email:
+        return jsonify({"ok": False, "error": "Informe o email"}), 400
+
+    try:
+        supa_delete_admin_user(email)
+        return jsonify({"ok": True, "message": "Login excluído com sucesso"})
     except Exception as e:
         return jsonify({"ok": False, "error": str(e)}), 500
 
