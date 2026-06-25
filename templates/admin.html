@@ -709,10 +709,15 @@ tbody tr:hover{
 
                     <label>
                         Hierarquia
-                        <input id="novo-admin-hierarquia"
-                               type="text"
-                               placeholder="admin"
-                               required>
+                        <select id="novo-admin-hierarquia"
+                                required>
+                            <option value="admin" selected>
+                                admin
+                            </option>
+                            <option value="entregador">
+                                entregador
+                            </option>
+                        </select>
                     </label>
 
                     <label class="full">
@@ -766,7 +771,7 @@ tbody tr:hover{
                         Exemplo de hierarquia
                     </h4>
                     <p>
-                        Você pode usar valores como `admin`, `supervisor`, `gestor` ou o padrão que quiser adotar no painel.
+                        Para esse painel, o cadastro fica limitado a duas opções: `admin` ou `entregador`.
                     </p>
                 </section>
 
