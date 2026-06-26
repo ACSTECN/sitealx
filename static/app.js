@@ -70,15 +70,19 @@ const telEl = document.getElementById("telefone");
 const tipoEl = document.getElementById("tipo");
 const anexoEl = document.getElementById("anexo");
 const anexoWrapper = document.getElementById("anexo-wrapper");
+const anexoStatusEl = document.getElementById("anexo-status");
 const form = document.getElementById("feedback-form");
 const qs = new URLSearchParams(location.search);
 
 function syncAttachmentVisibility() {
   if (!tipoEl || !anexoWrapper || !anexoEl) return;
-  const showAttachment = tipoEl.value === "sugestao";
-  anexoWrapper.classList.toggle("is-hidden", !showAttachment);
-  if (!showAttachment) {
-    anexoEl.value = "";
+  const attachmentEnabled = tipoEl.value === "sugestao";
+  anexoWrapper.classList.toggle("is-disabled", !attachmentEnabled);
+  anexoEl.disabled = !attachmentEnabled;
+  if (anexoStatusEl) {
+    anexoStatusEl.textContent = attachmentEnabled
+      ? "Anexo liberado para este tipo de envio."
+      : "O anexo fica disponivel apenas quando o tipo for Sugestao.";
   }
 }
 

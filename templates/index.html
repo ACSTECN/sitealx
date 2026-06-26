@@ -258,8 +258,22 @@ textarea:focus{
     line-height:1.7;
 }
 
-.file-upload.is-hidden{
-    display:none;
+.file-upload.is-disabled{
+    opacity:.72;
+    border-style:solid;
+    border-color:rgba(255,255,255,.08);
+}
+
+.file-upload.is-disabled input[type="file"]{
+    opacity:.55;
+    cursor:not-allowed;
+}
+
+.file-state{
+    display:block;
+    color:#8ec9ff;
+    font-size:12px;
+    line-height:1.6;
 }
 
 .rating{
@@ -568,39 +582,39 @@ textarea:focus{
     }
 
     .hero{
-        padding:88px 0 106px;
+        padding:76px 0 88px;
     }
 
     .hero-grid{
-        gap:30px;
+        gap:24px;
     }
 
     .hero-content{
-        gap:26px;
+        gap:20px;
     }
 
     .hero h1{
-        font-size:42px;
-        line-height:1.1;
+        font-size:36px;
+        line-height:1.14;
     }
 
     .hero p{
-        font-size:18px;
-        line-height:1.9;
+        font-size:16px;
+        line-height:1.8;
         max-width:none;
     }
 
     .hero-panel{
-        padding:32px 28px;
-        border-radius:26px;
+        padding:24px 22px;
+        border-radius:22px;
     }
 
     .hero-list div{
-        padding:20px 22px;
+        padding:16px 18px;
     }
 
     .form-section{
-        margin-top:-36px;
+        margin-top:-24px;
         padding-bottom:86px;
     }
 
@@ -672,29 +686,49 @@ textarea:focus{
     }
 
     .hero{
-        padding:76px 0 98px;
+        padding:64px 0 76px;
     }
 
     .hero h1{
-        font-size:36px;
-        line-height:1.12;
+        font-size:30px;
+        line-height:1.16;
     }
 
     .hero p{
-        font-size:17px;
-        line-height:1.95;
+        font-size:15px;
+        line-height:1.82;
+    }
+
+    .hero-buttons{
+        margin-top:2px;
+    }
+
+    .hero-buttons .primary,
+    .hero-buttons .secondary{
+        min-height:54px;
     }
 
     .hero-panel h3,
     .side-card h3{
-        font-size:26px;
+        font-size:22px;
     }
 
     .hero-panel,
     .form-card,
     .side-card{
-        padding:30px 22px;
+        padding:26px 20px;
         border-radius:24px;
+    }
+
+    .hero-list{
+        gap:12px;
+        margin-top:18px;
+    }
+
+    .hero-list div{
+        padding:14px 16px;
+        font-size:14px;
+        line-height:1.65;
     }
 
     .grid{
@@ -851,6 +885,7 @@ textarea:focus{
                     <span class="file-help">
                         Para sugestões, você pode enviar 1 arquivo em PDF, JPG, JPEG, PNG ou WEBP com até 10 MB.
                     </span>
+                    <span class="file-state" id="anexo-status"></span>
                 </label>
 
                 <label>
