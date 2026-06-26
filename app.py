@@ -271,6 +271,20 @@ def attachment_column_error(response_text):
     return "could not find" in text and "anexo_" in text
 
 
+def feedback_type_constraint_error(response_text):
+    text = (response_text or "").lower()
+    return "feedbacks_tipo_check" in text or ("check constraint" in text and "tipo" in text)
+
+
+def candidate_feedback_types(value):
+    normalized = normalize_feedback_type(value)
+    if normalized == "sugestao":
+        return ["sugestao"]
+    if normalized == "reclamacao":
+        return ["reclamacao"]
+    return ["outro", "outros"]
+
+
 def storage_headers(content_type="application/octet-stream"):
     return {
         "apikey": SUPABASE_KEY or "",
@@ -712,29 +726,46 @@ def supa_insert_feedback(row, attachment_meta=None):
         **build_supabase_headers(prefer_representation=True),
         "Prefer": "return=representation"
     }
-    payload = dict(row)
-    if attachment_meta:
-        payload["mensagem"] = append_attachment_marker(payload.get("mensagem"), attachment_meta)
-        payload["anexo_nome"] = attachment_meta.get("name")
-        payload["anexo_path"] = attachment_meta.get("path")
-        payload["anexo_tipo"] = attachment_meta.get("mime")
-        payload["anexo_tamanho"] = attachment_meta.get("size")
+    base_payload = dict(row)
+    payload_variants = []
+    for tipo in candidate_feedback_types(base_payload.get("tipo")):
+        payload = dict(base_payload)
+        payload["tipo"] = tipo
+        if attachment_meta:
+            payload["mensagem"] = append_attachment_marker(payload.get("mensagem"), attachment_meta)
+            payload["anexo_nome"] = attachment_meta.get("name")
+            payload["anexo_path"] = attachment_meta.get("path")
+            payload["anexo_tipo"] = attachment_meta.get("mime")
+            payload["anexo_tamanho"] = attachment_meta.get("size")
+        payload_variants.append(payload)
 
-    r = requests.post(url, headers=headers, json=payload)
-    if r.status_code in (200, 201):
-        created_rows = r.json() or []
-        return [normalize_feedback_row(item) for item in created_rows]
+    last_error = None
+    for payload in payload_variants:
+        r = requests.post(url, headers=headers, json=payload)
+        if r.status_code in (200, 201):
+            created_rows = r.json() or []
+            return [normalize_feedback_row(item) for item in created_rows]
 
-    if attachment_meta and attachment_column_error(r.text):
-        fallback_payload = dict(row)
-        fallback_payload["mensagem"] = append_attachment_marker(fallback_payload.get("mensagem"), attachment_meta)
-        fallback_response = requests.post(url, headers=headers, json=fallback_payload)
-        if fallback_response.status_code not in (200, 201):
-            raise Exception(fallback_response.text)
-        created_rows = fallback_response.json() or []
-        return [normalize_feedback_row(item) for item in created_rows]
+        if attachment_meta and attachment_column_error(r.text):
+            fallback_payload = dict(payload)
+            fallback_payload["mensagem"] = append_attachment_marker(base_payload.get("mensagem"), attachment_meta)
+            for key in ("anexo_nome", "anexo_path", "anexo_tipo", "anexo_tamanho"):
+                fallback_payload.pop(key, None)
+            fallback_response = requests.post(url, headers=headers, json=fallback_payload)
+            if fallback_response.status_code in (200, 201):
+                created_rows = fallback_response.json() or []
+                return [normalize_feedback_row(item) for item in created_rows]
+            last_error = fallback_response.text
+            if feedback_type_constraint_error(last_error):
+                continue
+            raise Exception(last_error)
 
-    raise Exception(r.text)
+        last_error = r.text
+        if feedback_type_constraint_error(last_error):
+            continue
+        raise Exception(last_error)
+
+    raise Exception(last_error or "Nao foi possivel inserir o feedback")
 
 
 def supa_list_feedbacks(
@@ -765,7 +796,10 @@ def supa_list_feedbacks(
     if hotzone:
         params.append(("hotzone", f"eq.{hotzone}"))
     if tipo:
-        params.append(("tipo", f"eq.{tipo}"))
+        if normalize_feedback_type(tipo) == "outro":
+            params.append(("tipo", "in.(outro,outros)"))
+        else:
+            params.append(("tipo", f"eq.{normalize_feedback_type(tipo)}"))
     if busca:
         busca_safe = busca.replace(",", " ").strip()
         search_terms = ",".join([
