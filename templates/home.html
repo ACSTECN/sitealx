@@ -57,6 +57,11 @@ body{
     height:48px;
 }
 
+.topbar-brand{
+    display:flex;
+    align-items:center;
+}
+
 .topbar-nav{
     display:flex;
     gap:30px;
@@ -930,6 +935,92 @@ body{
         grid-template-columns:1fr;
     }
 
+    .topbar{
+        background:rgba(6,17,29,.92);
+    }
+
+    .topbar-inner{
+        width:min(100%, 94%);
+        padding:12px 0 14px;
+        flex-direction:column;
+        align-items:center;
+        justify-content:center;
+        gap:12px;
+    }
+
+    .topbar-brand{
+        width:100%;
+        justify-content:center;
+    }
+
+    .logo{
+        height:40px;
+    }
+
+    .topbar-actions{
+        width:100%;
+        max-width:320px;
+        display:grid;
+        grid-template-columns:repeat(2, minmax(0, 1fr));
+        gap:10px;
+    }
+
+    .topbar-actions .ghost{
+        display:none;
+    }
+
+    .topbar-actions .primary,
+    .topbar-actions .admin{
+        width:100%;
+        min-height:48px;
+        padding:12px 14px;
+        text-align:center;
+        font-size:14px;
+    }
+
+    main.container{
+        padding-top:118px;
+    }
+
+    .hero-slider{
+        height:270px;
+    }
+
+    .hero-slider--full .hero-dots{
+        right:18px;
+        bottom:14px;
+    }
+
+}
+
+@media(max-width:560px){
+    .topbar-inner{
+        padding:10px 0 12px;
+        gap:10px;
+    }
+
+    .logo{
+        height:36px;
+    }
+
+    .topbar-actions{
+        max-width:290px;
+    }
+
+    .topbar-actions .primary,
+    .topbar-actions .admin{
+        min-height:46px;
+        padding:10px 12px;
+        font-size:13px;
+    }
+
+    main.container{
+        padding-top:108px;
+    }
+
+    .hero-slider{
+        height:250px;
+    }
 }
 
 </style>
