@@ -79,6 +79,8 @@ FEEDBACK_ATTACHMENT_ALLOWED_MIME_TYPES = {
 }
 ATTACHMENT_MARKER_START = "[[ALX_ATTACHMENT]]"
 ATTACHMENT_MARKER_END = "[[/ALX_ATTACHMENT]]"
+TYPE_MARKER_START = "[[ALX_FEEDBACK_TYPE]]"
+TYPE_MARKER_END = "[[/ALX_FEEDBACK_TYPE]]"
 
 def require_supabase_key():
     if not SUPABASE_KEY:
@@ -236,6 +238,30 @@ def append_attachment_marker(message, attachment_meta):
     return f"{(message or '').rstrip()}\n\n{ATTACHMENT_MARKER_START}{json.dumps(payload, ensure_ascii=True)}{ATTACHMENT_MARKER_END}"
 
 
+def append_feedback_type_marker(message, original_type):
+    normalized = normalize_feedback_type(original_type)
+    if normalized != "outro":
+        return message or ""
+    payload = {"tipo_original": "outros"}
+    return f"{(message or '').rstrip()}\n\n{TYPE_MARKER_START}{json.dumps(payload, ensure_ascii=True)}{TYPE_MARKER_END}"
+
+
+def extract_feedback_type_marker(message):
+    text = message or ""
+    start = text.find(TYPE_MARKER_START)
+    end = text.find(TYPE_MARKER_END)
+    if start == -1 or end == -1 or end < start:
+        return None
+    raw_json = text[start + len(TYPE_MARKER_START):end]
+    try:
+        data = json.loads(raw_json)
+    except Exception:
+        return None
+    if not isinstance(data, dict):
+        return None
+    return normalize_feedback_type(data.get("tipo_original"))
+
+
 def extract_attachment_marker(message):
     text = message or ""
     start = text.find(ATTACHMENT_MARKER_START)
@@ -266,6 +292,15 @@ def strip_attachment_marker(message):
     return (text[:start] + text[end + len(ATTACHMENT_MARKER_END):]).strip()
 
 
+def strip_feedback_type_marker(message):
+    text = message or ""
+    start = text.find(TYPE_MARKER_START)
+    end = text.find(TYPE_MARKER_END)
+    if start == -1 or end == -1 or end < start:
+        return text.strip()
+    return (text[:start] + text[end + len(TYPE_MARKER_END):]).strip()
+
+
 def attachment_column_error(response_text):
     text = (response_text or "").lower()
     return "could not find" in text and "anexo_" in text
@@ -282,7 +317,7 @@ def candidate_feedback_types(value):
         return ["sugestao"]
     if normalized == "reclamacao":
         return ["reclamacao"]
-    return ["outro", "outros"]
+    return ["outro", "outros", "sugestao"]
 
 
 def storage_headers(content_type="application/octet-stream"):
@@ -357,6 +392,7 @@ def create_signed_storage_url(object_path, expires_in=3600):
 
 def normalize_feedback_row(row):
     marker_meta = extract_attachment_marker(row.get("mensagem"))
+    marker_type = extract_feedback_type_marker(row.get("mensagem"))
     attachment_name = row.get("anexo_nome") or (marker_meta or {}).get("name")
     attachment_path = row.get("anexo_path") or (marker_meta or {}).get("path")
     attachment_type = row.get("anexo_tipo") or (marker_meta or {}).get("mime")
@@ -364,9 +400,11 @@ def normalize_feedback_row(row):
     attachment_url = row.get("anexo_url")
     if attachment_path:
         attachment_url = create_signed_storage_url(attachment_path) or attachment_url
+    clean_message = strip_feedback_type_marker(strip_attachment_marker(row.get("mensagem")))
     return {
         **row,
-        "mensagem": strip_attachment_marker(row.get("mensagem")),
+        "tipo": marker_type or row.get("tipo"),
+        "mensagem": clean_message,
         "anexo_nome": attachment_name,
         "anexo_path": attachment_path,
         "anexo_tipo": attachment_type,
@@ -727,10 +765,14 @@ def supa_insert_feedback(row, attachment_meta=None):
         "Prefer": "return=representation"
     }
     base_payload = dict(row)
+    original_type = base_payload.get("tipo")
     payload_variants = []
     for tipo in candidate_feedback_types(base_payload.get("tipo")):
         payload = dict(base_payload)
         payload["tipo"] = tipo
+        payload["mensagem"] = base_payload.get("mensagem")
+        if normalize_feedback_type(original_type) == "outro" and tipo == "sugestao":
+            payload["mensagem"] = append_feedback_type_marker(payload.get("mensagem"), original_type)
         if attachment_meta:
             payload["mensagem"] = append_attachment_marker(payload.get("mensagem"), attachment_meta)
             payload["anexo_nome"] = attachment_meta.get("name")
@@ -748,7 +790,7 @@ def supa_insert_feedback(row, attachment_meta=None):
 
         if attachment_meta and attachment_column_error(r.text):
             fallback_payload = dict(payload)
-            fallback_payload["mensagem"] = append_attachment_marker(base_payload.get("mensagem"), attachment_meta)
+            fallback_payload["mensagem"] = append_attachment_marker(payload.get("mensagem"), attachment_meta)
             for key in ("anexo_nome", "anexo_path", "anexo_tipo", "anexo_tamanho"):
                 fallback_payload.pop(key, None)
             fallback_response = requests.post(url, headers=headers, json=fallback_payload)
