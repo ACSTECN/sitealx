@@ -38,6 +38,32 @@ def normalize_env_value(value):
         v = v[1:-1].strip()
     return v
 
+def normalize_feedback_type(value, default="sugestao"):
+    raw = (value or "").strip().lower()
+    if not raw:
+        raw = default
+    simplified = (
+        raw.replace("ã", "a")
+        .replace("á", "a")
+        .replace("à", "a")
+        .replace("â", "a")
+        .replace("ç", "c")
+        .replace("é", "e")
+        .replace("ê", "e")
+        .replace("í", "i")
+        .replace("ó", "o")
+        .replace("ô", "o")
+        .replace("õ", "o")
+        .replace("ú", "u")
+    )
+    mapping = {
+        "sugestao": "sugestao",
+        "reclamacao": "reclamacao",
+        "outro": "outro",
+        "outros": "outro",
+    }
+    return mapping.get(simplified, "outro")
+
 SUPABASE_URL = normalize_env_value(os.environ.get("SUPABASE_URL")) or "https://ppewtznjwigjowgmhrge.supabase.co"
 SUPABASE_URL = SUPABASE_URL.rstrip("/")
 SUPABASE_KEY = normalize_env_value(os.environ.get("SUPABASE_SERVICE_ROLE_KEY") or os.environ.get("SUPABASE_KEY"))
@@ -802,9 +828,7 @@ def api_feedback():
         hotzone = "OUTROS"
     telefone = (data.get("telefone") or "").strip()
     email = (data.get("email") or "").strip()
-    tipo = (data.get("tipo") or "sugestao").strip() or "sugestao"
-    if tipo not in ("sugestao", "reclamacao", "outros"):
-        tipo = "outros"
+    tipo = normalize_feedback_type(data.get("tipo"))
     mensagem = (data.get("mensagem") or "").strip()
     try:
         satisfacao = int(data.get("satisfacao") or 10)
@@ -866,7 +890,7 @@ def api_admin_feedbacks():
     if not session.get("user"):
         return jsonify({"ok": False, "error": "Not authorized"}), 403
     hotzone = (request.args.get("hotzone") or "").strip()
-    tipo = (request.args.get("tipo") or "").strip()
+    tipo = normalize_feedback_type(request.args.get("tipo"), default="") if (request.args.get("tipo") or "").strip() else ""
     busca = (request.args.get("busca") or "").strip()
     attachment_mode = (request.args.get("attachment_mode") or "").strip()
     sort = (request.args.get("sort") or "created_at.desc").strip() or "created_at.desc"
