@@ -76,13 +76,8 @@ const qs = new URLSearchParams(location.search);
 
 function syncAttachmentVisibility() {
   if (!tipoEl || !anexoWrapper || !anexoEl) return;
-  const attachmentEnabled = tipoEl.value === "sugestao";
-  anexoWrapper.classList.toggle("is-disabled", !attachmentEnabled);
-  anexoEl.disabled = !attachmentEnabled;
   if (anexoStatusEl) {
-    anexoStatusEl.textContent = attachmentEnabled
-      ? "Anexo liberado para este tipo de envio."
-      : "O anexo fica disponivel apenas quando o tipo for Sugestao.";
+    anexoStatusEl.textContent = "Anexo liberado para qualquer tipo de envio.";
   }
 }
 
@@ -141,11 +136,6 @@ if (form) {
 
     if (cpfDigits.length !== 11) {
       setStatus("CPF inválido.", "#b91c1c");
-      return;
-    }
-
-    if (selectedFile && tipo !== "sugestao") {
-      setStatus("O anexo está disponível apenas para sugestões.", "#b91c1c");
       return;
     }
 

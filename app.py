@@ -917,8 +917,6 @@ def api_feedback():
     satisfacao_db = (satisfacao + 1) // 2
     if not all([nome, cpf, hotzone, telefone, email, mensagem]):
         return jsonify({"ok": False, "error": "Dados incompletos"}), 400
-    if attachment and getattr(attachment, "filename", "") and tipo != "sugestao":
-        return jsonify({"ok": False, "error": "O anexo esta disponivel apenas para sugestoes"}), 400
     try:
         attachment_meta = None
         if attachment and getattr(attachment, "filename", ""):
