@@ -17,6 +17,7 @@ body{
     color:#fff;
     font-family:Arial, Helvetica, sans-serif;
     overflow-x:hidden;
+    line-height:1.6;
 }
 
 .container{
@@ -26,7 +27,7 @@ body{
 
 .hero{
     position:relative;
-    padding:100px 0 90px;
+    padding:110px 0 120px;
     background:
         radial-gradient(circle at top right, rgba(56,189,248,.16), transparent 24%),
         linear-gradient(rgba(4,10,20,.82), rgba(4,10,20,.9)),
@@ -45,7 +46,7 @@ body{
     z-index:2;
     display:grid;
     grid-template-columns:1.05fr .95fr;
-    gap:30px;
+    gap:38px;
     align-items:center;
 }
 
@@ -75,6 +76,7 @@ body{
     color:#c2d0df;
     line-height:1.9;
     max-width:680px;
+    margin-bottom:0;
 }
 
 .hero-buttons{
@@ -122,7 +124,7 @@ body{
 .hero-panel{
     position:relative;
     z-index:2;
-    padding:30px;
+    padding:34px;
     border-radius:30px;
     background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03));
     border:1px solid rgba(255,255,255,.08);
@@ -148,7 +150,7 @@ body{
 }
 
 .hero-list div{
-    padding:16px 18px;
+    padding:18px 20px;
     border-radius:18px;
     background:rgba(255,255,255,.04);
     border:1px solid rgba(255,255,255,.06);
@@ -159,26 +161,27 @@ body{
     margin-top:-58px;
     position:relative;
     z-index:10;
-    padding-bottom:84px;
+    padding-bottom:96px;
 }
 
 .form-layout{
     display:grid;
     grid-template-columns:1.1fr .9fr;
-    gap:24px;
+    gap:28px;
+    align-items:start;
 }
 
 .form-card,
 .side-card{
     background:#0b1627;
     border-radius:32px;
-    padding:42px;
+    padding:46px;
     border:1px solid rgba(255,255,255,.06);
     box-shadow:0 20px 60px rgba(0,0,0,.28);
 }
 
 .form-header{
-    margin-bottom:34px;
+    margin-bottom:38px;
 }
 
 .form-header h2{
@@ -194,16 +197,16 @@ body{
 .grid{
     display:grid;
     grid-template-columns:repeat(2,1fr);
-    gap:20px;
+    gap:22px;
 }
 
 label{
     display:flex;
     flex-direction:column;
-    gap:10px;
+    gap:12px;
     font-size:14px;
     color:#dce7f3;
-    margin-bottom:22px;
+    margin-bottom:24px;
 }
 
 input,
@@ -213,7 +216,7 @@ textarea{
     border:none;
     outline:none;
     border-radius:16px;
-    padding:16px;
+    padding:18px 18px;
     background:#101d31;
     color:#fff;
     font-size:15px;
@@ -229,8 +232,9 @@ textarea:focus{
 }
 
 .file-upload{
-    margin-top:2px;
-    padding:20px;
+    margin-top:6px;
+    margin-bottom:8px;
+    padding:22px;
     border-radius:20px;
     background:#101d31;
     border:1px dashed rgba(142,201,255,.35);
@@ -253,10 +257,10 @@ textarea:focus{
 }
 
 .rating{
-    display:flex;
+    display:grid;
+    grid-template-columns:repeat(5, minmax(0, 1fr));
     gap:12px;
-    margin-top:10px;
-    flex-wrap:wrap;
+    margin-top:12px;
 }
 
 .rating label{
@@ -267,8 +271,8 @@ textarea:focus{
     display:flex;
     align-items:center;
     justify-content:center;
-    width:50px;
-    height:50px;
+    width:100%;
+    min-height:56px;
     border-radius:14px;
     background:#101d31;
     border:1px solid rgba(255,255,255,.06);
@@ -282,8 +286,21 @@ textarea:focus{
 }
 
 .status{
-    margin-top:25px;
+    margin-top:28px;
     color:#8ec9ff;
+    min-height:24px;
+}
+
+.form-card form{
+    display:grid;
+    gap:8px;
+}
+
+.form-card > form > .primary{
+    min-height:56px;
+    padding-inline:32px;
+    justify-self:flex-start;
+    margin-top:6px;
 }
 
 .side-card h3{
@@ -294,16 +311,16 @@ textarea:focus{
 .side-card > p{
     color:#aebfd1;
     line-height:1.85;
-    margin-bottom:26px;
+    margin-bottom:28px;
 }
 
 .stack{
     display:grid;
-    gap:16px;
+    gap:18px;
 }
 
 .mini-card{
-    padding:22px;
+    padding:24px;
     border-radius:22px;
     background:#101d31;
     border:1px solid rgba(255,255,255,.05);
@@ -322,9 +339,9 @@ textarea:focus{
 }
 
 .steps{
-    margin-top:22px;
+    margin-top:28px;
     display:grid;
-    gap:14px;
+    gap:16px;
 }
 
 .step{
@@ -332,7 +349,7 @@ textarea:focus{
     grid-template-columns:50px 1fr;
     gap:14px;
     align-items:start;
-    padding:18px;
+    padding:20px;
     border-radius:20px;
     background:rgba(255,255,255,.03);
     border:1px solid rgba(255,255,255,.05);
@@ -362,7 +379,7 @@ textarea:focus{
 }
 
 .faq-section{
-    margin-top:38px;
+    margin-top:42px;
 }
 
 .faq-section h3{
@@ -499,6 +516,10 @@ textarea:focus{
 }
 
 @media(max-width:1080px){
+    .hero{
+        padding:92px 0 110px;
+    }
+
     .hero-grid,
     .form-layout{
         grid-template-columns:1fr;
@@ -514,7 +535,7 @@ textarea:focus{
 
     .form-card,
     .side-card{
-        padding:30px;
+        padding:34px;
     }
 
     .form-header h2{
@@ -528,6 +549,136 @@ textarea:focus{
     .footer-bottom{
         justify-content:center;
         text-align:center;
+    }
+}
+
+@media(max-width:768px){
+    .container{
+        width:min(100%, 94%);
+    }
+
+    .hero{
+        padding:78px 0 96px;
+    }
+
+    .hero h1{
+        font-size:38px;
+        line-height:1.08;
+    }
+
+    .hero p{
+        font-size:17px;
+        line-height:1.8;
+    }
+
+    .hero-panel{
+        padding:28px;
+        border-radius:26px;
+    }
+
+    .form-section{
+        margin-top:-42px;
+        padding-bottom:72px;
+    }
+
+    .form-card,
+    .side-card{
+        padding:28px 24px;
+        border-radius:26px;
+    }
+
+    .form-header{
+        margin-bottom:28px;
+    }
+
+    .form-header h2{
+        font-size:30px;
+        line-height:1.14;
+    }
+
+    .hero-buttons{
+        flex-direction:column;
+        align-items:stretch;
+    }
+
+    .hero-buttons .primary,
+    .hero-buttons .secondary,
+    .form-card > form > .primary{
+        width:100%;
+        justify-self:stretch;
+    }
+
+    .rating{
+        grid-template-columns:repeat(4, minmax(0, 1fr));
+    }
+
+    .step{
+        grid-template-columns:44px 1fr;
+        padding:18px;
+    }
+
+    .step-number{
+        width:44px;
+        height:44px;
+    }
+}
+
+@media(max-width:560px){
+    .badge{
+        width:100%;
+        justify-content:center;
+        text-align:center;
+        line-height:1.5;
+    }
+
+    .hero{
+        padding:70px 0 90px;
+    }
+
+    .hero h1{
+        font-size:32px;
+    }
+
+    .hero-panel,
+    .form-card,
+    .side-card{
+        padding:22px 18px;
+        border-radius:22px;
+    }
+
+    .grid{
+        gap:18px;
+    }
+
+    label{
+        margin-bottom:20px;
+    }
+
+    input,
+    select,
+    textarea{
+        padding:16px;
+        font-size:14px;
+    }
+
+    .file-upload{
+        padding:18px;
+    }
+
+    .rating{
+        grid-template-columns:repeat(3, minmax(0, 1fr));
+    }
+
+    .rating-item{
+        min-height:52px;
+    }
+
+    .footer-inner{
+        gap:20px;
+    }
+
+    .footer-logo{
+        height:62px;
     }
 }
 </style>

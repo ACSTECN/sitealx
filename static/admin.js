@@ -149,34 +149,34 @@ function renderTable(rows) {
   if (!tabela) return;
   tabela.innerHTML = "";
   if (!rows.length) {
-    tabela.innerHTML = '<tr><td colspan="7" class="table-empty">Nenhum feedback encontrado com os filtros atuais.</td></tr>';
+    tabela.innerHTML = '<tr><td colspan="7" class="table-empty" data-label="Status">Nenhum feedback encontrado com os filtros atuais.</td></tr>';
     return;
   }
   rows.forEach((row) => {
     const tr = document.createElement("tr");
     tr.innerHTML = `
-      <td>${escapeHtml(formatDate(row.created_at))}</td>
-      <td>
+      <td data-label="Data">${escapeHtml(formatDate(row.created_at))}</td>
+      <td data-label="Tipo / Hotzone">
         <div class="feedback-meta">
           <strong>${escapeHtml((row.tipo || "-").toUpperCase())}</strong>
           <span>${escapeHtml(row.hotzone || "-")}</span>
         </div>
       </td>
-      <td>
+      <td data-label="Nome">
         <div class="feedback-meta">
           <strong>${escapeHtml(row.nome_completo || "-")}</strong>
           <span>${escapeHtml(formatCPF(row.cpf || "-"))}</span>
         </div>
       </td>
-      <td>
+      <td data-label="Contato">
         <div class="feedback-meta">
           <span>${escapeHtml(row.email || "-")}</span>
           <span>${escapeHtml(formatPhone(row.telefone || "-"))}</span>
         </div>
       </td>
-      <td>${escapeHtml(String(row.satisfacao ?? "-"))}</td>
-      <td>${renderAttachmentCell(row)}</td>
-      <td><div class="feedback-message">${escapeHtml(row.mensagem || "-")}</div></td>
+      <td data-label="Satisfação">${escapeHtml(String(row.satisfacao ?? "-"))}</td>
+      <td data-label="Anexo">${renderAttachmentCell(row)}</td>
+      <td data-label="Mensagem"><div class="feedback-message">${escapeHtml(row.mensagem || "-")}</div></td>
     `;
     tabela.appendChild(tr);
   });
@@ -321,11 +321,11 @@ function renderAdminUsers(rows) {
     const activeClass = user.active ? "active" : "inactive";
     const activeLabel = user.active ? "Ativo" : "Inativo";
     tr.innerHTML = `
-      <td>${escapeHtml(user.email || "-")}</td>
-      <td>${escapeHtml(user.hierarchy || "-")}</td>
-      <td><span class="status-badge ${activeClass}">${activeLabel}</span></td>
-      <td>${escapeHtml(formatDate(user.created_at))}</td>
-      <td>
+      <td data-label="Email">${escapeHtml(user.email || "-")}</td>
+      <td data-label="Hierarquia">${escapeHtml(user.hierarchy || "-")}</td>
+      <td data-label="Status"><span class="status-badge ${activeClass}">${activeLabel}</span></td>
+      <td data-label="Criado em">${escapeHtml(formatDate(user.created_at))}</td>
+      <td data-label="Ações">
         <div class="user-actions">
           <button type="button" class="muted-btn" data-action="edit" data-email="${escapeHtml(user.email || "")}">Editar</button>
           <button type="button" class="secondary" data-action="toggle" data-email="${escapeHtml(user.email || "")}" data-active="${user.active ? "1" : "0"}">${user.active ? "Desativar" : "Ativar"}</button>
