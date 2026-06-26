@@ -582,31 +582,54 @@ textarea:focus{
     }
 
     .hero{
-        padding:76px 0 88px;
+        padding:64px 0 74px;
+        background-position:center top;
     }
 
     .hero-grid{
-        gap:24px;
+        gap:20px;
+        align-items:start;
     }
 
     .hero-content{
-        gap:20px;
+        gap:18px;
+        justify-items:center;
+        text-align:center;
+    }
+
+    .badge{
+        margin-bottom:0;
     }
 
     .hero h1{
-        font-size:36px;
-        line-height:1.14;
+        font-size:34px;
+        line-height:1.15;
+        max-width:12ch;
     }
 
     .hero p{
         font-size:16px;
         line-height:1.8;
         max-width:none;
+        max-width:36ch;
     }
 
     .hero-panel{
-        padding:24px 22px;
+        width:100%;
+        max-width:680px;
+        margin-inline:auto;
+        padding:22px 20px;
         border-radius:22px;
+    }
+
+    .hero-panel h3{
+        font-size:24px;
+        margin-bottom:12px;
+    }
+
+    .hero-panel p{
+        font-size:15px;
+        line-height:1.75;
     }
 
     .hero-list div{
@@ -634,9 +657,12 @@ textarea:focus{
     }
 
     .hero-buttons{
+        width:100%;
+        max-width:420px;
         flex-direction:column;
         align-items:stretch;
         gap:14px;
+        margin-inline:auto;
     }
 
     .hero-buttons .primary,
@@ -673,7 +699,7 @@ textarea:focus{
 
 @media(max-width:560px){
     .container{
-        width:min(100%, 97%);
+        width:min(100%, 95%);
     }
 
     .badge{
@@ -681,31 +707,34 @@ textarea:focus{
         justify-content:center;
         text-align:center;
         line-height:1.5;
-        padding:12px 14px;
-        margin-bottom:10px;
+        padding:11px 12px;
+        margin-bottom:0;
+        font-size:11px;
     }
 
     .hero{
-        padding:64px 0 76px;
+        padding:54px 0 62px;
     }
 
     .hero h1{
-        font-size:30px;
-        line-height:1.16;
+        font-size:28px;
+        line-height:1.18;
     }
 
     .hero p{
-        font-size:15px;
-        line-height:1.82;
+        font-size:14px;
+        line-height:1.78;
     }
 
     .hero-buttons{
-        margin-top:2px;
+        gap:12px;
+        margin-top:0;
     }
 
     .hero-buttons .primary,
     .hero-buttons .secondary{
-        min-height:54px;
+        min-height:52px;
+        padding-inline:20px;
     }
 
     .hero-panel h3,
@@ -716,19 +745,19 @@ textarea:focus{
     .hero-panel,
     .form-card,
     .side-card{
-        padding:26px 20px;
+        padding:24px 18px;
         border-radius:24px;
     }
 
     .hero-list{
-        gap:12px;
-        margin-top:18px;
+        gap:10px;
+        margin-top:16px;
     }
 
     .hero-list div{
-        padding:14px 16px;
-        font-size:14px;
-        line-height:1.65;
+        padding:12px 14px;
+        font-size:13px;
+        line-height:1.6;
     }
 
     .grid{
