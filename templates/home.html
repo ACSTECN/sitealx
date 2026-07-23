@@ -959,24 +959,19 @@ body{
 
     .topbar-actions{
         width:100%;
-        max-width:320px;
+        max-width:420px;
         display:grid;
         grid-template-columns:repeat(2, minmax(0, 1fr));
         gap:10px;
     }
 
     .topbar-actions .primary,
-    .topbar-actions .admin,
     .topbar-actions .ghost{
         width:100%;
         min-height:48px;
         padding:12px 14px;
         text-align:center;
         font-size:14px;
-    }
-
-    .topbar-actions .admin{
-        grid-column:1 / -1;
     }
 
     main.container{
@@ -1005,11 +1000,10 @@ body{
     }
 
     .topbar-actions{
-        max-width:290px;
+        max-width:300px;
     }
 
     .topbar-actions .primary,
-    .topbar-actions .admin,
     .topbar-actions .ghost{
         min-height:46px;
         padding:10px 12px;
@@ -1069,13 +1063,6 @@ body{
          href="{{ url_for('parceiro_alx') }}">
 
         Quero Ser Parceiro
-
-      </a>
-
-      <a class="admin"
-         href="{{ url_for('login_page') }}">
-
-        Área Admin
 
       </a>
 
