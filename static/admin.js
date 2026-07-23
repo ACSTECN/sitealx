@@ -74,6 +74,15 @@ function formatBytes(value) {
   return `${size} B`;
 }
 
+function formatFeedbackTypeLabel(value) {
+  const normalized = String(value || "").trim().toLowerCase();
+  if (normalized === "parceiro") return "Ser Parceiro";
+  if (normalized === "sugestao") return "Sugestão";
+  if (normalized === "reclamacao") return "Reclamação";
+  if (normalized === "outro" || normalized === "outros") return "Outros";
+  return value || "-";
+}
+
 function getFilters() {
   return {
     hotzone: filtroHotzone?.value || "",
@@ -92,7 +101,7 @@ function getFilters() {
 function getActiveFilterLabels(filters) {
   const labels = [];
   if (filters.hotzone) labels.push(`Hotzone: ${filters.hotzone}`);
-  if (filters.tipo) labels.push(`Tipo: ${filters.tipo}`);
+  if (filters.tipo) labels.push(`Tipo: ${formatFeedbackTypeLabel(filters.tipo)}`);
   if (filters.busca) labels.push(`Busca: ${filters.busca}`);
   if (filters.attachment_mode === "with") labels.push("Com anexo");
   if (filters.attachment_mode === "without") labels.push("Sem anexo");
@@ -158,7 +167,7 @@ function renderTable(rows) {
       <td data-label="Data">${escapeHtml(formatDate(row.created_at))}</td>
       <td data-label="Tipo / Hotzone">
         <div class="feedback-meta">
-          <strong>${escapeHtml((row.tipo || "-").toUpperCase())}</strong>
+          <strong>${escapeHtml(formatFeedbackTypeLabel(row.tipo))}</strong>
           <span>${escapeHtml(row.hotzone || "-")}</span>
         </div>
       </td>

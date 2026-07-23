@@ -38,12 +38,10 @@ def normalize_env_value(value):
         v = v[1:-1].strip()
     return v
 
-def normalize_feedback_type(value, default="sugestao"):
-    raw = (value or "").strip().lower()
-    if not raw:
-        raw = default
-    simplified = (
-        raw.replace("ã", "a")
+def simplify_text(value):
+    return (
+        (value or "").strip().lower()
+        .replace("ã", "a")
         .replace("á", "a")
         .replace("à", "a")
         .replace("â", "a")
@@ -56,6 +54,12 @@ def normalize_feedback_type(value, default="sugestao"):
         .replace("õ", "o")
         .replace("ú", "u")
     )
+
+def normalize_feedback_type(value, default="sugestao"):
+    raw = (value or "").strip().lower()
+    if not raw:
+        raw = default
+    simplified = simplify_text(raw)
     mapping = {
         "sugestao": "sugestao",
         "reclamacao": "reclamacao",
@@ -63,6 +67,14 @@ def normalize_feedback_type(value, default="sugestao"):
         "outros": "outro",
     }
     return mapping.get(simplified, "outro")
+
+def normalize_feedback_filter_type(value):
+    simplified = simplify_text(value)
+    if not simplified:
+        return ""
+    if simplified in {"parceiro", "ser parceiro", "parceiro alx"}:
+        return "parceiro"
+    return normalize_feedback_type(simplified, default="")
 
 SUPABASE_URL = normalize_env_value(os.environ.get("SUPABASE_URL")) or "https://ppewtznjwigjowgmhrge.supabase.co"
 SUPABASE_URL = SUPABASE_URL.rstrip("/")
@@ -401,9 +413,12 @@ def normalize_feedback_row(row):
     if attachment_path:
         attachment_url = create_signed_storage_url(attachment_path) or attachment_url
     clean_message = strip_feedback_type_marker(strip_attachment_marker(row.get("mensagem")))
+    resolved_type = marker_type or row.get("tipo")
+    if not marker_type and (row.get("hotzone") or "").strip().upper() == "PARCEIRO ALX" and normalize_feedback_type(row.get("tipo")) == "sugestao":
+        resolved_type = "parceiro"
     return {
         **row,
-        "tipo": marker_type or row.get("tipo"),
+        "tipo": resolved_type,
         "mensagem": clean_message,
         "anexo_nome": attachment_name,
         "anexo_path": attachment_path,
@@ -843,7 +858,11 @@ def supa_list_feedbacks(
     if hotzone:
         params.append(("hotzone", f"eq.{hotzone}"))
     if tipo:
-        if normalize_feedback_type(tipo) == "outro":
+        normalized_filter_type = normalize_feedback_filter_type(tipo)
+        if normalized_filter_type == "parceiro":
+            params.append(("hotzone", "eq.PARCEIRO ALX"))
+            params.append(("tipo", "eq.sugestao"))
+        elif normalized_filter_type == "outro":
             params.append(("tipo", "in.(outro,outros)"))
         else:
             params.append(("tipo", f"eq.{normalize_feedback_type(tipo)}"))
@@ -969,7 +988,7 @@ def api_admin_feedbacks():
     if not session.get("user"):
         return jsonify({"ok": False, "error": "Not authorized"}), 403
     hotzone = (request.args.get("hotzone") or "").strip()
-    tipo = normalize_feedback_type(request.args.get("tipo"), default="") if (request.args.get("tipo") or "").strip() else ""
+    tipo = normalize_feedback_filter_type(request.args.get("tipo")) if (request.args.get("tipo") or "").strip() else ""
     busca = (request.args.get("busca") or "").strip()
     attachment_mode = (request.args.get("attachment_mode") or "").strip()
     sort = (request.args.get("sort") or "created_at.desc").strip() or "created_at.desc"
