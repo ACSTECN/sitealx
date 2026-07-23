@@ -819,11 +819,28 @@ textarea:focus{
 <header class="hero">
     <div class="container hero-grid">
         <div class="hero-content">
-            <div class="badge">ALX • Feedback / Qualidade Operacional</div>
-            <h1>Sua mensagem ajuda a deixar a operação mais forte.</h1>
+            <div class="badge">
+                {% if partner_mode %}
+                ALX • Canal Parceiro
+                {% else %}
+                ALX • Feedback / Qualidade Operacional
+                {% endif %}
+            </div>
+            <h1>
+                {% if partner_mode %}
+                Sua mensagem fortalece a parceria com a ALX.
+                {% else %}
+                Sua mensagem ajuda a deixar a operação mais forte.
+                {% endif %}
+            </h1>
             <p>
+                {% if partner_mode %}
+                Este espaço foi pensado para parceiros ALX compartilharem percepções, oportunidades de melhoria,
+                ajustes de atendimento e qualquer ponto relevante para evoluir a relação comercial e operacional.
+                {% else %}
                 Sugestões, reclamações e melhorias nos ajudam a organizar melhor a rotina, reforçar o atendimento
                 e evoluir a operação com mais inteligência. Quanto melhor o retorno, melhor o padrão que conseguimos entregar.
+                {% endif %}
             </p>
             <div class="hero-buttons">
                 <a href="#feedback-form" class="primary">Enviar feedback</a>
@@ -832,15 +849,32 @@ textarea:focus{
         </div>
 
         <div class="hero-panel">
-            <h3>Canal de escuta da ALX</h3>
+            <h3>
+                {% if partner_mode %}
+                Canal parceiro da ALX
+                {% else %}
+                Canal de escuta da ALX
+                {% endif %}
+            </h3>
             <p>
+                {% if partner_mode %}
+                Usamos este ambiente para receber retornos de parceiros sobre atendimento, comunicação, operação,
+                alinhamento comercial e pontos que possam melhorar a experiência com a ALX.
+                {% else %}
                 Usamos esse espaço para receber informações valiosas sobre hotzones, suporte, atendimento,
                 comunicação, melhoria comercial e experiência operacional.
+                {% endif %}
             </p>
             <div class="hero-list">
+                {% if partner_mode %}
+                <div>Contexto claro ajuda a equipe a responder com mais precisão e velocidade.</div>
+                <div>Sugestões bem descritas viram ajustes práticos para fortalecer a parceria.</div>
+                <div>Pontos recorrentes ficam mais fáceis de mapear e tratar com prioridade.</div>
+                {% else %}
                 <div>Feedbacks com mais contexto ajudam a gerar respostas mais rápidas.</div>
                 <div>Sugestões bem descritas viram melhoria prática para a operação.</div>
                 <div>Problemas recorrentes podem ser identificados com mais clareza.</div>
+                {% endif %}
             </div>
         </div>
     </div>
@@ -850,10 +884,21 @@ textarea:focus{
     <section class="form-layout">
         <section class="form-card">
             <div class="form-header">
-                <h2>Envie sua mensagem para a ALX</h2>
+                <h2>
+                    {% if partner_mode %}
+                    Envie sua mensagem como parceiro ALX
+                    {% else %}
+                    Envie sua mensagem para a ALX
+                    {% endif %}
+                </h2>
                 <p>
+                    {% if partner_mode %}
+                    Preencha as informações abaixo com tranquilidade. O mesmo banco e fluxo de leitura continuam sendo usados,
+                    mas aqui não pedimos hotzone, porque o foco é a experiência do parceiro com a ALX.
+                    {% else %}
                     Preencha as informações abaixo com calma. Quanto mais completo o seu relato, melhor a nossa leitura
                     sobre o que precisa ser ajustado, reforçado ou melhorado na operação.
+                    {% endif %}
                 </p>
             </div>
 
@@ -869,6 +914,9 @@ textarea:focus{
                         <input type="text" id="cpf" name="cpf" placeholder="000.000.000-00" required>
                     </label>
 
+                    {% if partner_mode %}
+                    <input type="hidden" id="hotzone" name="hotzone" value="{{ partner_hotzone or 'PARCEIRO ALX' }}">
+                    {% else %}
                     <label>
                         Hotzone de atuação
                         <select id="hotzone" name="hotzone" required>
@@ -882,6 +930,7 @@ textarea:focus{
                             <option value="OUTROS">OUTROS</option>
                         </select>
                     </label>
+                    {% endif %}
 
                     <label>
                         Telefone
@@ -940,24 +989,53 @@ textarea:focus{
         </section>
 
         <aside class="side-card">
-            <h3>Por que esse canal é importante</h3>
+            <h3>
+                {% if partner_mode %}
+                Por que esse canal parceiro importa
+                {% else %}
+                Por que esse canal é importante
+                {% endif %}
+            </h3>
             <p>
+                {% if partner_mode %}
+                Uma parceria forte evolui quando existe escuta, clareza de contexto e espaço para registrar o que
+                precisa ser ajustado na operação, no atendimento ou na comunicação.
+                {% else %}
                 Uma operação forte não melhora só com volume. Ela melhora com escuta, leitura correta dos problemas
                 e organização na forma de responder.
+                {% endif %}
             </p>
 
             <div class="stack">
                 <div class="mini-card">
-                    <strong>Operação</strong>
-                    <span>Ajude a identificar pontos de melhoria em fluxo, organização, rotina e suporte.</span>
+                    <strong>{% if partner_mode %}Relacionamento{% else %}Operação{% endif %}</strong>
+                    <span>
+                        {% if partner_mode %}
+                        Traga percepções sobre alinhamento, retorno, acompanhamento e experiência com a ALX.
+                        {% else %}
+                        Ajude a identificar pontos de melhoria em fluxo, organização, rotina e suporte.
+                        {% endif %}
+                    </span>
                 </div>
                 <div class="mini-card">
-                    <strong>Hotzones</strong>
-                    <span>Relate dificuldades específicas de região, atendimento ou contexto de atuação.</span>
+                    <strong>{% if partner_mode %}Processos{% else %}Hotzones{% endif %}</strong>
+                    <span>
+                        {% if partner_mode %}
+                        Registre gargalos, oportunidades e pontos de melhoria em processos e comunicação.
+                        {% else %}
+                        Relate dificuldades específicas de região, atendimento ou contexto de atuação.
+                        {% endif %}
+                    </span>
                 </div>
                 <div class="mini-card">
                     <strong>Atendimento</strong>
-                    <span>Seu retorno ajuda a elevar o padrão da comunicação e da experiência da ALX.</span>
+                    <span>
+                        {% if partner_mode %}
+                        Seu retorno ajuda a elevar o padrão da comunicação e da experiência entre parceiro e ALX.
+                        {% else %}
+                        Seu retorno ajuda a elevar o padrão da comunicação e da experiência da ALX.
+                        {% endif %}
+                    </span>
                 </div>
             </div>
 
