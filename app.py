@@ -506,7 +506,7 @@ def fale_conosco():
 @app.get("/parceiro-alx")
 @app.get("/fale-conosco/parceiro")
 def parceiro_alx():
-    return render_template("index.html", partner_mode=True, partner_hotzone="PARCEIRO ALX")
+    return render_template("partner.html", partner_mode=True, partner_hotzone="PARCEIRO ALX")
 
 @app.get("/sobre")
 def sobre_page():

@@ -965,17 +965,18 @@ body{
         gap:10px;
     }
 
-    .topbar-actions .ghost{
-        display:none;
-    }
-
     .topbar-actions .primary,
-    .topbar-actions .admin{
+    .topbar-actions .admin,
+    .topbar-actions .ghost{
         width:100%;
         min-height:48px;
         padding:12px 14px;
         text-align:center;
         font-size:14px;
+    }
+
+    .topbar-actions .admin{
+        grid-column:1 / -1;
     }
 
     main.container{
@@ -1008,7 +1009,8 @@ body{
     }
 
     .topbar-actions .primary,
-    .topbar-actions .admin{
+    .topbar-actions .admin,
+    .topbar-actions .ghost{
         min-height:46px;
         padding:10px 12px;
         font-size:13px;
@@ -1063,13 +1065,12 @@ body{
 
       </a>
 
-      <button class="ghost"
-              type="button"
-              disabled>
+      <a class="ghost"
+         href="{{ url_for('parceiro_alx') }}">
 
-        Area Logada Entregador
+        Quero Ser Parceiro
 
-      </button>
+      </a>
 
       <a class="admin"
          href="{{ url_for('login_page') }}">
