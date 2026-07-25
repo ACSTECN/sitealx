@@ -102,56 +102,6 @@ body{
     transform:translateY(-2px);
 }
 
-.hero{
-    padding:88px 0 88px;
-    position:relative;
-    overflow:hidden;
-    background:#06111d;
-}
-
-.hero::before{
-    content:"";
-    position:absolute;
-    inset:0;
-    background:none;
-    pointer-events:none;
-}
-
-.hero-shell{
-    width:min(1500px, 96%);
-    margin:0 auto;
-    position:relative;
-    z-index:1;
-}
-
-.hero-banner{
-    position:relative;
-    min-height:0;
-    overflow:hidden;
-    border-radius:34px;
-    border:1px solid rgba(255,255,255,.06);
-    box-shadow:0 20px 48px rgba(0,0,0,.28);
-}
-
-.hero-banner img{
-    width:100%;
-    height:auto;
-    aspect-ratio:4.4 / 1.45;
-    object-fit:cover;
-    object-position:center;
-    display:block;
-}
-
-.hero-content{
-    width:100%;
-    margin-top:26px;
-    padding:8px 6px 0;
-    display:flex;
-    flex-direction:column;
-    justify-content:flex-start;
-}
-
-.hero-kicker,
 .section-kicker{
     display:inline-flex;
     align-items:center;
@@ -168,14 +118,44 @@ body{
     font-weight:800;
 }
 
-.hero h1{
-    font-size:58px;
-    line-height:1.08;
-    max-width:12ch;
-    margin-bottom:18px;
+.hero{
+    padding:28px 0 30px;
 }
 
-.hero p{
+.hero-media{
+    width:100%;
+    overflow:hidden;
+    position:relative;
+}
+
+.hero-media img{
+    width:100%;
+    height:auto;
+    display:block;
+    aspect-ratio:4.7 / 1.18;
+    object-fit:cover;
+    object-position:center;
+}
+
+.hero-copy{
+    padding:38px 0 10px;
+}
+
+.hero-grid{
+    display:grid;
+    grid-template-columns:minmax(0, 1.2fr) minmax(280px, .8fr);
+    gap:30px;
+    align-items:end;
+}
+
+.hero-text h1{
+    font-size:58px;
+    line-height:1.05;
+    margin-bottom:18px;
+    max-width:11ch;
+}
+
+.hero-text p{
     color:#cfe0f0;
     font-size:18px;
     line-height:1.9;
@@ -186,17 +166,17 @@ body{
     display:flex;
     gap:14px;
     flex-wrap:wrap;
-    margin-top:26px;
+    margin-top:28px;
 }
 
-.hero-card-tags{
+.hero-tags{
     display:flex;
     flex-wrap:wrap;
     gap:10px;
     margin-top:24px;
 }
 
-.hero-card-tag{
+.hero-tag{
     display:inline-flex;
     align-items:center;
     padding:10px 14px;
@@ -209,8 +189,78 @@ body{
     letter-spacing:.04em;
 }
 
+.hero-side{
+    padding:28px;
+    border-radius:30px;
+    background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+    border:1px solid rgba(255,255,255,.06);
+    box-shadow:0 18px 40px rgba(0,0,0,.22);
+    display:grid;
+    gap:14px;
+}
+
+.hero-side strong{
+    font-size:20px;
+}
+
+.hero-side p{
+    color:#b8c7d8;
+    line-height:1.85;
+}
+
+.hero-side a{
+    color:#8dd6ff;
+    text-decoration:none;
+    font-weight:700;
+    word-break:break-all;
+}
+
+.hero-side a:hover{
+    color:#c8efff;
+}
+
+.metrics{
+    padding:14px 0 24px;
+}
+
+.metrics-grid{
+    display:grid;
+    grid-template-columns:repeat(4, minmax(0, 1fr));
+    gap:18px;
+}
+
+.metric-card{
+    padding:24px 22px;
+    border-radius:26px;
+    background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+    border:1px solid rgba(255,255,255,.06);
+    box-shadow:0 18px 40px rgba(0,0,0,.18);
+}
+
+.metric-card strong{
+    display:block;
+    font-size:15px;
+    color:#9ecdf0;
+    text-transform:uppercase;
+    letter-spacing:.08em;
+    margin-bottom:8px;
+}
+
+.metric-card span{
+    display:block;
+    font-size:28px;
+    font-weight:800;
+    margin-bottom:10px;
+}
+
+.metric-card p{
+    color:#b6c6d6;
+    font-size:14px;
+    line-height:1.75;
+}
+
 .section{
-    padding:28px 0;
+    padding:36px 0;
 }
 
 .section-heading{
@@ -225,69 +275,44 @@ body{
     max-width:74ch;
 }
 
-.insights-grid{
+.clean-grid{
     display:grid;
     grid-template-columns:repeat(3, minmax(0, 1fr));
     gap:18px;
     margin-top:28px;
 }
 
-.insight-card{
-    padding:24px 20px;
-    border-radius:26px;
+.clean-card{
+    padding:28px 24px;
+    border-radius:28px;
     background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
     border:1px solid rgba(255,255,255,.06);
     box-shadow:0 18px 40px rgba(0,0,0,.22);
 }
 
-.insight-card strong{
+.clean-card strong{
     display:block;
-    margin-bottom:10px;
-    font-size:18px;
+    margin-bottom:12px;
+    font-size:22px;
 }
 
-.insight-card p{
-    color:#afc0d1;
-    font-size:14px;
-    line-height:1.8;
-    margin-bottom:14px;
+.clean-card p{
+    color:#b6c7d8;
+    line-height:1.85;
+    margin-bottom:18px;
 }
 
-.insight-card span{
-    color:#afc0d1;
-    font-size:14px;
-    line-height:1.8;
-}
-
-.detail-list{
+.clean-card ul{
     display:grid;
-    gap:8px;
+    gap:10px;
     padding-left:18px;
     color:#d5e2ef;
     font-size:14px;
-    line-height:1.75;
-}
-
-.telegram-link{
-    display:inline-flex;
-    align-items:center;
-    margin-top:8px;
-    color:#8dd6ff;
-    text-decoration:none;
-    font-weight:700;
-    word-break:break-all;
-}
-
-.telegram-link:hover{
-    color:#c8efff;
-}
-
-.spotlight{
-    padding:48px 0 18px;
+    line-height:1.8;
 }
 
 .video-section{
-    padding:22px 0 18px;
+    padding:32px 0 18px;
 }
 
 .video-shell{
@@ -328,7 +353,7 @@ body{
 }
 
 .video-copy h3{
-    font-size:28px;
+    font-size:30px;
 }
 
 .video-copy p{
@@ -354,11 +379,106 @@ body{
     line-height:1.75;
 }
 
-.media-carousel-section{
-    padding:28px 0 18px;
+.spotlight{
+    padding:26px 0 18px;
 }
 
-.media-carousel-head{
+.spotlight-grid{
+    display:grid;
+    grid-template-columns:1.08fr .92fr;
+    gap:24px;
+}
+
+.spotlight-main,
+.spotlight-side{
+    border-radius:32px;
+    border:1px solid rgba(255,255,255,.06);
+    box-shadow:0 18px 40px rgba(0,0,0,.22);
+}
+
+.spotlight-main{
+    padding:38px;
+    background:linear-gradient(135deg, rgba(11,132,255,.16), rgba(9,18,32,.96));
+}
+
+.spotlight-main h2{
+    font-size:40px;
+    line-height:1.12;
+    margin:12px 0 18px;
+}
+
+.spotlight-main p{
+    color:#d9e6f2;
+    line-height:1.9;
+    margin-bottom:24px;
+}
+
+.bullet-grid{
+    display:grid;
+    grid-template-columns:repeat(2, minmax(0, 1fr));
+    gap:14px;
+}
+
+.bullet-card{
+    padding:18px;
+    border-radius:20px;
+    background:rgba(255,255,255,.05);
+    border:1px solid rgba(255,255,255,.06);
+}
+
+.bullet-card strong{
+    display:block;
+    margin-bottom:8px;
+}
+
+.bullet-card span{
+    color:#cad8e6;
+    font-size:14px;
+    line-height:1.75;
+}
+
+.spotlight-side{
+    padding:32px;
+    background:#0d1727;
+    display:grid;
+    gap:16px;
+    align-content:start;
+}
+
+.spotlight-side h3{
+    font-size:28px;
+}
+
+.spotlight-side p{
+    color:#b8c7d8;
+    line-height:1.85;
+}
+
+.side-card{
+    padding:18px;
+    border-radius:20px;
+    background:rgba(255,255,255,.04);
+    border:1px solid rgba(255,255,255,.06);
+}
+
+.side-card strong{
+    display:block;
+    margin-bottom:8px;
+}
+
+.side-card span{
+    color:#aebfd1;
+    font-size:14px;
+    line-height:1.75;
+}
+
+.media-carousel-section,
+.carousel-section{
+    padding:34px 0 18px;
+}
+
+.media-carousel-head,
+.carousel-head{
     display:flex;
     align-items:end;
     justify-content:space-between;
@@ -442,12 +562,14 @@ body{
     text-transform:uppercase;
 }
 
-.media-carousel-nav{
+.media-carousel-nav,
+.carousel-actions{
     display:flex;
     gap:10px;
 }
 
-.media-carousel-btn{
+.media-carousel-btn,
+.carousel-action{
     width:44px;
     height:44px;
     border-radius:50%;
@@ -479,209 +601,6 @@ body{
 .media-carousel-dot.is-active{
     background:#51b5ff;
     box-shadow:0 0 0 6px rgba(81,181,255,.12);
-}
-
-.carousel-section{
-    padding:28px 0 22px;
-}
-
-.carousel-head{
-    display:flex;
-    align-items:end;
-    justify-content:space-between;
-    gap:20px;
-    margin-bottom:24px;
-}
-
-.carousel-actions{
-    display:flex;
-    gap:10px;
-}
-
-.carousel-action{
-    width:42px;
-    height:42px;
-    border-radius:50%;
-    display:grid;
-    place-items:center;
-    background:rgba(255,255,255,.05);
-    border:1px solid rgba(255,255,255,.08);
-    color:#dce6f2;
-    font-weight:900;
-}
-
-.info-carousel{
-    display:grid;
-    grid-auto-flow:column;
-    grid-auto-columns:minmax(280px, 1fr);
-    gap:18px;
-    overflow-x:auto;
-    scroll-snap-type:x mandatory;
-    padding-bottom:8px;
-}
-
-.info-carousel::-webkit-scrollbar{
-    height:8px;
-}
-
-.info-carousel::-webkit-scrollbar-thumb{
-    background:rgba(255,255,255,.16);
-    border-radius:999px;
-}
-
-.info-card{
-    scroll-snap-align:start;
-    min-height:220px;
-    padding:24px;
-    border-radius:28px;
-    background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
-    border:1px solid rgba(255,255,255,.06);
-    box-shadow:0 18px 40px rgba(0,0,0,.22);
-    display:grid;
-    gap:14px;
-    align-content:start;
-}
-
-.info-badge{
-    display:inline-flex;
-    width:max-content;
-    padding:8px 12px;
-    border-radius:999px;
-    background:rgba(56,189,248,.1);
-    border:1px solid rgba(56,189,248,.22);
-    color:#c7efff;
-    font-size:12px;
-    font-weight:800;
-    letter-spacing:.08em;
-    text-transform:uppercase;
-}
-
-.info-card h3{
-    font-size:22px;
-    line-height:1.2;
-}
-
-.info-card p{
-    color:#b8c7d8;
-    line-height:1.85;
-}
-
-.info-card small{
-    color:#86a0b7;
-    font-size:13px;
-}
-
-.spotlight-grid{
-    display:grid;
-    grid-template-columns:1.1fr .9fr;
-    gap:24px;
-}
-
-.spotlight-main,
-.spotlight-side{
-    border-radius:32px;
-    border:1px solid rgba(255,255,255,.06);
-    box-shadow:0 18px 40px rgba(0,0,0,.22);
-}
-
-.spotlight-main{
-    padding:38px;
-    background:linear-gradient(135deg, rgba(11,132,255,.14), rgba(9,18,32,.96));
-}
-
-.spotlight-main h2{
-    font-size:38px;
-    line-height:1.15;
-    margin:12px 0 18px;
-}
-
-.spotlight-main p{
-    color:#d9e6f2;
-    line-height:1.9;
-    margin-bottom:24px;
-}
-
-.bullet-grid{
-    display:grid;
-    grid-template-columns:repeat(2, minmax(0, 1fr));
-    gap:14px;
-}
-
-.bullet-card{
-    padding:18px;
-    border-radius:20px;
-    background:rgba(255,255,255,.05);
-    border:1px solid rgba(255,255,255,.06);
-}
-
-.bullet-card strong{
-    display:block;
-    margin-bottom:8px;
-}
-
-.bullet-card span{
-    color:#cad8e6;
-    font-size:14px;
-    line-height:1.75;
-}
-
-.schedule-meta{
-    display:grid;
-    gap:12px;
-    margin-top:20px;
-}
-
-.schedule-note{
-    padding:18px;
-    border-radius:20px;
-    background:rgba(255,255,255,.05);
-    border:1px solid rgba(255,255,255,.06);
-}
-
-.schedule-note strong{
-    display:block;
-    margin-bottom:8px;
-}
-
-.schedule-note span{
-    color:#c9d8e6;
-    font-size:14px;
-    line-height:1.8;
-}
-
-.spotlight-side{
-    padding:32px;
-    background:#0d1727;
-    display:grid;
-    gap:16px;
-    align-content:start;
-}
-
-.spotlight-side h3{
-    font-size:26px;
-}
-
-.spotlight-side p{
-    color:#b8c7d8;
-    line-height:1.85;
-}
-
-.side-card{
-    padding:18px;
-    border-radius:20px;
-    background:rgba(255,255,255,.04);
-    border:1px solid rgba(255,255,255,.06);
-}
-
-.side-card strong{
-    display:block;
-    margin-bottom:8px;
-}
-
-.side-card span{
-    color:#aebfd1;
-    font-size:14px;
-    line-height:1.75;
 }
 
 .cta-section{
@@ -774,15 +693,17 @@ body{
     color:#7f92a6;
 }
 
-@media(max-width:1000px){
+@media(max-width:1100px){
+    .hero-grid,
     .video-shell,
     .spotlight-grid,
     .footer-inner{
         grid-template-columns:1fr;
     }
 
-    .insights-grid{
-        grid-template-columns:1fr;
+    .metrics-grid,
+    .clean-grid{
+        grid-template-columns:repeat(2, minmax(0, 1fr));
     }
 
     .media-slide{
@@ -793,14 +714,13 @@ body{
         display:none;
     }
 
-    .hero h1,
+    .hero-text h1,
     .section-heading,
     .spotlight-main h2,
     .cta-card h2{
-        font-size:40px;
+        font-size:42px;
         max-width:none;
     }
-
 }
 
 @media(max-width:700px){
@@ -824,26 +744,32 @@ body{
         text-align:center;
     }
 
-    .insights-grid,
+    .metrics-grid,
+    .clean-grid,
     .bullet-grid,
     .footer-inner{
         grid-template-columns:1fr;
     }
 
-    .media-carousel-head{
-        flex-direction:column;
-        align-items:start;
-    }
-
+    .media-carousel-head,
     .carousel-head{
         flex-direction:column;
         align-items:start;
     }
 
+    .hero-copy{
+        padding:28px 0 0;
+    }
+
+    .hero-media img{
+        aspect-ratio:2.55 / 1.18;
+    }
+
     .video-copy,
     .spotlight-main,
     .spotlight-side,
-    .cta-card{
+    .cta-card,
+    .hero-side{
         padding:26px 20px;
     }
 
@@ -857,19 +783,6 @@ body{
 
     .video-frame{
         min-height:300px;
-    }
-
-    .hero{
-        padding:110px 0 62px;
-    }
-
-    .hero-banner img{
-        aspect-ratio:2.4 / 1.25;
-    }
-
-    .hero-content{
-        margin-top:22px;
-        padding:4px 0 0;
     }
 }
 
@@ -889,14 +802,14 @@ body{
         padding:10px 12px;
     }
 
-    .hero h1,
+    .hero-text h1,
     .section-heading,
     .spotlight-main h2,
     .cta-card h2{
         font-size:30px;
     }
 
-    .hero p,
+    .hero-text p,
     .section-text,
     .video-copy p,
     .spotlight-main p,
@@ -904,13 +817,12 @@ body{
         font-size:15px;
     }
 
-    .media-slide-copy h3{
+    .metric-card span{
         font-size:24px;
     }
 
-    .hero-content{
-        margin-top:18px;
-        padding:0;
+    .media-slide-copy h3{
+        font-size:24px;
     }
 }
 </style>
@@ -924,7 +836,7 @@ body{
     </div>
 
     <nav class="topbar-nav">
-      <a href="{{ url_for('home') }}">Início</a>
+      <a href="{{ url_for('home') }}">Inicio</a>
       <a href="{{ url_for('page_99food') }}" class="is-active">99Food</a>
       <a href="{{ url_for('sobre_page') }}">Sobre</a>
       <a href="{{ url_for('fale_conosco') }}">Contato</a>
@@ -939,148 +851,124 @@ body{
 
 <main>
   <section class="hero">
-    <div class="hero-shell">
-      <div class="hero-banner">
-        <img src="/static/img/ALXE99.png" alt="Areas de atuacao ALX com 99Food">
-        <div class="hero-content">
-        <span class="hero-kicker">Pagina dedicada 99Food</span>
-        <h1>Sobre 99Food</h1>
-        <p>
-          Pagina separada para deixar reunidas as informacoes mais importantes da operacao
-          com a ALX na 99Food, com espaco proprio para materiais, informativos e reconhecimento.
-        </p>
+    <div class="hero-media">
+      <img src="/static/img/ALXE99.png" alt="ALX e 99Food atuando em Sao Paulo e Rio de Janeiro">
+    </div>
 
-        <div class="hero-actions">
-          <a class="primary" href="{{ url_for('parceiro_alx') }}#feedback-form">Seja Parceiro</a>
-          <a class="secondary" href="{{ url_for('home') }}">Voltar ao inicio</a>
+    <div class="container hero-copy">
+      <div class="hero-grid">
+        <div class="hero-text">
+          <span class="section-kicker">Operacao 99Food</span>
+          <h1>Uma pagina pronta para apresentar a forca da ALX na 99Food</h1>
+          <p>
+            A ALX entrega estrutura operacional, organizacao e presenca em mercados estrategicos
+            para acelerar operacoes ligadas a 99Food. Esta pagina agora comunica a parceria com
+            mais clareza, visual premium e foco comercial.
+          </p>
+
+          <div class="hero-actions">
+            <a class="primary" href="{{ url_for('parceiro_alx') }}#feedback-form">Seja Parceiro</a>
+            <a class="secondary" href="{{ url_for('home') }}">Voltar ao inicio</a>
+          </div>
+
+          <div class="hero-tags">
+            <span class="hero-tag">Cobertura estrategica</span>
+            <span class="hero-tag">Sao Paulo</span>
+            <span class="hero-tag">Rio de Janeiro</span>
+          </div>
         </div>
 
-        <div class="hero-card-tags">
-          <span class="hero-card-tag">Areas de atuacao</span>
-          <span class="hero-card-tag">Rio de Janeiro</span>
-          <span class="hero-card-tag">Sao Paulo</span>
-        </div>
+        <aside class="hero-side">
+          <strong>Canal oficial de suporte</strong>
+          <p>
+            Para orientacoes, alinhamentos e acompanhamento da operacao, a ALX centraliza o
+            suporte pelo canal oficial no Telegram.
+          </p>
+          <a href="https://t.me/+5511968437483" target="_blank" rel="noopener">
+            https://t.me/+5511968437483
+          </a>
+        </aside>
       </div>
+    </div>
+  </section>
+
+  <section class="metrics">
+    <div class="container">
+      <div class="metrics-grid">
+        <article class="metric-card">
+          <strong>Atuacao</strong>
+          <span>2 frentes</span>
+          <p>Operacao estruturada em Sao Paulo e Rio de Janeiro, com leitura local e capacidade de expansao.</p>
+        </article>
+        <article class="metric-card">
+          <strong>Suporte</strong>
+          <span>Canal direto</span>
+          <p>Comunicacao agil para manter rotina, orientacao e acompanhamento da operacao em tempo real.</p>
+        </article>
+        <article class="metric-card">
+          <strong>Imagem</strong>
+          <span>Marca forte</span>
+          <p>Materiais visuais, registros e momentos que reforcam consistencia, presenca e performance.</p>
+        </article>
+        <article class="metric-card">
+          <strong>Parceria</strong>
+          <span>Escala comercial</span>
+          <p>Base pronta para conectar novos parceiros a uma operacao com mais organizacao, ritmo e confianca.</p>
+        </article>
       </div>
     </div>
   </section>
 
   <section class="section">
     <div class="container">
-      <span class="section-kicker">Informacoes importantes</span>
-      <h2 class="section-heading">Tudo que o entregador precisa saber para operar com a ALX na 99Food</h2>
+      <span class="section-kicker">Diferenciais</span>
+      <h2 class="section-heading">Uma apresentacao mais limpa, moderna e orientada a resultado</h2>
       <p class="section-text">
-        Limpei os textos genericos e deixei a pagina quase pronta com as orientacoes principais
-        sobre bag, suporte e funcionamento dos agendamentos.
+        Em vez de uma pagina carregada com informacoes internas, o conteudo agora destaca o que
+        importa para quem avalia a ALX como parceira: presenca operacional, suporte, organizacao
+        e capacidade de manter a operacao viva com comunicacao e reconhecimento.
       </p>
 
-      <div class="insights-grid">
-        <div class="insight-card">
-          <strong>Sobre a bag da ALX Entregas</strong>
+      <div class="clean-grid">
+        <article class="clean-card">
+          <strong>Operacao com metodo</strong>
           <p>
-            A ALX Entregas disponibiliza bags para os entregadores, conforme disponibilidade em nossa base.
+            A ALX organiza fluxo, alinhamento e acompanhamento para sustentar uma rotina mais
+            previsivel e eficiente dentro do ecossistema 99Food.
           </p>
-          <ul class="detail-list">
-            <li>A bag e fornecida em forma de emprestimo e continua sendo patrimonio da ALX Entregas.</li>
-            <li>Em caso de desvinculacao da operacao, a bag deve ser devolvida em boas condicoes.</li>
-            <li>A entrega da bag implica concordancia com essa condicao.</li>
+          <ul>
+            <li>Padrao de atendimento e acompanhamento</li>
+            <li>Comunicacao centralizada</li>
+            <li>Presenca ativa na rotina operacional</li>
           </ul>
-        </div>
-        <div class="insight-card">
-          <strong>Suporte realizado pelo Telegram</strong>
+        </article>
+
+        <article class="clean-card">
+          <strong>Suporte que aproxima</strong>
           <p>
-            Apos sua vinculacao, todo o atendimento operacional sera feito pelo Telegram.
+            O atendimento ganha mais proximidade com um canal direto, pensado para agilizar
+            orientacoes, resolver duvidas e manter a operacao conectada.
           </p>
-          <ul class="detail-list">
-            <li>Tirar duvidas</li>
-            <li>Solicitar suporte durante as entregas</li>
-            <li>Falar diretamente com nossa equipe</li>
-            <li>Receber orientacoes da operacao</li>
+          <ul>
+            <li>Canal oficial de suporte</li>
+            <li>Orientacao rapida para o dia a dia</li>
+            <li>Contato mais simples com a equipe ALX</li>
           </ul>
-          <a class="telegram-link" href="https://t.me/+5511968437483" target="_blank" rel="noopener">
-            https://t.me/+5511968437483
-          </a>
-        </div>
-        <div class="insight-card">
-          <strong>Como funcionam os agendamentos</strong>
+        </article>
+
+        <article class="clean-card">
+          <strong>Imagem comercial mais forte</strong>
           <p>
-            Na ALX Entregas voce escolhe os dias e horarios que deseja trabalhar.
+            Video, premiacoes e informativos ajudam a mostrar uma operacao em movimento, com
+            identidade visual mais premium e leitura mais profissional.
           </p>
-          <ul class="detail-list">
-            <li>Almoco: 11h as 14h</li>
-            <li>Tarde: 14h as 18h</li>
-            <li>Jantar: 18h as 22h</li>
-            <li>Ceia: 22h as 00h, somente no Rio de Janeiro</li>
+          <ul>
+            <li>Apresentacao institucional mais bonita</li>
+            <li>Materiais visuais em destaque</li>
+            <li>Narrativa comercial mais clara</li>
           </ul>
-        </div>
+        </article>
       </div>
-    </div>
-  </section>
-
-  <section class="spotlight">
-    <div class="container spotlight-grid">
-      <div class="spotlight-main">
-        <span class="hero-kicker">Agendamentos e rotina</span>
-        <h2>Os horarios sao liberados diariamente e dependem da performance na plataforma</h2>
-        <p>
-          Em Sao Paulo os horarios para o dia seguinte ficam disponiveis a partir das 10h da manha.
-          No Rio de Janeiro, a liberacao acontece a partir das 10h20. Os agendamentos sao liberados
-          conforme a sua performance na plataforma.
-        </p>
-
-        <div class="bullet-grid">
-          <div class="bullet-card">
-            <strong>Escolha consciente</strong>
-            <span>Agende apenas os turnos que realmente ira trabalhar para ajudar no bom funcionamento da operacao.</span>
-          </div>
-          <div class="bullet-card">
-            <strong>Performance importa</strong>
-            <span>A disponibilidade dos agendamentos acompanha sua performance dentro da plataforma.</span>
-          </div>
-          <div class="bullet-card">
-            <strong>Ceia no Rio</strong>
-            <span>O turno de ceia, das 22h as 00h, esta disponivel somente no Rio de Janeiro.</span>
-          </div>
-          <div class="bullet-card">
-            <strong>Evite faltas</strong>
-            <span>Manter compromisso com os turnos agendados ajuda toda a equipe e a organizacao da operacao.</span>
-          </div>
-        </div>
-
-        <div class="schedule-meta">
-          <div class="schedule-note">
-            <strong>Sao Paulo</strong>
-            <span>Agendamentos do dia seguinte liberados todos os dias a partir das 10h da manha.</span>
-          </div>
-          <div class="schedule-note">
-            <strong>Rio de Janeiro</strong>
-            <span>Agendamentos do dia seguinte liberados todos os dias a partir das 10h20.</span>
-          </div>
-        </div>
-      </div>
-
-      <aside class="spotlight-side">
-        <h3>Importante na operacao</h3>
-        <p>
-          Ter o contato da ALX no Telegram e essencial, pois ele sera o principal canal de comunicacao
-          entre voce e a equipe durante a operacao.
-        </p>
-
-        <div class="side-card">
-          <strong>Canal principal</strong>
-          <span>O Telegram sera usado para suporte, orientacoes, duvidas e contato direto com a operacao.</span>
-        </div>
-
-        <div class="side-card">
-          <strong>Bag em emprestimo</strong>
-          <span>A bag deve ser devolvida caso voce se desligue da operacao ou deixe de fazer parte da equipe.</span>
-        </div>
-
-        <div class="side-card">
-          <strong>Compromisso com turnos</strong>
-          <span>Agendar somente o que vai cumprir evita faltas e ajuda no bom funcionamento da operacao.</span>
-        </div>
-      </aside>
     </div>
   </section>
 
@@ -1093,21 +981,77 @@ body{
       </div>
 
       <aside class="video-copy">
-        <span class="hero-kicker">Video ALX</span>
-        <h3>Uma area dedicada para video institucional e momentos da operacao</h3>
+        <span class="section-kicker">Alguns momentos ALX</span>
+        <h3>Video institucional para reforcar energia, presenca e rotina da operacao</h3>
         <p>
-          Agora esse bloco ja recebe o video de alguns momentos ALX, com material visual da operacao
-          e da presenca da marca junto da 99Food.
+          O bloco de video entra como vitrine visual da marca, ajudando a contar a historia da
+          ALX na 99Food com mais ritmo, autenticidade e conexao com quem visita a pagina.
         </p>
 
         <div class="video-note">
-          <strong>Video real no ar</strong>
-          <span>O player ja esta ativo e pronto para ser trocado depois, se voce quiser subir outra versao.</span>
+          <strong>Conteudo vivo</strong>
+          <span>Um formato ideal para apresentar bastidores positivos, movimento de operacao e identidade da equipe.</span>
         </div>
 
         <div class="video-note">
-          <strong>Boa posicao na pagina</strong>
-          <span>Esse bloco sustenta a narrativa visual da pagina antes dos carrosseis e do CTA final.</span>
+          <strong>Leitura comercial</strong>
+          <span>O video sustenta uma narrativa mais forte para cliente, parceiro e novos contatos da ALX.</span>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <section class="spotlight">
+    <div class="container spotlight-grid">
+      <div class="spotlight-main">
+        <span class="section-kicker">Por que a ALX</span>
+        <h2>Presenca local, suporte continuo e estrutura para crescer com mais consistencia</h2>
+        <p>
+          A ALX se posiciona ao lado da 99Food com uma operacao que combina acompanhamento,
+          comunicacao e capacidade de execucao. O resultado e uma experiencia mais organizada,
+          com melhor apresentacao para quem chega e mais confianca para quem acompanha.
+        </p>
+
+        <div class="bullet-grid">
+          <div class="bullet-card">
+            <strong>Execucao organizada</strong>
+            <span>Fluxos mais claros e uma rotina pensada para manter consistencia operacional.</span>
+          </div>
+          <div class="bullet-card">
+            <strong>Atuacao estrategica</strong>
+            <span>Presenca em mercados relevantes para ampliar alcance e consolidar a marca.</span>
+          </div>
+          <div class="bullet-card">
+            <strong>Comunicacao ativa</strong>
+            <span>Suporte e informacao reunidos em um canal mais direto e funcional.</span>
+          </div>
+          <div class="bullet-card">
+            <strong>Escalabilidade</strong>
+            <span>Base preparada para receber novas oportunidades comerciais e fortalecer parcerias.</span>
+          </div>
+        </div>
+      </div>
+
+      <aside class="spotlight-side">
+        <h3>Uma pagina com cara de marca</h3>
+        <p>
+          O layout foi redesenhado para sair do tom operacional interno e assumir um posicionamento
+          mais comercial, bonito e pronto para apresentar a ALX com mais impacto.
+        </p>
+
+        <div class="side-card">
+          <strong>Banner em largura total</strong>
+          <span>A imagem principal agora lidera a pagina como destaque real, com leitura mais elegante e direta.</span>
+        </div>
+
+        <div class="side-card">
+          <strong>Conteudo objetivo</strong>
+          <span>Os blocos foram enxugados para deixar a navegacao mais leve e a mensagem mais forte.</span>
+        </div>
+
+        <div class="side-card">
+          <strong>Pronta para cliente</strong>
+          <span>Mais coerencia visual, mais espaco e uma narrativa pensada para valorizar a parceria.</span>
         </div>
       </aside>
     </div>
@@ -1118,10 +1062,10 @@ body{
       <div class="media-carousel-head">
         <div>
           <span class="section-kicker">Premiacoes</span>
-          <h2 class="section-heading">Carrossel de premiacoes</h2>
+          <h2 class="section-heading">Reconhecimento que fortalece a imagem da operacao</h2>
           <p class="section-text">
-            Esta area ja fica pronta para voce alimentar a pasta de premiacoes com novas imagens.
-            O carrossel roda sozinho e tambem aceita navegacao manual.
+            O carrossel de premiacoes valoriza registros reais da ALX, ajudando a transformar
+            conquistas e momentos especiais em prova visual da consistencia da marca.
           </p>
         </div>
 
@@ -1140,12 +1084,12 @@ body{
               </figure>
               <div class="media-slide-copy">
                 <span class="media-badge">Premiacao 01</span>
-                <h3>Momentos de premiacao e reconhecimento da ALX</h3>
+                <h3>Momentos que evidenciam performance e reconhecimento</h3>
                 <p>
-                  O carrossel de premiacoes agora usa as imagens reais da pasta que voce separou
-                  para destacar momentos importantes da operacao.
+                  Cada registro ajuda a mostrar uma operacao viva, valorizada e conectada com a
+                  construcao de uma marca mais forte ao lado da 99Food.
                 </p>
-                <small>Fonte: carroselmomentos</small>
+                <small>Galeria institucional com autoplay e navegacao manual</small>
               </div>
             </article>
 
@@ -1155,12 +1099,12 @@ body{
               </figure>
               <div class="media-slide-copy">
                 <span class="media-badge">Premiacao 02</span>
-                <h3>Galeria pronta para valorizar as conquistas da operacao</h3>
+                <h3>Uma vitrine visual para destacar conquistas reais</h3>
                 <p>
-                  Mantive a estrutura automatica do carrossel para ficar facil trocar,
-                  ampliar ou reorganizar os registros de premiacao depois.
+                  O carrossel cria uma leitura mais premium da pagina e reforca a consistencia da
+                  ALX em contextos de operacao, equipe e resultado.
                 </p>
-                <small>Pasta pronta: static/img/99food-premiacoes</small>
+                <small>Apresentacao pensada para leitura comercial</small>
               </div>
             </article>
 
@@ -1170,11 +1114,12 @@ body{
               </figure>
               <div class="media-slide-copy">
                 <span class="media-badge">Premiacao 03</span>
-                <h3>Mais prova visual de performance e presenca da ALX</h3>
+                <h3>Imagem de marca apoiada por registros autenticos</h3>
                 <p>
-                  Essas imagens passam a rodar automaticamente para fortalecer a pagina com materiais reais.
+                  Em vez de um bloco estatico, a pagina passa a exibir dinamismo e proximidade com
+                  materiais reais que elevam a percepcao da operacao.
                 </p>
-                <small>Carrossel automatico com setas e indicadores</small>
+                <small>Mais ritmo visual para a experiencia da pagina</small>
               </div>
             </article>
 
@@ -1184,11 +1129,12 @@ body{
               </figure>
               <div class="media-slide-copy">
                 <span class="media-badge">Premiacao 04</span>
-                <h3>Espaco pronto para a sequencia completa de momentos</h3>
+                <h3>Reconhecimento apresentado com mais elegancia</h3>
                 <p>
-                  A quarta imagem entra no mesmo fluxo do carrossel para completar essa vitrine de premiacoes.
+                  A sequencia das imagens ajuda a construir uma narrativa de confianca, presenca e
+                  resultado para parceiros e visitantes da pagina.
                 </p>
-                <small>Atualizado com os arquivos que voce enviou</small>
+                <small>Carrossel continuo com identidade visual mais limpa</small>
               </div>
             </article>
           </div>
@@ -1203,9 +1149,10 @@ body{
       <div class="carousel-head">
         <div>
           <span class="section-kicker">Informativos</span>
-          <h2 class="section-heading">Carrossel de informativos 99</h2>
+          <h2 class="section-heading">Comunicacao visual que mantem a operacao alinhada</h2>
           <p class="section-text">
-            Aqui entram artes, comunicados e materiais de informativos 99 para rodar como carrossel.
+            Os informativos entram como parte da identidade da pagina e mostram uma operacao que
+            comunica bem, orienta com clareza e sustenta rotina com mais organizacao.
           </p>
         </div>
 
@@ -1224,11 +1171,12 @@ body{
               </figure>
               <div class="media-slide-copy">
                 <span class="media-badge">Informativo 01</span>
-                <h3>Comunicados visuais da 99Food</h3>
+                <h3>Comunicacao clara para fortalecer rotina e alinhamento</h3>
                 <p>
-                  O carrossel agora usa a pasta real de comunicados para mostrar os materiais da 99Food.
+                  O primeiro bloco abre a sequencia mostrando como a operacao pode comunicar com
+                  mais objetividade, ritmo e padrao visual.
                 </p>
-                <small>Fonte: comunicados</small>
+                <small>Material visual integrado ao carrossel institucional</small>
               </div>
             </article>
 
@@ -1238,11 +1186,12 @@ body{
               </figure>
               <div class="media-slide-copy">
                 <span class="media-badge">Informativo 02</span>
-                <h3>Materiais de rotina e alinhamento operacional</h3>
+                <h3>Mais organizacao na leitura dos materiais da operacao</h3>
                 <p>
-                  Deixei esse bloco preparado para continuar recebendo artes, avisos e comunicados atualizados.
+                  A apresentacao em carrossel deixa a pagina mais elegante e permite destacar
+                  comunicados sem pesar a experiencia visual.
                 </p>
-                <small>Pasta pronta: static/img/99food-informativos</small>
+                <small>Leitura mais limpa para parceiro, cliente e equipe</small>
               </div>
             </article>
 
@@ -1252,11 +1201,12 @@ body{
               </figure>
               <div class="media-slide-copy">
                 <span class="media-badge">Informativo 03</span>
-                <h3>Carrossel pensado para informativos recorrentes</h3>
+                <h3>Materiais que ajudam a dar ritmo a pagina</h3>
                 <p>
-                  Assim fica facil manter a pagina sempre viva com novas artes, informativos e comunicados.
+                  Os slides reforcam que a ALX trabalha com organizacao, acompanhamento e uma
+                  comunicacao que acompanha a rotina da operacao.
                 </p>
-                <small>Carrossel automatico com navegacao manual</small>
+                <small>Rotacao automatica com controle manual</small>
               </div>
             </article>
 
@@ -1266,11 +1216,12 @@ body{
               </figure>
               <div class="media-slide-copy">
                 <span class="media-badge">Informativo 04</span>
-                <h3>Mais um bloco para a sequencia dos comunicados</h3>
+                <h3>Visual premium para comunicados recorrentes</h3>
                 <p>
-                  O quarto material entra na rotacao automatica para ampliar a leitura dos informativos na pagina.
+                  O quarto slide amplia a sensacao de pagina viva, atualizada e preparada para
+                  seguir crescendo com novos materiais visuais.
                 </p>
-                <small>Atualizado com os arquivos enviados</small>
+                <small>Mais consistencia para a narrativa institucional</small>
               </div>
             </article>
 
@@ -1280,11 +1231,12 @@ body{
               </figure>
               <div class="media-slide-copy">
                 <span class="media-badge">Informativo 05</span>
-                <h3>Sequencia pronta para novos materiais da 99Food</h3>
+                <h3>Conteudo visual que reforca presenca e confianca</h3>
                 <p>
-                  O carrossel segue escalavel para voce continuar alimentando a pagina sem refazer a estrutura.
+                  A composicao da galeria ajuda a comunicar cuidado com detalhes e melhora a
+                  percepcao da ALX como parceira preparada.
                 </p>
-                <small>Rodando junto com os demais comunicados</small>
+                <small>Apresentacao mais forte sem poluir a pagina</small>
               </div>
             </article>
 
@@ -1294,11 +1246,12 @@ body{
               </figure>
               <div class="media-slide-copy">
                 <span class="media-badge">Informativo 06</span>
-                <h3>Bloco final para fechar a galeria de comunicados</h3>
+                <h3>Galeria pronta para comunicar com mais impacto</h3>
                 <p>
-                  O ultimo slide completa a vitrine com todos os arquivos que voce separou para essa area.
+                  O fechamento da sequencia sustenta uma pagina mais profissional, com conteudo que
+                  informa e ao mesmo tempo fortalece imagem de marca.
                 </p>
-                <small>Se quiser depois eu tambem organizo por tema</small>
+                <small>Experiencia visual organizada do inicio ao fim</small>
               </div>
             </article>
           </div>
@@ -1311,10 +1264,10 @@ body{
   <section class="cta-section">
     <div class="container">
       <div class="cta-card">
-        <h2>Quer conversar com a ALX sobre parceria?</h2>
+        <h2>Vamos construir a proxima parceria com a ALX?</h2>
         <p>
-          A pagina da 99Food agora tem um caminho direto para contato. Quando voce mandar mais informacoes,
-          eu continuo enriquecendo esta secao com o conteudo real da parceria.
+          Se a sua empresa busca uma operacao mais organizada, com suporte proximo, apresentacao
+          forte e capacidade de expansao, a ALX esta pronta para conversar.
         </p>
         <a class="primary" href="{{ url_for('parceiro_alx') }}#feedback-form">Seja Parceiro</a>
       </div>
