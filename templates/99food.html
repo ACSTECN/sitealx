@@ -108,9 +108,9 @@ body{
     gap:10px;
     padding:10px 16px;
     border-radius:999px;
-    background:rgba(56,189,248,.10);
-    border:1px solid rgba(56,189,248,.24);
-    color:#bfefff;
+    background:rgba(255,255,255,.06);
+    border:1px solid rgba(255,255,255,.08);
+    color:#e6eef8;
     margin-bottom:18px;
     font-size:13px;
     letter-spacing:.08em;
@@ -119,47 +119,42 @@ body{
 }
 
 .hero{
-    padding:28px 0 30px;
+    padding:22px 0 26px;
 }
 
 .hero-media{
     width:100%;
     overflow:hidden;
     position:relative;
+    background:#040914;
+    border-top:1px solid rgba(255,255,255,.04);
+    border-bottom:1px solid rgba(255,255,255,.04);
 }
 
 .hero-media img{
     width:100%;
-    height:auto;
+    height:340px;
     display:block;
-    aspect-ratio:4.7 / 1.18;
     object-fit:cover;
-    object-position:center;
+    object-position:center 56%;
 }
 
 .hero-copy{
-    padding:38px 0 10px;
-}
-
-.hero-grid{
-    display:grid;
-    grid-template-columns:minmax(0, 1.2fr) minmax(280px, .8fr);
-    gap:30px;
-    align-items:end;
+    padding:30px 0 6px;
 }
 
 .hero-text h1{
-    font-size:58px;
+    font-size:52px;
     line-height:1.05;
     margin-bottom:18px;
-    max-width:11ch;
+    max-width:13ch;
 }
 
 .hero-text p{
     color:#cfe0f0;
     font-size:18px;
     line-height:1.9;
-    max-width:62ch;
+    max-width:68ch;
 }
 
 .hero-actions{
@@ -189,34 +184,16 @@ body{
     letter-spacing:.04em;
 }
 
-.hero-side{
-    padding:28px;
-    border-radius:30px;
-    background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
-    border:1px solid rgba(255,255,255,.06);
-    box-shadow:0 18px 40px rgba(0,0,0,.22);
-    display:grid;
-    gap:14px;
+.hero-support{
+    margin-top:24px;
+    color:#9fb2c6;
+    font-size:14px;
 }
 
-.hero-side strong{
-    font-size:20px;
-}
-
-.hero-side p{
-    color:#b8c7d8;
-    line-height:1.85;
-}
-
-.hero-side a{
-    color:#8dd6ff;
+.hero-support a{
+    color:#dce8f6;
     text-decoration:none;
     font-weight:700;
-    word-break:break-all;
-}
-
-.hero-side a:hover{
-    color:#c8efff;
 }
 
 .metrics{
@@ -503,14 +480,12 @@ body{
 
 .media-slide{
     min-width:100%;
-    display:grid;
-    grid-template-columns:1.15fr .85fr;
-    gap:22px;
-    padding:30px;
+    display:block;
+    padding:0;
     border-radius:32px;
-    background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
-    border:1px solid rgba(255,255,255,.06);
-    box-shadow:0 18px 40px rgba(0,0,0,.22);
+    background:#0b1422;
+    border:1px solid rgba(255,255,255,.05);
+    box-shadow:0 18px 40px rgba(0,0,0,.18);
 }
 
 .media-slide-figure{
@@ -519,47 +494,11 @@ body{
 
 .media-slide img{
     width:100%;
-    height:100%;
-    min-height:320px;
+    height:420px;
     object-fit:cover;
-    border-radius:24px;
-    border:1px solid rgba(255,255,255,.06);
+    object-position:center;
+    border-radius:32px;
     display:block;
-}
-
-.media-slide-copy{
-    display:grid;
-    align-content:center;
-    gap:14px;
-}
-
-.media-slide-copy h3{
-    font-size:30px;
-    line-height:1.15;
-}
-
-.media-slide-copy p{
-    color:#c9d8e6;
-    line-height:1.9;
-}
-
-.media-slide-copy small{
-    color:#86a0b7;
-    font-size:13px;
-}
-
-.media-badge{
-    display:inline-flex;
-    width:max-content;
-    padding:8px 12px;
-    border-radius:999px;
-    background:rgba(56,189,248,.1);
-    border:1px solid rgba(56,189,248,.22);
-    color:#c7efff;
-    font-size:12px;
-    font-weight:800;
-    letter-spacing:.08em;
-    text-transform:uppercase;
 }
 
 .media-carousel-nav,
@@ -694,7 +633,6 @@ body{
 }
 
 @media(max-width:1100px){
-    .hero-grid,
     .video-shell,
     .spotlight-grid,
     .footer-inner{
@@ -757,28 +695,24 @@ body{
         align-items:start;
     }
 
-    .hero-copy{
-        padding:28px 0 0;
-    }
-
     .hero-media img{
-        aspect-ratio:2.55 / 1.18;
+        height:270px;
+        object-position:center 56%;
     }
 
     .video-copy,
     .spotlight-main,
     .spotlight-side,
-    .cta-card,
-    .hero-side{
+    .cta-card{
         padding:26px 20px;
     }
 
     .media-slide{
-        padding:22px;
+        padding:0;
     }
 
     .media-slide img{
-        min-height:240px;
+        height:280px;
     }
 
     .video-frame{
@@ -820,10 +754,6 @@ body{
     .metric-card span{
         font-size:24px;
     }
-
-    .media-slide-copy h3{
-        font-size:24px;
-    }
 }
 </style>
 </head>
@@ -856,38 +786,29 @@ body{
     </div>
 
     <div class="container hero-copy">
-      <div class="hero-grid">
-        <div class="hero-text">
-          <span class="section-kicker">Operacao 99Food</span>
-          <h1>Uma pagina pronta para apresentar a forca da ALX na 99Food</h1>
-          <p>
-            A ALX entrega estrutura operacional, organizacao e presenca em mercados estrategicos
-            para acelerar operacoes ligadas a 99Food. Esta pagina agora comunica a parceria com
-            mais clareza, visual premium e foco comercial.
-          </p>
+      <div class="hero-text">
+        <span class="section-kicker">Operacao 99Food</span>
+        <h1>Uma estrutura pronta para ampliar a presenca da ALX na 99Food</h1>
+        <p>
+          A ALX combina presenca local, suporte e organizacao para sustentar operacoes com mais
+          clareza, ritmo e forca comercial em Sao Paulo e no Rio de Janeiro.
+        </p>
 
-          <div class="hero-actions">
-            <a class="primary" href="{{ url_for('parceiro_alx') }}#feedback-form">Seja Parceiro</a>
-            <a class="secondary" href="{{ url_for('home') }}">Voltar ao inicio</a>
-          </div>
-
-          <div class="hero-tags">
-            <span class="hero-tag">Cobertura estrategica</span>
-            <span class="hero-tag">Sao Paulo</span>
-            <span class="hero-tag">Rio de Janeiro</span>
-          </div>
+        <div class="hero-actions">
+          <a class="primary" href="{{ url_for('parceiro_alx') }}#feedback-form">Seja Parceiro</a>
+          <a class="secondary" href="{{ url_for('home') }}">Voltar ao inicio</a>
         </div>
 
-        <aside class="hero-side">
-          <strong>Canal oficial de suporte</strong>
-          <p>
-            Para orientacoes, alinhamentos e acompanhamento da operacao, a ALX centraliza o
-            suporte pelo canal oficial no Telegram.
-          </p>
-          <a href="https://t.me/+5511968437483" target="_blank" rel="noopener">
-            https://t.me/+5511968437483
-          </a>
-        </aside>
+        <div class="hero-tags">
+          <span class="hero-tag">Cobertura estrategica</span>
+          <span class="hero-tag">Sao Paulo</span>
+          <span class="hero-tag">Rio de Janeiro</span>
+        </div>
+
+        <div class="hero-support">
+          Canal oficial de suporte:
+          <a href="https://t.me/+5511968437483" target="_blank" rel="noopener">Telegram ALX</a>
+        </div>
       </div>
     </div>
   </section>
@@ -1062,11 +983,7 @@ body{
       <div class="media-carousel-head">
         <div>
           <span class="section-kicker">Premiacoes</span>
-          <h2 class="section-heading">Reconhecimento que fortalece a imagem da operacao</h2>
-          <p class="section-text">
-            O carrossel de premiacoes valoriza registros reais da ALX, ajudando a transformar
-            conquistas e momentos especiais em prova visual da consistencia da marca.
-          </p>
+          <h2 class="section-heading">Premiacoes ALX</h2>
         </div>
 
         <div class="media-carousel-nav">
@@ -1082,60 +999,24 @@ body{
               <figure class="media-slide-figure">
                 <img src="/static/img/99food-premiacoes/premio-01.jpg" alt="Premiacao ALX 01">
               </figure>
-              <div class="media-slide-copy">
-                <span class="media-badge">Premiacao 01</span>
-                <h3>Momentos que evidenciam performance e reconhecimento</h3>
-                <p>
-                  Cada registro ajuda a mostrar uma operacao viva, valorizada e conectada com a
-                  construcao de uma marca mais forte ao lado da 99Food.
-                </p>
-                <small>Galeria institucional com autoplay e navegacao manual</small>
-              </div>
             </article>
 
             <article class="media-slide">
               <figure class="media-slide-figure">
                 <img src="/static/img/99food-premiacoes/premio-02.jpg" alt="Premiacao ALX 02">
               </figure>
-              <div class="media-slide-copy">
-                <span class="media-badge">Premiacao 02</span>
-                <h3>Uma vitrine visual para destacar conquistas reais</h3>
-                <p>
-                  O carrossel cria uma leitura mais premium da pagina e reforca a consistencia da
-                  ALX em contextos de operacao, equipe e resultado.
-                </p>
-                <small>Apresentacao pensada para leitura comercial</small>
-              </div>
             </article>
 
             <article class="media-slide">
               <figure class="media-slide-figure">
                 <img src="/static/img/99food-premiacoes/premio-03.jpg" alt="Premiacao ALX 03">
               </figure>
-              <div class="media-slide-copy">
-                <span class="media-badge">Premiacao 03</span>
-                <h3>Imagem de marca apoiada por registros autenticos</h3>
-                <p>
-                  Em vez de um bloco estatico, a pagina passa a exibir dinamismo e proximidade com
-                  materiais reais que elevam a percepcao da operacao.
-                </p>
-                <small>Mais ritmo visual para a experiencia da pagina</small>
-              </div>
             </article>
 
             <article class="media-slide">
               <figure class="media-slide-figure">
                 <img src="/static/img/99food-premiacoes/premio-04.jpg" alt="Premiacao ALX 04">
               </figure>
-              <div class="media-slide-copy">
-                <span class="media-badge">Premiacao 04</span>
-                <h3>Reconhecimento apresentado com mais elegancia</h3>
-                <p>
-                  A sequencia das imagens ajuda a construir uma narrativa de confianca, presenca e
-                  resultado para parceiros e visitantes da pagina.
-                </p>
-                <small>Carrossel continuo com identidade visual mais limpa</small>
-              </div>
             </article>
           </div>
         </div>
@@ -1149,11 +1030,7 @@ body{
       <div class="carousel-head">
         <div>
           <span class="section-kicker">Informativos</span>
-          <h2 class="section-heading">Comunicacao visual que mantem a operacao alinhada</h2>
-          <p class="section-text">
-            Os informativos entram como parte da identidade da pagina e mostram uma operacao que
-            comunica bem, orienta com clareza e sustenta rotina com mais organizacao.
-          </p>
+          <h2 class="section-heading">Informativos 99Food</h2>
         </div>
 
         <div class="carousel-actions">
@@ -1169,90 +1046,36 @@ body{
               <figure class="media-slide-figure">
                 <img src="/static/img/99food-informativos/info-01.png" alt="Informativo 99 01">
               </figure>
-              <div class="media-slide-copy">
-                <span class="media-badge">Informativo 01</span>
-                <h3>Comunicacao clara para fortalecer rotina e alinhamento</h3>
-                <p>
-                  O primeiro bloco abre a sequencia mostrando como a operacao pode comunicar com
-                  mais objetividade, ritmo e padrao visual.
-                </p>
-                <small>Material visual integrado ao carrossel institucional</small>
-              </div>
             </article>
 
             <article class="media-slide">
               <figure class="media-slide-figure">
                 <img src="/static/img/99food-informativos/info-02.png" alt="Informativo 99 02">
               </figure>
-              <div class="media-slide-copy">
-                <span class="media-badge">Informativo 02</span>
-                <h3>Mais organizacao na leitura dos materiais da operacao</h3>
-                <p>
-                  A apresentacao em carrossel deixa a pagina mais elegante e permite destacar
-                  comunicados sem pesar a experiencia visual.
-                </p>
-                <small>Leitura mais limpa para parceiro, cliente e equipe</small>
-              </div>
             </article>
 
             <article class="media-slide">
               <figure class="media-slide-figure">
                 <img src="/static/img/99food-informativos/info-03.png" alt="Informativo 99 03">
               </figure>
-              <div class="media-slide-copy">
-                <span class="media-badge">Informativo 03</span>
-                <h3>Materiais que ajudam a dar ritmo a pagina</h3>
-                <p>
-                  Os slides reforcam que a ALX trabalha com organizacao, acompanhamento e uma
-                  comunicacao que acompanha a rotina da operacao.
-                </p>
-                <small>Rotacao automatica com controle manual</small>
-              </div>
             </article>
 
             <article class="media-slide">
               <figure class="media-slide-figure">
                 <img src="/static/img/99food-informativos/info-04.png" alt="Informativo 99 04">
               </figure>
-              <div class="media-slide-copy">
-                <span class="media-badge">Informativo 04</span>
-                <h3>Visual premium para comunicados recorrentes</h3>
-                <p>
-                  O quarto slide amplia a sensacao de pagina viva, atualizada e preparada para
-                  seguir crescendo com novos materiais visuais.
-                </p>
-                <small>Mais consistencia para a narrativa institucional</small>
-              </div>
             </article>
 
             <article class="media-slide">
               <figure class="media-slide-figure">
                 <img src="/static/img/99food-informativos/info-05.png" alt="Informativo 99 05">
               </figure>
-              <div class="media-slide-copy">
-                <span class="media-badge">Informativo 05</span>
-                <h3>Conteudo visual que reforca presenca e confianca</h3>
-                <p>
-                  A composicao da galeria ajuda a comunicar cuidado com detalhes e melhora a
-                  percepcao da ALX como parceira preparada.
-                </p>
-                <small>Apresentacao mais forte sem poluir a pagina</small>
-              </div>
             </article>
 
             <article class="media-slide">
               <figure class="media-slide-figure">
                 <img src="/static/img/99food-informativos/info-06.png" alt="Informativo 99 06">
               </figure>
-              <div class="media-slide-copy">
-                <span class="media-badge">Informativo 06</span>
-                <h3>Galeria pronta para comunicar com mais impacto</h3>
-                <p>
-                  O fechamento da sequencia sustenta uma pagina mais profissional, com conteudo que
-                  informa e ao mesmo tempo fortalece imagem de marca.
-                </p>
-                <small>Experiencia visual organizada do inicio ao fim</small>
-              </div>
             </article>
           </div>
         </div>
