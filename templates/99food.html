@@ -120,9 +120,9 @@ body{
 
 .hero-grid{
     display:grid;
-    grid-template-columns:.9fr 1.1fr;
+    grid-template-columns:1fr;
     gap:28px;
-    align-items:center;
+    align-items:start;
     position:relative;
     z-index:1;
 }
@@ -147,7 +147,7 @@ body{
 .hero h1{
     font-size:58px;
     line-height:1.08;
-    max-width:11ch;
+    max-width:12ch;
     margin-bottom:18px;
 }
 
@@ -167,7 +167,8 @@ body{
 
 .hero-card{
     position:relative;
-    min-height:460px;
+    width:100%;
+    min-height:420px;
     padding:0;
     overflow:hidden;
     border-radius:32px;
@@ -196,7 +197,7 @@ body{
 .hero-card-copy{
     position:relative;
     z-index:1;
-    min-height:460px;
+    min-height:420px;
     padding:26px;
     display:flex;
     flex-direction:column;
@@ -252,7 +253,7 @@ body{
 
 .insights-grid{
     display:grid;
-    grid-template-columns:repeat(4, minmax(0, 1fr));
+    grid-template-columns:repeat(3, minmax(0, 1fr));
     gap:18px;
     margin-top:28px;
 }
@@ -271,10 +272,40 @@ body{
     font-size:18px;
 }
 
+.insight-card p{
+    color:#afc0d1;
+    font-size:14px;
+    line-height:1.8;
+    margin-bottom:14px;
+}
+
 .insight-card span{
     color:#afc0d1;
     font-size:14px;
     line-height:1.8;
+}
+
+.detail-list{
+    display:grid;
+    gap:8px;
+    padding-left:18px;
+    color:#d5e2ef;
+    font-size:14px;
+    line-height:1.75;
+}
+
+.telegram-link{
+    display:inline-flex;
+    align-items:center;
+    margin-top:8px;
+    color:#8dd6ff;
+    text-decoration:none;
+    font-weight:700;
+    word-break:break-all;
+}
+
+.telegram-link:hover{
+    color:#c8efff;
 }
 
 .spotlight{
@@ -620,6 +651,30 @@ body{
     line-height:1.75;
 }
 
+.schedule-meta{
+    display:grid;
+    gap:12px;
+    margin-top:20px;
+}
+
+.schedule-note{
+    padding:18px;
+    border-radius:20px;
+    background:rgba(255,255,255,.05);
+    border:1px solid rgba(255,255,255,.06);
+}
+
+.schedule-note strong{
+    display:block;
+    margin-bottom:8px;
+}
+
+.schedule-note span{
+    color:#c9d8e6;
+    font-size:14px;
+    line-height:1.8;
+}
+
 .spotlight-side{
     padding:32px;
     background:#0d1727;
@@ -754,7 +809,7 @@ body{
     }
 
     .insights-grid{
-        grid-template-columns:repeat(2, minmax(0, 1fr));
+        grid-template-columns:1fr;
     }
 
     .media-slide{
@@ -920,8 +975,8 @@ body{
         <span class="hero-kicker">Pagina dedicada 99Food</span>
         <h1>Sobre 99Food</h1>
         <p>
-          Pagina separada para apresentar a parceria da ALX com a 99Food com mais clareza,
-          mais peso visual e espaco proprio para materiais, informativos e reconhecimento.
+          Pagina separada para deixar reunidas as informacoes mais importantes da operacao
+          com a ALX na 99Food, com espaco proprio para materiais, informativos e reconhecimento.
         </p>
 
         <div class="hero-actions">
@@ -933,8 +988,8 @@ body{
       <div class="hero-card">
         <img src="/static/img/ALXE99.png" alt="Areas de atuacao ALX com 99Food">
         <div class="hero-card-copy">
-          <h3>Areas de atuacao</h3>
           <div class="hero-card-tags">
+            <span class="hero-card-tag">Areas de atuacao</span>
             <span class="hero-card-tag">Rio de Janeiro</span>
             <span class="hero-card-tag">Sao Paulo</span>
           </div>
@@ -945,29 +1000,51 @@ body{
 
   <section class="section">
     <div class="container">
-      <span class="section-kicker">Leitura comercial</span>
-      <h2 class="section-heading">Base pronta para aprofundar a relacao da ALX com a 99Food</h2>
+      <span class="section-kicker">Informacoes importantes</span>
+      <h2 class="section-heading">Tudo que o entregador precisa saber para operar com a ALX na 99Food</h2>
       <p class="section-text">
-        Deixei a estrutura preparada para voce ir alimentando essa pagina com mais contexto, resultados,
-        operacao, escala e tudo o que ajude a reforcar a relevancia da parceria.
+        Limpei os textos genericos e deixei a pagina quase pronta com as orientacoes principais
+        sobre bag, suporte e funcionamento dos agendamentos.
       </p>
 
       <div class="insights-grid">
         <div class="insight-card">
-          <strong>Presenca no delivery</strong>
-          <span>A parceria reforca a imagem da ALX em um ambiente de alta demanda e ritmo acelerado.</span>
+          <strong>Sobre a bag da ALX Entregas</strong>
+          <p>
+            A ALX Entregas disponibiliza bags para os entregadores, conforme disponibilidade em nossa base.
+          </p>
+          <ul class="detail-list">
+            <li>A bag e fornecida em forma de emprestimo e continua sendo patrimonio da ALX Entregas.</li>
+            <li>Em caso de desvinculacao da operacao, a bag deve ser devolvida em boas condicoes.</li>
+            <li>A entrega da bag implica concordancia com essa condicao.</li>
+          </ul>
         </div>
         <div class="insight-card">
-          <strong>Operacao em movimento</strong>
-          <span>Espaco ideal para destacar suporte, rotina operacional, alinhamento e capacidade de resposta.</span>
+          <strong>Suporte realizado pelo Telegram</strong>
+          <p>
+            Apos sua vinculacao, todo o atendimento operacional sera feito pelo Telegram.
+          </p>
+          <ul class="detail-list">
+            <li>Tirar duvidas</li>
+            <li>Solicitar suporte durante as entregas</li>
+            <li>Falar diretamente com nossa equipe</li>
+            <li>Receber orientacoes da operacao</li>
+          </ul>
+          <a class="telegram-link" href="https://t.me/+5511968437483" target="_blank" rel="noopener">
+            https://t.me/+5511968437483
+          </a>
         </div>
         <div class="insight-card">
-          <strong>Marca com contexto</strong>
-          <span>A pagina ajuda a transformar a parceria em prova social real, com leitura mais comercial.</span>
-        </div>
-        <div class="insight-card">
-          <strong>Pronta para evoluir</strong>
-          <span>Quando voce mandar mais informacoes, eu encaixo tudo aqui mantendo o mesmo visual da marca.</span>
+          <strong>Como funcionam os agendamentos</strong>
+          <p>
+            Na ALX Entregas voce escolhe os dias e horarios que deseja trabalhar.
+          </p>
+          <ul class="detail-list">
+            <li>Almoco: 11h as 14h</li>
+            <li>Tarde: 14h as 18h</li>
+            <li>Jantar: 18h as 22h</li>
+            <li>Ceia: 22h as 00h, somente no Rio de Janeiro</li>
+          </ul>
         </div>
       </div>
     </div>
@@ -976,53 +1053,65 @@ body{
   <section class="spotlight">
     <div class="container spotlight-grid">
       <div class="spotlight-main">
-        <span class="hero-kicker">Estrutura separada</span>
-        <h2>Uma secao dedicada para apresentar a forca dessa parceria com mais contexto</h2>
+        <span class="hero-kicker">Agendamentos e rotina</span>
+        <h2>Os horarios sao liberados diariamente e dependem da performance na plataforma</h2>
         <p>
-          Em vez de deixar a 99Food diluida na home, agora a ALX passa a ter um espaco proprio para explicar
-          a presenca no delivery, o valor da relacao e o quanto essa parceria ajuda a construir marca e credibilidade.
+          Em Sao Paulo os horarios para o dia seguinte ficam disponiveis a partir das 10h da manha.
+          No Rio de Janeiro, a liberacao acontece a partir das 10h20. Os agendamentos sao liberados
+          conforme a sua performance na plataforma.
         </p>
 
         <div class="bullet-grid">
           <div class="bullet-card">
-            <strong>Operacao com ritmo</strong>
-            <span>Bloco ideal para falar de rotina intensa, leitura pratica e resposta rapida no dia a dia.</span>
+            <strong>Escolha consciente</strong>
+            <span>Agende apenas os turnos que realmente ira trabalhar para ajudar no bom funcionamento da operacao.</span>
           </div>
           <div class="bullet-card">
-            <strong>Suporte e alinhamento</strong>
-            <span>Espaco para destacar acompanhamento operacional, proximidade e consistencia na execucao.</span>
+            <strong>Performance importa</strong>
+            <span>A disponibilidade dos agendamentos acompanha sua performance dentro da plataforma.</span>
           </div>
           <div class="bullet-card">
-            <strong>Valor percebido</strong>
-            <span>Uma pagina propria melhora a apresentacao da parceria e reforca o peso comercial da ALX.</span>
+            <strong>Ceia no Rio</strong>
+            <span>O turno de ceia, das 22h as 00h, esta disponivel somente no Rio de Janeiro.</span>
           </div>
           <div class="bullet-card">
-            <strong>Escalavel</strong>
-            <span>Esta estrutura ja nasce pronta para receber novas informacoes sem refazer a pagina inteira.</span>
+            <strong>Evite faltas</strong>
+            <span>Manter compromisso com os turnos agendados ajuda toda a equipe e a organizacao da operacao.</span>
+          </div>
+        </div>
+
+        <div class="schedule-meta">
+          <div class="schedule-note">
+            <strong>Sao Paulo</strong>
+            <span>Agendamentos do dia seguinte liberados todos os dias a partir das 10h da manha.</span>
+          </div>
+          <div class="schedule-note">
+            <strong>Rio de Janeiro</strong>
+            <span>Agendamentos do dia seguinte liberados todos os dias a partir das 10h20.</span>
           </div>
         </div>
       </div>
 
       <aside class="spotlight-side">
-        <h3>O que esta pagina pode reforcar</h3>
+        <h3>Importante na operacao</h3>
         <p>
-          A ideia aqui e te dar uma base separada para contar a historia da 99Food do jeito certo,
-          com narrativa propria, menu proprio e caminho direto para parceria.
+          Ter o contato da ALX no Telegram e essencial, pois ele sera o principal canal de comunicacao
+          entre voce e a equipe durante a operacao.
         </p>
 
         <div class="side-card">
-          <strong>Parceria estrategica</strong>
-          <span>Espaco para destacar confianca, relacao comercial e construcao de longo prazo com a ALX.</span>
+          <strong>Canal principal</strong>
+          <span>O Telegram sera usado para suporte, orientacoes, duvidas e contato direto com a operacao.</span>
         </div>
 
         <div class="side-card">
-          <strong>Presenca operacional</strong>
-          <span>Bloco bom para mostrar que a ALX tem vivencia real, ritmo de entrega e suporte de rotina.</span>
+          <strong>Bag em emprestimo</strong>
+          <span>A bag deve ser devolvida caso voce se desligue da operacao ou deixe de fazer parte da equipe.</span>
         </div>
 
         <div class="side-card">
-          <strong>CTA direto</strong>
-          <span>O botao abaixo leva o visitante para o formulario parceiro sem dar volta.</span>
+          <strong>Compromisso com turnos</strong>
+          <span>Agendar somente o que vai cumprir evita faltas e ajuda no bom funcionamento da operacao.</span>
         </div>
       </aside>
     </div>
