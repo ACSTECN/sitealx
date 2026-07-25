@@ -118,47 +118,35 @@ body{
 }
 
 .hero-shell{
-    width:100%;
-    margin:0;
+    width:min(1400px, 94%);
+    margin:0 auto;
     position:relative;
     z-index:1;
 }
 
 .hero-banner{
     position:relative;
-    min-height:560px;
+    min-height:0;
     overflow:hidden;
+    border-radius:34px;
+    border:1px solid rgba(255,255,255,.06);
+    box-shadow:0 20px 48px rgba(0,0,0,.28);
 }
 
 .hero-banner img{
-    position:absolute;
-    inset:0;
     width:100%;
-    height:100%;
-    object-fit:cover;
+    height:auto;
     object-position:center;
     display:block;
 }
 
-.hero-banner::after{
-    content:"";
-    position:absolute;
-    inset:0;
-    background:
-        linear-gradient(90deg, rgba(9,18,32,.82) 0%, rgba(9,18,32,.58) 28%, rgba(9,18,32,.18) 55%, rgba(9,18,32,.08) 100%),
-        linear-gradient(180deg, rgba(9,18,32,.06) 0%, rgba(9,18,32,.12) 46%, rgba(9,18,32,.58) 100%);
-}
-
 .hero-content{
-    position:relative;
-    z-index:1;
-    width:min(1400px, 100%);
-    min-height:560px;
-    margin:0 auto;
-    padding:54px 42px;
+    width:100%;
+    margin-top:26px;
+    padding:8px 6px 0;
     display:flex;
     flex-direction:column;
-    justify-content:flex-end;
+    justify-content:flex-start;
 }
 
 .hero-kicker,
@@ -811,10 +799,6 @@ body{
         max-width:none;
     }
 
-    .hero-banner,
-    .hero-content{
-        min-height:460px;
-    }
 }
 
 @media(max-width:700px){
@@ -836,10 +820,6 @@ body{
     .topbar-actions .secondary{
         width:100%;
         text-align:center;
-    }
-
-    .hero{
-        padding:126px 0 70px;
     }
 
     .insights-grid,
@@ -881,13 +861,9 @@ body{
         padding:110px 0 62px;
     }
 
-    .hero-banner,
     .hero-content{
-        min-height:420px;
-    }
-
-    .hero-content{
-        padding:28px 22px;
+        margin-top:22px;
+        padding:4px 0 0;
     }
 }
 
@@ -926,13 +902,9 @@ body{
         font-size:24px;
     }
 
-    .hero-banner,
     .hero-content{
-        min-height:360px;
-    }
-
-    .hero-content{
-        padding:22px 18px;
+        margin-top:18px;
+        padding:0;
     }
 }
 </style>
