@@ -523,6 +523,10 @@ def fale_conosco():
 def parceiro_alx():
     return render_template("partner.html", partner_mode=True, partner_hotzone="PARCEIRO ALX")
 
+@app.get("/99food")
+def page_99food():
+    return render_template("99food.html")
+
 @app.get("/sobre")
 def sobre_page():
     return render_template("sobre.html")

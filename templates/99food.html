@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ALX Entregas • 99Food</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    background:#06111d;
+    color:#fff;
+    font-family:Arial, Helvetica, sans-serif;
+    line-height:1.6;
+}
+
+.container{
+    width:min(1200px, 92%);
+    margin:auto;
+}
+
+.topbar{
+    position:sticky;
+    top:0;
+    z-index:999;
+    backdrop-filter:blur(14px);
+    background:rgba(6,17,29,.88);
+    border-bottom:1px solid rgba(255,255,255,.06);
+}
+
+.topbar-inner{
+    width:min(1200px, 92%);
+    margin:auto;
+    min-height:84px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:22px;
+}
+
+.topbar-brand{
+    display:flex;
+    align-items:center;
+}
+
+.logo{
+    height:54px;
+}
+
+.topbar-nav{
+    display:flex;
+    align-items:center;
+    gap:24px;
+}
+
+.topbar-nav a{
+    color:#dce6f2;
+    text-decoration:none;
+    font-weight:700;
+}
+
+.topbar-nav a.is-active,
+.topbar-nav a:hover{
+    color:#51b5ff;
+}
+
+.topbar-actions{
+    display:flex;
+    gap:14px;
+}
+
+.primary,
+.secondary{
+    padding:12px 22px;
+    border-radius:14px;
+    text-decoration:none;
+    font-weight:700;
+    border:none;
+    font-size:14px;
+    transition:.25s;
+}
+
+.primary{
+    background:#0b84ff;
+    color:#fff;
+    box-shadow:0 0 25px rgba(11,132,255,.25);
+}
+
+.secondary{
+    background:rgba(255,255,255,.06);
+    color:#fff;
+    border:1px solid rgba(255,255,255,.08);
+}
+
+.primary:hover,
+.secondary:hover{
+    transform:translateY(-2px);
+}
+
+.hero{
+    padding:110px 0 88px;
+    position:relative;
+    overflow:hidden;
+}
+
+.hero::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:
+        radial-gradient(circle at 18% 25%, rgba(56,189,248,.12), transparent 24%),
+        radial-gradient(circle at 85% 22%, rgba(11,132,255,.12), transparent 20%);
+    pointer-events:none;
+}
+
+.hero-grid{
+    display:grid;
+    grid-template-columns:1.05fr .95fr;
+    gap:28px;
+    align-items:center;
+    position:relative;
+    z-index:1;
+}
+
+.hero-kicker,
+.section-kicker{
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    padding:10px 16px;
+    border-radius:999px;
+    background:rgba(56,189,248,.10);
+    border:1px solid rgba(56,189,248,.24);
+    color:#bfefff;
+    margin-bottom:18px;
+    font-size:13px;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    font-weight:800;
+}
+
+.hero h1{
+    font-size:58px;
+    line-height:1.08;
+    max-width:11ch;
+    margin-bottom:18px;
+}
+
+.hero p{
+    color:#cfe0f0;
+    font-size:18px;
+    line-height:1.9;
+    max-width:62ch;
+}
+
+.hero-actions{
+    display:flex;
+    gap:14px;
+    flex-wrap:wrap;
+    margin-top:26px;
+}
+
+.hero-card{
+    padding:30px;
+    border-radius:32px;
+    background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+    border:1px solid rgba(255,255,255,.06);
+    box-shadow:0 18px 40px rgba(0,0,0,.22);
+}
+
+.hero-card img{
+    width:100%;
+    border-radius:24px;
+    border:1px solid rgba(255,255,255,.06);
+    margin-bottom:18px;
+    display:block;
+}
+
+.hero-card h3{
+    font-size:24px;
+    margin-bottom:10px;
+}
+
+.hero-card p{
+    color:#b7c6d6;
+    font-size:15px;
+    line-height:1.8;
+}
+
+.section{
+    padding:28px 0;
+}
+
+.section-heading{
+    font-size:42px;
+    line-height:1.14;
+    margin-bottom:14px;
+}
+
+.section-text{
+    color:#b7c6d6;
+    line-height:1.9;
+    max-width:74ch;
+}
+
+.insights-grid{
+    display:grid;
+    grid-template-columns:repeat(4, minmax(0, 1fr));
+    gap:18px;
+    margin-top:28px;
+}
+
+.insight-card{
+    padding:24px 20px;
+    border-radius:26px;
+    background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+    border:1px solid rgba(255,255,255,.06);
+    box-shadow:0 18px 40px rgba(0,0,0,.22);
+}
+
+.insight-card strong{
+    display:block;
+    margin-bottom:10px;
+    font-size:18px;
+}
+
+.insight-card span{
+    color:#afc0d1;
+    font-size:14px;
+    line-height:1.8;
+}
+
+.spotlight{
+    padding:48px 0 18px;
+}
+
+.spotlight-grid{
+    display:grid;
+    grid-template-columns:1.1fr .9fr;
+    gap:24px;
+}
+
+.spotlight-main,
+.spotlight-side{
+    border-radius:32px;
+    border:1px solid rgba(255,255,255,.06);
+    box-shadow:0 18px 40px rgba(0,0,0,.22);
+}
+
+.spotlight-main{
+    padding:38px;
+    background:linear-gradient(135deg, rgba(11,132,255,.14), rgba(9,18,32,.96));
+}
+
+.spotlight-main h2{
+    font-size:38px;
+    line-height:1.15;
+    margin:12px 0 18px;
+}
+
+.spotlight-main p{
+    color:#d9e6f2;
+    line-height:1.9;
+    margin-bottom:24px;
+}
+
+.bullet-grid{
+    display:grid;
+    grid-template-columns:repeat(2, minmax(0, 1fr));
+    gap:14px;
+}
+
+.bullet-card{
+    padding:18px;
+    border-radius:20px;
+    background:rgba(255,255,255,.05);
+    border:1px solid rgba(255,255,255,.06);
+}
+
+.bullet-card strong{
+    display:block;
+    margin-bottom:8px;
+}
+
+.bullet-card span{
+    color:#cad8e6;
+    font-size:14px;
+    line-height:1.75;
+}
+
+.spotlight-side{
+    padding:32px;
+    background:#0d1727;
+    display:grid;
+    gap:16px;
+    align-content:start;
+}
+
+.spotlight-side h3{
+    font-size:26px;
+}
+
+.spotlight-side p{
+    color:#b8c7d8;
+    line-height:1.85;
+}
+
+.side-card{
+    padding:18px;
+    border-radius:20px;
+    background:rgba(255,255,255,.04);
+    border:1px solid rgba(255,255,255,.06);
+}
+
+.side-card strong{
+    display:block;
+    margin-bottom:8px;
+}
+
+.side-card span{
+    color:#aebfd1;
+    font-size:14px;
+    line-height:1.75;
+}
+
+.cta-section{
+    padding:62px 0 90px;
+}
+
+.cta-card{
+    border-radius:34px;
+    padding:42px;
+    background:linear-gradient(135deg, rgba(11,132,255,.18), rgba(10,18,30,.96));
+    border:1px solid rgba(255,255,255,.06);
+    box-shadow:0 18px 40px rgba(0,0,0,.22);
+    text-align:center;
+}
+
+.cta-card h2{
+    font-size:42px;
+    margin-bottom:16px;
+}
+
+.cta-card p{
+    max-width:60ch;
+    margin:0 auto 26px;
+    color:#d1deeb;
+    line-height:1.9;
+}
+
+.footer{
+    border-top:1px solid rgba(255,255,255,.06);
+    background:linear-gradient(180deg, rgba(6,17,29,0), rgba(16,29,49,.65));
+    color:#aab7c6;
+}
+
+.footer-inner{
+    width:92%;
+    max-width:1200px;
+    margin:auto;
+    padding:34px 0;
+    display:grid;
+    grid-template-columns:1.2fr 1fr 1fr;
+    gap:24px;
+}
+
+.footer-logo{
+    height:74px;
+    max-width:340px;
+    object-fit:contain;
+    display:block;
+    margin-bottom:14px;
+}
+
+.footer-title{
+    font-size:18px;
+    font-weight:800;
+    color:#eaf3ff;
+}
+
+.footer-sub{
+    color:#93a4ba;
+    line-height:1.7;
+    max-width:420px;
+}
+
+.footer-block h4{
+    margin-bottom:10px;
+    font-size:14px;
+    text-transform:uppercase;
+    letter-spacing:.12em;
+    color:#93a4ba;
+}
+
+.footer-link{
+    display:block;
+    color:#dce6f2;
+    text-decoration:none;
+    line-height:1.8;
+    padding:6px 0;
+}
+
+.footer-link:hover{
+    color:#fff;
+}
+
+.footer-bottom{
+    width:92%;
+    max-width:1200px;
+    margin:auto;
+    padding:16px 0 24px;
+    border-top:1px solid rgba(255,255,255,.06);
+    color:#7f92a6;
+}
+
+@media(max-width:1000px){
+    .hero-grid,
+    .spotlight-grid,
+    .footer-inner{
+        grid-template-columns:1fr;
+    }
+
+    .insights-grid{
+        grid-template-columns:repeat(2, minmax(0, 1fr));
+    }
+
+    .topbar-nav{
+        display:none;
+    }
+
+    .hero h1,
+    .section-heading,
+    .spotlight-main h2,
+    .cta-card h2{
+        font-size:40px;
+        max-width:none;
+    }
+}
+
+@media(max-width:700px){
+    .topbar-inner{
+        width:min(100%, 94%);
+        padding:12px 0 14px;
+        flex-direction:column;
+        gap:12px;
+    }
+
+    .topbar-actions{
+        width:100%;
+        max-width:420px;
+        display:grid;
+        grid-template-columns:repeat(2, minmax(0, 1fr));
+    }
+
+    .topbar-actions .primary,
+    .topbar-actions .secondary{
+        width:100%;
+        text-align:center;
+    }
+
+    .hero{
+        padding:126px 0 70px;
+    }
+
+    .insights-grid,
+    .bullet-grid,
+    .footer-inner{
+        grid-template-columns:1fr;
+    }
+
+    .hero-card,
+    .spotlight-main,
+    .spotlight-side,
+    .cta-card{
+        padding:26px 20px;
+    }
+}
+
+@media(max-width:560px){
+    .logo{
+        height:40px;
+    }
+
+    .topbar-actions{
+        max-width:310px;
+    }
+
+    .topbar-actions .primary,
+    .topbar-actions .secondary{
+        font-size:13px;
+        min-height:46px;
+        padding:10px 12px;
+    }
+
+    .hero h1,
+    .section-heading,
+    .spotlight-main h2,
+    .cta-card h2{
+        font-size:30px;
+    }
+
+    .hero p,
+    .section-text,
+    .spotlight-main p,
+    .cta-card p{
+        font-size:15px;
+    }
+}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="topbar-brand">
+      <img src="/static/img/logo.png" class="logo" alt="ALX">
+    </div>
+
+    <nav class="topbar-nav">
+      <a href="{{ url_for('home') }}">Início</a>
+      <a href="{{ url_for('page_99food') }}" class="is-active">99Food</a>
+      <a href="{{ url_for('sobre_page') }}">Sobre</a>
+      <a href="{{ url_for('fale_conosco') }}">Contato</a>
+    </nav>
+
+    <div class="topbar-actions">
+      <a class="primary" href="{{ url_for('fale_conosco') }}">Fale Conosco</a>
+      <a class="secondary" href="{{ url_for('parceiro_alx') }}#feedback-form">Seja Parceiro</a>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="container hero-grid">
+      <div>
+        <span class="hero-kicker">Pagina dedicada 99Food</span>
+        <h1>Sobre 99Food</h1>
+        <p>
+          Esta pagina foi separada para concentrar tudo o que a ALX quiser comunicar sobre a parceria com a 99Food:
+          operacao, contexto comercial, valor da relacao e espaco para evoluir a apresentacao com mais detalhes depois.
+        </p>
+
+        <div class="hero-actions">
+          <a class="primary" href="{{ url_for('parceiro_alx') }}#feedback-form">Seja Parceiro</a>
+          <a class="secondary" href="{{ url_for('home') }}">Voltar ao inicio</a>
+        </div>
+      </div>
+
+      <div class="hero-card">
+        <img src="/static/img/2evento.png" alt="Operacao ALX com 99Food">
+        <h3>Uma narrativa separada para a parceria</h3>
+        <p>
+          Agora a 99Food nao fica mais misturada no meio da home. Esta pagina cria um ambiente proprio
+          para contar a historia da parceria com mais clareza e mais peso comercial.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <span class="section-kicker">Leitura comercial</span>
+      <h2 class="section-heading">Base pronta para aprofundar a relacao da ALX com a 99Food</h2>
+      <p class="section-text">
+        Deixei a estrutura preparada para voce ir alimentando essa pagina com mais contexto, resultados,
+        operacao, escala e tudo o que ajude a reforcar a relevancia da parceria.
+      </p>
+
+      <div class="insights-grid">
+        <div class="insight-card">
+          <strong>Presenca no delivery</strong>
+          <span>A parceria reforca a imagem da ALX em um ambiente de alta demanda e ritmo acelerado.</span>
+        </div>
+        <div class="insight-card">
+          <strong>Operacao em movimento</strong>
+          <span>Espaco ideal para destacar suporte, rotina operacional, alinhamento e capacidade de resposta.</span>
+        </div>
+        <div class="insight-card">
+          <strong>Marca com contexto</strong>
+          <span>A pagina ajuda a transformar a parceria em prova social real, com leitura mais comercial.</span>
+        </div>
+        <div class="insight-card">
+          <strong>Pronta para evoluir</strong>
+          <span>Quando voce mandar mais informacoes, eu encaixo tudo aqui mantendo o mesmo visual da marca.</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="spotlight">
+    <div class="container spotlight-grid">
+      <div class="spotlight-main">
+        <span class="hero-kicker">Estrutura separada</span>
+        <h2>Uma secao dedicada para apresentar a forca dessa parceria com mais contexto</h2>
+        <p>
+          Em vez de deixar a 99Food diluida na home, agora a ALX passa a ter um espaco proprio para explicar
+          a presenca no delivery, o valor da relacao e o quanto essa parceria ajuda a construir marca e credibilidade.
+        </p>
+
+        <div class="bullet-grid">
+          <div class="bullet-card">
+            <strong>Operacao com ritmo</strong>
+            <span>Bloco ideal para falar de rotina intensa, leitura pratica e resposta rapida no dia a dia.</span>
+          </div>
+          <div class="bullet-card">
+            <strong>Suporte e alinhamento</strong>
+            <span>Espaco para destacar acompanhamento operacional, proximidade e consistencia na execucao.</span>
+          </div>
+          <div class="bullet-card">
+            <strong>Valor percebido</strong>
+            <span>Uma pagina propria melhora a apresentacao da parceria e reforca o peso comercial da ALX.</span>
+          </div>
+          <div class="bullet-card">
+            <strong>Escalavel</strong>
+            <span>Esta estrutura ja nasce pronta para receber novas informacoes sem refazer a pagina inteira.</span>
+          </div>
+        </div>
+      </div>
+
+      <aside class="spotlight-side">
+        <h3>O que esta pagina pode reforcar</h3>
+        <p>
+          A ideia aqui e te dar uma base separada para contar a historia da 99Food do jeito certo,
+          com narrativa propria, menu proprio e caminho direto para parceria.
+        </p>
+
+        <div class="side-card">
+          <strong>Parceria estrategica</strong>
+          <span>Espaco para destacar confianca, relacao comercial e construcao de longo prazo com a ALX.</span>
+        </div>
+
+        <div class="side-card">
+          <strong>Presenca operacional</strong>
+          <span>Bloco bom para mostrar que a ALX tem vivencia real, ritmo de entrega e suporte de rotina.</span>
+        </div>
+
+        <div class="side-card">
+          <strong>CTA direto</strong>
+          <span>O botao abaixo leva o visitante para o formulario parceiro sem dar volta.</span>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <section class="cta-section">
+    <div class="container">
+      <div class="cta-card">
+        <h2>Quer conversar com a ALX sobre parceria?</h2>
+        <p>
+          A pagina da 99Food agora tem um caminho direto para contato. Quando voce mandar mais informacoes,
+          eu continuo enriquecendo esta secao com o conteudo real da parceria.
+        </p>
+        <a class="primary" href="{{ url_for('parceiro_alx') }}#feedback-form">Seja Parceiro</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <div>
+      <img src="/static/img/logo.png" class="footer-logo" alt="ALX">
+      <div class="footer-title">ALX Entregas</div>
+      <div class="footer-sub">
+        Operador logistico com gestao operacional, suporte e tecnologia para conectar entregadores,
+        plataformas e novos parceiros com mais estrutura.
+      </div>
+    </div>
+
+    <div class="footer-block">
+      <h4>Navegacao</h4>
+      <a class="footer-link" href="{{ url_for('home') }}">Inicio</a>
+      <a class="footer-link" href="{{ url_for('page_99food') }}">99Food</a>
+      <a class="footer-link" href="{{ url_for('sobre_page') }}">Sobre</a>
+      <a class="footer-link" href="{{ url_for('parceiro_alx') }}#feedback-form">Seja Parceiro</a>
+    </div>
+
+    <div class="footer-block">
+      <h4>Contato</h4>
+      <a class="footer-link" href="{{ url_for('fale_conosco') }}">Fale Conosco</a>
+      <a class="footer-link" href="{{ url_for('login_page') }}">Area Admin</a>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <small>&copy; 2026 ALX Entregas. Todos os direitos reservados.</small>
+  </div>
+</footer>
+
+</body>
+</html>
