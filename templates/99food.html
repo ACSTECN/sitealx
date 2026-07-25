@@ -205,12 +205,47 @@ body{
     margin-top:24px;
     color:#9fb2c6;
     font-size:14px;
+    display:flex;
+    flex-wrap:wrap;
+    align-items:center;
+    gap:12px;
 }
 
 .hero-support a{
     color:#dce8f6;
     text-decoration:none;
     font-weight:700;
+}
+
+.hero-support-links{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+}
+
+.hero-support-link{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    padding:10px 14px;
+    border-radius:999px;
+    background:rgba(255,255,255,.06);
+    border:1px solid rgba(255,255,255,.08);
+    color:#f1f6fd;
+    text-decoration:none;
+    font-size:13px;
+    font-weight:800;
+    letter-spacing:.02em;
+    transition:.2s ease;
+}
+
+.hero-support-link:hover{
+    transform:translateY(-1px);
+    background:rgba(255,255,255,.1);
+}
+
+.hero-support-link strong{
+    color:#8ec5ff;
 }
 
 .metrics{
@@ -859,8 +894,15 @@ body{
           </div>
 
           <div class="hero-support">
-            Canal oficial de suporte:
-            <a href="https://t.me/+5511968437483" target="_blank" rel="noopener">Telegram ALX</a>
+            <span>Canal oficial de suporte:</span>
+            <div class="hero-support-links">
+              <a class="hero-support-link" href="https://t.me/AlxEntregasRJ21967093799" target="_blank" rel="noopener">
+                <strong>RJ</strong> Telegram
+              </a>
+              <a class="hero-support-link" href="https://t.me/+5511968437483" target="_blank" rel="noopener">
+                <strong>SP</strong> Telegram
+              </a>
+            </div>
           </div>
         </div>
       </div>
