@@ -118,7 +118,7 @@ body{
 }
 
 .hero-shell{
-    width:min(1400px, 94%);
+    width:min(1500px, 96%);
     margin:0 auto;
     position:relative;
     z-index:1;
@@ -136,6 +136,8 @@ body{
 .hero-banner img{
     width:100%;
     height:auto;
+    aspect-ratio:4.4 / 1.45;
+    object-fit:cover;
     object-position:center;
     display:block;
 }
@@ -861,6 +863,10 @@ body{
         padding:110px 0 62px;
     }
 
+    .hero-banner img{
+        aspect-ratio:2.4 / 1.25;
+    }
+
     .hero-content{
         margin-top:22px;
         padding:4px 0 0;
@@ -1130,14 +1136,29 @@ body{
           <div class="media-carousel-track">
             <article class="media-slide">
               <figure class="media-slide-figure">
-                <img src="/static/img/99food-premiacoes/premio-01.png" alt="Premiacao ALX 01">
+                <img src="/static/img/99food-premiacoes/premio-01.jpg" alt="Premiacao ALX 01">
               </figure>
               <div class="media-slide-copy">
                 <span class="media-badge">Premiacao 01</span>
-                <h3>Espaco para trofeus, reconhecimentos e registros oficiais</h3>
+                <h3>Momentos de premiacao e reconhecimento da ALX</h3>
                 <p>
-                  Aqui entram as imagens de premiacoes da ALX para reforcar autoridade, historico
-                  e momentos importantes ligados a performance da operacao.
+                  O carrossel de premiacoes agora usa as imagens reais da pasta que voce separou
+                  para destacar momentos importantes da operacao.
+                </p>
+                <small>Fonte: carroselmomentos</small>
+              </div>
+            </article>
+
+            <article class="media-slide">
+              <figure class="media-slide-figure">
+                <img src="/static/img/99food-premiacoes/premio-02.jpg" alt="Premiacao ALX 02">
+              </figure>
+              <div class="media-slide-copy">
+                <span class="media-badge">Premiacao 02</span>
+                <h3>Galeria pronta para valorizar as conquistas da operacao</h3>
+                <p>
+                  Mantive a estrutura automatica do carrossel para ficar facil trocar,
+                  ampliar ou reorganizar os registros de premiacao depois.
                 </p>
                 <small>Pasta pronta: static/img/99food-premiacoes</small>
               </div>
@@ -1145,30 +1166,29 @@ body{
 
             <article class="media-slide">
               <figure class="media-slide-figure">
-                <img src="/static/img/99food-premiacoes/premio-02.png" alt="Premiacao ALX 02">
+                <img src="/static/img/99food-premiacoes/premio-03.jpg" alt="Premiacao ALX 03">
               </figure>
               <div class="media-slide-copy">
-                <span class="media-badge">Premiacao 02</span>
-                <h3>Mais espaco para valorizar conquistas da ALX</h3>
+                <span class="media-badge">Premiacao 03</span>
+                <h3>Mais prova visual de performance e presenca da ALX</h3>
                 <p>
-                  O carrossel aceita novas imagens sem mexer na estrutura principal da pagina
-                  e ajuda a manter a leitura de prova social sempre em destaque.
+                  Essas imagens passam a rodar automaticamente para fortalecer a pagina com materiais reais.
                 </p>
-                <small>Troque ou acrescente os arquivos depois</small>
+                <small>Carrossel automatico com setas e indicadores</small>
               </div>
             </article>
 
             <article class="media-slide">
               <figure class="media-slide-figure">
-                <img src="/static/img/99food-premiacoes/premio-03.png" alt="Premiacao ALX 03">
+                <img src="/static/img/99food-premiacoes/premio-04.jpg" alt="Premiacao ALX 04">
               </figure>
               <div class="media-slide-copy">
-                <span class="media-badge">Premiacao 03</span>
-                <h3>Bloco pensado para rodar imagens automaticamente</h3>
+                <span class="media-badge">Premiacao 04</span>
+                <h3>Espaco pronto para a sequencia completa de momentos</h3>
                 <p>
-                  Enquanto voce organiza a pasta definitiva, eu deixei imagens-base para o carrossel ja funcionar.
+                  A quarta imagem entra no mesmo fluxo do carrossel para completar essa vitrine de premiacoes.
                 </p>
-                <small>Carrossel automatico com setas e indicadores</small>
+                <small>Atualizado com os arquivos que voce enviou</small>
               </div>
             </article>
           </div>
@@ -1204,12 +1224,11 @@ body{
               </figure>
               <div class="media-slide-copy">
                 <span class="media-badge">Informativo 01</span>
-                <h3>Espaco para comunicado principal da 99</h3>
+                <h3>Comunicados visuais da 99Food</h3>
                 <p>
-                  Este slide pode receber materiais mais institucionais, comunicados visuais
-                  ou artes de campanha ligadas a 99Food.
+                  O carrossel agora usa a pasta real de comunicados para mostrar os materiais da 99Food.
                 </p>
-                <small>Pasta pronta: static/img/99food-informativos</small>
+                <small>Fonte: comunicados</small>
               </div>
             </article>
 
@@ -1219,12 +1238,11 @@ body{
               </figure>
               <div class="media-slide-copy">
                 <span class="media-badge">Informativo 02</span>
-                <h3>Espaco para materiais de rotina e alinhamento</h3>
+                <h3>Materiais de rotina e alinhamento operacional</h3>
                 <p>
-                  O segundo slide pode ser usado para avisos operacionais, novidades,
-                  janelas de atendimento e reforcos visuais da parceria.
+                  Deixei esse bloco preparado para continuar recebendo artes, avisos e comunicados atualizados.
                 </p>
-                <small>Troque pelas imagens oficiais quando quiser</small>
+                <small>Pasta pronta: static/img/99food-informativos</small>
               </div>
             </article>
 
@@ -1239,6 +1257,48 @@ body{
                   Assim fica facil manter a pagina sempre viva com novas artes, informativos e comunicados.
                 </p>
                 <small>Carrossel automatico com navegacao manual</small>
+              </div>
+            </article>
+
+            <article class="media-slide">
+              <figure class="media-slide-figure">
+                <img src="/static/img/99food-informativos/info-04.png" alt="Informativo 99 04">
+              </figure>
+              <div class="media-slide-copy">
+                <span class="media-badge">Informativo 04</span>
+                <h3>Mais um bloco para a sequencia dos comunicados</h3>
+                <p>
+                  O quarto material entra na rotacao automatica para ampliar a leitura dos informativos na pagina.
+                </p>
+                <small>Atualizado com os arquivos enviados</small>
+              </div>
+            </article>
+
+            <article class="media-slide">
+              <figure class="media-slide-figure">
+                <img src="/static/img/99food-informativos/info-05.png" alt="Informativo 99 05">
+              </figure>
+              <div class="media-slide-copy">
+                <span class="media-badge">Informativo 05</span>
+                <h3>Sequencia pronta para novos materiais da 99Food</h3>
+                <p>
+                  O carrossel segue escalavel para voce continuar alimentando a pagina sem refazer a estrutura.
+                </p>
+                <small>Rodando junto com os demais comunicados</small>
+              </div>
+            </article>
+
+            <article class="media-slide">
+              <figure class="media-slide-figure">
+                <img src="/static/img/99food-informativos/info-06.png" alt="Informativo 99 06">
+              </figure>
+              <div class="media-slide-copy">
+                <span class="media-badge">Informativo 06</span>
+                <h3>Bloco final para fechar a galeria de comunicados</h3>
+                <p>
+                  O ultimo slide completa a vitrine com todos os arquivos que voce separou para essa area.
+                </p>
+                <small>Se quiser depois eu tambem organizo por tema</small>
               </div>
             </article>
           </div>
