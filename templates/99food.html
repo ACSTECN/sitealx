@@ -120,6 +120,7 @@ body{
 
 .hero{
     padding:18px 0 30px;
+    background:linear-gradient(180deg, #04101c 0%, #06111d 100%);
 }
 
 .hero-media{
@@ -129,12 +130,21 @@ body{
     background:#06111d;
 }
 
+.hero-media::after{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:linear-gradient(180deg, rgba(3,12,24,.58), rgba(3,12,24,.46));
+    pointer-events:none;
+}
+
 .hero-media img{
     width:100%;
     height:340px;
     display:block;
     object-fit:cover;
-    object-position:center 58%;
+    object-position:center 60%;
+    filter:saturate(.9) brightness(.78) contrast(1.05);
 }
 
 .hero-copy{
@@ -738,7 +748,7 @@ body{
 
     .hero-media img{
         height:270px;
-        object-position:center 58%;
+        object-position:center 60%;
     }
 
     .video-copy,
