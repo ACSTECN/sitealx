@@ -691,6 +691,220 @@ body{
     font-size:12px;
 }
 
+.partner-trust-section{
+    padding:58px 0 8px;
+}
+
+.partner-brand-grid{
+    display:grid;
+    grid-template-columns:repeat(4, minmax(0, 1fr));
+    gap:18px;
+    margin-top:30px;
+}
+
+.partner-brand-card{
+    min-height:142px;
+    padding:24px 20px;
+    border-radius:28px;
+    background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+    border:1px solid rgba(255,255,255,.06);
+    box-shadow:0 18px 40px rgba(0,0,0,.22);
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+    gap:18px;
+}
+
+.partner-logo{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-weight:900;
+    letter-spacing:.02em;
+}
+
+.partner-logo-mark{
+    width:44px;
+    height:44px;
+    border-radius:14px;
+    display:grid;
+    place-items:center;
+    font-size:18px;
+    box-shadow:0 10px 24px rgba(0,0,0,.2);
+}
+
+.partner-logo-text{
+    display:flex;
+    flex-direction:column;
+    line-height:1;
+}
+
+.partner-logo-text strong{
+    font-size:22px;
+}
+
+.partner-logo-text span{
+    margin-top:5px;
+    font-size:12px;
+    color:#c6d3e1;
+    font-weight:700;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+}
+
+.partner-logo-99 .partner-logo-mark{
+    background:linear-gradient(135deg, #ffd84f, #f4ba00);
+    color:#14387d;
+}
+
+.partner-logo-99 .partner-logo-text strong{
+    color:#ffe072;
+}
+
+.partner-logo-ifood .partner-logo-mark{
+    background:linear-gradient(135deg, #ff5e52, #e71d24);
+    color:#fff;
+}
+
+.partner-logo-ifood .partner-logo-text strong{
+    color:#ff857e;
+}
+
+.partner-logo-mercado .partner-logo-mark{
+    background:linear-gradient(135deg, #ffe160, #f7c400);
+    color:#1a4fd6;
+}
+
+.partner-logo-mercado .partner-logo-text strong{
+    color:#ffe160;
+    font-size:20px;
+}
+
+.partner-logo-box .partner-logo-mark{
+    background:linear-gradient(135deg, #87c44b, #4d8f1f);
+    color:#fff8d6;
+}
+
+.partner-logo-box .partner-logo-text strong{
+    color:#b7eb73;
+    font-size:20px;
+}
+
+.partner-brand-card p{
+    color:#aebfd1;
+    line-height:1.8;
+    font-size:14px;
+}
+
+.partner-spotlight{
+    padding:72px 0 14px;
+}
+
+.partner-spotlight-grid{
+    display:grid;
+    grid-template-columns:1.1fr .9fr;
+    gap:24px;
+    align-items:stretch;
+}
+
+.partner-spotlight-main,
+.partner-spotlight-side{
+    border-radius:32px;
+    border:1px solid rgba(255,255,255,.06);
+    box-shadow:0 18px 40px rgba(0,0,0,.22);
+}
+
+.partner-spotlight-main{
+    padding:38px;
+    background:linear-gradient(135deg, rgba(11,132,255,.14), rgba(9,18,32,.96));
+}
+
+.partner-spotlight-main h3{
+    font-size:38px;
+    margin:12px 0 18px;
+}
+
+.partner-spotlight-main p{
+    color:#d9e6f2;
+    line-height:1.9;
+    margin-bottom:24px;
+}
+
+.partner-pill{
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    padding:10px 16px;
+    border-radius:999px;
+    background:rgba(255,255,255,.06);
+    border:1px solid rgba(255,255,255,.08);
+    color:#dbeafe;
+    font-size:13px;
+    font-weight:800;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+}
+
+.partner-bullets{
+    display:grid;
+    grid-template-columns:repeat(2, minmax(0, 1fr));
+    gap:14px;
+    margin-bottom:28px;
+}
+
+.partner-bullet{
+    padding:18px;
+    border-radius:20px;
+    background:rgba(255,255,255,.05);
+    border:1px solid rgba(255,255,255,.06);
+}
+
+.partner-bullet strong{
+    display:block;
+    margin-bottom:8px;
+}
+
+.partner-bullet span{
+    color:#c9d7e4;
+    line-height:1.75;
+    font-size:14px;
+}
+
+.partner-spotlight-side{
+    padding:32px;
+    background:#0d1727;
+    display:grid;
+    gap:18px;
+    align-content:start;
+}
+
+.partner-spotlight-side h4{
+    font-size:24px;
+}
+
+.partner-spotlight-side p{
+    color:#b8c7d8;
+    line-height:1.85;
+}
+
+.partner-side-card{
+    padding:18px;
+    border-radius:20px;
+    background:rgba(255,255,255,.04);
+    border:1px solid rgba(255,255,255,.06);
+}
+
+.partner-side-card strong{
+    display:block;
+    margin-bottom:8px;
+}
+
+.partner-side-card span{
+    color:#aebfd1;
+    line-height:1.75;
+    font-size:14px;
+}
+
 /* =========================
    CTA
 ========================= */
@@ -862,7 +1076,8 @@ body{
     .tech-grid,
     .portal-grid,
     .commercial-grid,
-    .proof-grid{
+    .proof-grid,
+    .partner-brand-grid{
         grid-template-columns:1fr 1fr;
     }
 
@@ -931,7 +1146,9 @@ body{
     .portal-grid,
     .commercial-grid,
     .proof-grid,
-    .commercial-points{
+    .commercial-points,
+    .partner-spotlight-grid,
+    .partner-bullets{
         grid-template-columns:1fr;
     }
 
@@ -987,6 +1204,16 @@ body{
         bottom:14px;
     }
 
+    .partner-spotlight-main,
+    .partner-spotlight-side,
+    .partner-brand-card{
+        padding:24px 20px;
+    }
+
+    .partner-spotlight-main h3{
+        font-size:30px;
+    }
+
 }
 
 @media(max-width:560px){
@@ -1016,6 +1243,18 @@ body{
 
     .hero-slider{
         height:250px;
+    }
+
+    .partner-brand-grid{
+        grid-template-columns:1fr;
+    }
+
+    .partner-logo-text strong{
+        font-size:20px;
+    }
+
+    .partner-spotlight-main h3{
+        font-size:26px;
     }
 }
 
@@ -1109,6 +1348,133 @@ body{
       <button class="hero-dot"
               type="button"></button>
 
+    </div>
+
+</section>
+
+<!-- PARCEIROS -->
+<section class="partner-trust-section">
+
+    <span class="section-kicker">
+        Alguns parceiros que confiaram na ALX Entregas
+    </span>
+
+    <h2 class="section-heading">
+        Relações construídas com operação, suporte e consistência
+    </h2>
+
+    <p class="section-text">
+        A ALX vem fortalecendo sua presença com operações que exigem resposta rápida, padrão de atendimento
+        e capacidade de execução. Esta seção abre espaço para destacar parceiros e reforçar credibilidade logo no início do site.
+    </p>
+
+    <div class="partner-brand-grid">
+        <div class="partner-brand-card partner-logo-99">
+            <div class="partner-logo">
+                <div class="partner-logo-mark">99</div>
+                <div class="partner-logo-text">
+                    <strong>99Food</strong>
+                    <span>Delivery</span>
+                </div>
+            </div>
+            <p>Operação com foco em ritmo, adaptação e presença em uma rotina de alta demanda.</p>
+        </div>
+
+        <div class="partner-brand-card partner-logo-ifood">
+            <div class="partner-logo">
+                <div class="partner-logo-mark">iF</div>
+                <div class="partner-logo-text">
+                    <strong>iFood</strong>
+                    <span>Food Tech</span>
+                </div>
+            </div>
+            <p>Experiência em operação de delivery com leitura prática de atendimento, escala e suporte.</p>
+        </div>
+
+        <div class="partner-brand-card partner-logo-mercado">
+            <div class="partner-logo">
+                <div class="partner-logo-mark">ML</div>
+                <div class="partner-logo-text">
+                    <strong>Mercado Livre</strong>
+                    <span>Logística</span>
+                </div>
+            </div>
+            <p>Atuação em um ecossistema que pede eficiência, previsibilidade operacional e velocidade.</p>
+        </div>
+
+        <div class="partner-brand-card partner-logo-box">
+            <div class="partner-logo">
+                <div class="partner-logo-mark">BM</div>
+                <div class="partner-logo-text">
+                    <strong>Box Mineiro</strong>
+                    <span>Parceiro</span>
+                </div>
+            </div>
+            <p>Parceria com operação próxima do negócio, alinhamento de rotina e atenção à experiência.</p>
+        </div>
+    </div>
+
+</section>
+
+<!-- 99FOOD -->
+<section class="partner-spotlight">
+
+    <div class="partner-spotlight-grid">
+        <div class="partner-spotlight-main">
+            <span class="partner-pill">Sobre a 99Food</span>
+            <h3>Uma seção dedicada para apresentar a força dessa parceria com mais contexto comercial.</h3>
+            <p>
+                Deixamos esse espaço pronto para você aprofundar a relação da ALX com a 99Food, contar a história da operação,
+                mostrar diferenciais e destacar tudo o que essa parceria representa para a marca.
+            </p>
+
+            <div class="partner-bullets">
+                <div class="partner-bullet">
+                    <strong>Base pronta</strong>
+                    <span>A estrutura já fica preparada para receber mais informações sem precisar refazer a página.</span>
+                </div>
+                <div class="partner-bullet">
+                    <strong>Leitura comercial</strong>
+                    <span>O conteúdo pode ser expandido para fortalecer prova social e valor percebido da ALX.</span>
+                </div>
+                <div class="partner-bullet">
+                    <strong>Operação com contexto</strong>
+                    <span>Esse bloco pode destacar escala, suporte, atendimento e resultados da parceria.</span>
+                </div>
+                <div class="partner-bullet">
+                    <strong>Pronto para evoluir</strong>
+                    <span>Quando você mandar mais detalhes, eu encaixo tudo aqui mantendo o mesmo visual.</span>
+                </div>
+            </div>
+
+            <a class="primary"
+               href="{{ url_for('parceiro_alx') }}#feedback-form">
+                Seja Parceiro
+            </a>
+        </div>
+
+        <aside class="partner-spotlight-side">
+            <h4>O que esta seção pode reforçar</h4>
+            <p>
+                Enquanto você me passa mais informações, já deixei um bloco com linguagem de apresentação para a ALX
+                mostrar parceria, presença operacional e capacidade de crescimento ao lado da 99Food.
+            </p>
+
+            <div class="partner-side-card">
+                <strong>Parceria estratégica</strong>
+                <span>Espaço para destacar valor da relação comercial, confiança e construção de longo prazo.</span>
+            </div>
+
+            <div class="partner-side-card">
+                <strong>Operação em movimento</strong>
+                <span>Bloco ideal para falar de suporte, ritmo logístico, estrutura e acompanhamento da rotina.</span>
+            </div>
+
+            <div class="partner-side-card">
+                <strong>CTA direto</strong>
+                <span>O botão já leva o visitante para o formulário parceiro, encurtando o caminho de contato.</span>
+            </div>
+        </aside>
     </div>
 
 </section>
@@ -1498,8 +1864,8 @@ body{
     </h2>
 
     <p class="section-text">
-        Organizamos a experiência digital da operação para atender diferentes perfis com clareza:
-        administração, entregadores e novos parceiros comerciais.
+        Organizamos a experiência digital da operação para atender com clareza a gestão interna
+        e os novos parceiros comerciais que querem se conectar com a ALX.
     </p>
 
     <div class="portal-grid">
@@ -1517,25 +1883,14 @@ body{
         </div>
 
         <div class="portal-card">
-            <span class="portal-tag">Em Breve</span>
-            <h3>Área Logada Entregador</h3>
-            <p>
-                Espaço dedicado para o entregador acompanhar comunicações, acessos e rotinas da operação.
-            </p>
-            <span class="portal-action portal-disabled">
-                Disponível em breve
-            </span>
-        </div>
-
-        <div class="portal-card">
             <span class="portal-tag">Comercial</span>
-            <h3>Quero ser Cliente</h3>
+            <h3>Seja Parceiro</h3>
             <p>
-                Canal direto para empresas e parceiros que desejam uma operação mais tecnológica, organizada e forte.
+                Canal direto para marcas e operações que querem conversar com a ALX sobre parceria e expansão.
             </p>
             <a class="portal-action"
-               href="{{ url_for('site_public') }}">
-                Falar com Comercial
+               href="{{ url_for('parceiro_alx') }}#feedback-form">
+                Ir para o formulário
             </a>
         </div>
 
