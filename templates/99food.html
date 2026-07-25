@@ -120,7 +120,7 @@ body{
 
 .hero-grid{
     display:grid;
-    grid-template-columns:1.05fr .95fr;
+    grid-template-columns:.9fr 1.1fr;
     gap:28px;
     align-items:center;
     position:relative;
@@ -166,22 +166,41 @@ body{
 }
 
 .hero-card{
-    padding:24px;
+    position:relative;
+    min-height:460px;
+    padding:0;
+    overflow:hidden;
     border-radius:32px;
-    background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+    background:#0b1322;
     border:1px solid rgba(255,255,255,.06);
     box-shadow:0 18px 40px rgba(0,0,0,.22);
 }
 
+.hero-card::after{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:linear-gradient(180deg, rgba(2,7,15,.08), rgba(2,7,15,.26) 48%, rgba(2,7,15,.92));
+}
+
 .hero-card img{
+    position:absolute;
+    inset:0;
     width:100%;
-    min-height:240px;
+    height:100%;
     object-fit:cover;
     object-position:center;
-    border-radius:24px;
-    border:1px solid rgba(255,255,255,.06);
-    margin-bottom:20px;
     display:block;
+}
+
+.hero-card-copy{
+    position:relative;
+    z-index:1;
+    min-height:460px;
+    padding:26px;
+    display:flex;
+    flex-direction:column;
+    justify-content:flex-end;
 }
 
 .hero-card h3{
@@ -284,55 +303,15 @@ body{
     position:relative;
     min-height:360px;
     overflow:hidden;
-    background:
-        linear-gradient(135deg, rgba(11,132,255,.12), rgba(9,18,32,.96)),
-        radial-gradient(circle at 20% 20%, rgba(56,189,248,.12), transparent 25%);
+    background:#050b14;
 }
 
-.video-frame::before{
-    content:"";
-    position:absolute;
-    inset:18px;
-    border-radius:24px;
-    border:1px dashed rgba(191,239,255,.28);
-    background:rgba(5,15,27,.35);
-}
-
-.video-placeholder{
-    position:absolute;
-    inset:0;
-    z-index:1;
-    display:grid;
-    place-items:center;
-    padding:34px;
-    text-align:center;
-}
-
-.play-badge{
-    width:84px;
-    height:84px;
-    border-radius:50%;
-    display:grid;
-    place-items:center;
-    background:linear-gradient(135deg, #0b84ff, #4db7ff);
-    box-shadow:0 18px 34px rgba(11,132,255,.3);
-    margin:0 auto 18px;
-    font-size:30px;
-    font-weight:900;
-}
-
-.video-placeholder strong{
+.video-player{
+    width:100%;
+    height:100%;
+    min-height:360px;
     display:block;
-    font-size:30px;
-    margin-bottom:10px;
-}
-
-.video-placeholder span{
-    display:block;
-    max-width:36ch;
-    margin:0 auto;
-    color:#c6d7e7;
-    line-height:1.85;
+    object-fit:cover;
 }
 
 .video-copy{
@@ -844,6 +823,15 @@ body{
         padding:26px 20px;
     }
 
+    .hero-card{
+        min-height:380px;
+    }
+
+    .hero-card-copy{
+        min-height:380px;
+        padding:22px;
+    }
+
     .media-slide{
         padding:22px;
     }
@@ -888,12 +876,17 @@ body{
         font-size:15px;
     }
 
-    .video-placeholder strong{
+    .media-slide-copy h3{
         font-size:24px;
     }
 
-    .media-slide-copy h3{
-        font-size:24px;
+    .hero-card{
+        min-height:310px;
+    }
+
+    .hero-card-copy{
+        min-height:310px;
+        padding:18px;
     }
 }
 </style>
@@ -939,13 +932,12 @@ body{
 
       <div class="hero-card">
         <img src="/static/img/ALXE99.png" alt="Areas de atuacao ALX com 99Food">
-        <h3>Areas de atuacao</h3>
-        <p>
-          Base visual da parceria com destaque para a atuacao da ALX no Rio de Janeiro e em Sao Paulo.
-        </p>
-        <div class="hero-card-tags">
-          <span class="hero-card-tag">Rio de Janeiro</span>
-          <span class="hero-card-tag">Sao Paulo</span>
+        <div class="hero-card-copy">
+          <h3>Areas de atuacao</h3>
+          <div class="hero-card-tags">
+            <span class="hero-card-tag">Rio de Janeiro</span>
+            <span class="hero-card-tag">Sao Paulo</span>
+          </div>
         </div>
       </div>
     </div>
@@ -1039,29 +1031,22 @@ body{
   <section class="video-section">
     <div class="container video-shell">
       <div class="video-frame">
-        <div class="video-placeholder">
-          <div>
-            <div class="play-badge">▶</div>
-            <strong>Alguns momentos ALX</strong>
-            <span>
-              Este bloco fica reservado para um video com alguns momentos ALX,
-              registros da operacao e materiais institucionais da parceria.
-            </span>
-          </div>
-        </div>
+        <video class="video-player" controls autoplay muted loop playsinline preload="metadata">
+          <source src="{{ url_for('static', filename='video/video-alx.mp4') }}" type="video/mp4">
+        </video>
       </div>
 
       <aside class="video-copy">
         <span class="hero-kicker">Video ALX</span>
         <h3>Uma area dedicada para video institucional e momentos da operacao</h3>
         <p>
-          Deixei esse espaco mais neutro para receber depois um video principal da ALX,
-          com momentos da operacao, bastidores e materiais que reforcem a parceria com a 99Food.
+          Agora esse bloco ja recebe o video de alguns momentos ALX, com material visual da operacao
+          e da presenca da marca junto da 99Food.
         </p>
 
         <div class="video-note">
-          <strong>Pronto para trocar</strong>
-          <span>Quando voce tiver o video, eu substituo esse placeholder por um player real ou embed.</span>
+          <strong>Video real no ar</strong>
+          <span>O player ja esta ativo e pronto para ser trocado depois, se voce quiser subir outra versao.</span>
         </div>
 
         <div class="video-note">
