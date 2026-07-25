@@ -166,7 +166,7 @@ body{
 }
 
 .hero-card{
-    padding:30px;
+    padding:24px;
     border-radius:32px;
     background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
     border:1px solid rgba(255,255,255,.06);
@@ -175,21 +175,44 @@ body{
 
 .hero-card img{
     width:100%;
+    min-height:240px;
+    object-fit:cover;
+    object-position:center;
     border-radius:24px;
     border:1px solid rgba(255,255,255,.06);
-    margin-bottom:18px;
+    margin-bottom:20px;
     display:block;
 }
 
 .hero-card h3{
-    font-size:24px;
-    margin-bottom:10px;
+    font-size:26px;
+    margin-bottom:8px;
 }
 
 .hero-card p{
     color:#b7c6d6;
     font-size:15px;
     line-height:1.8;
+}
+
+.hero-card-tags{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    margin-top:18px;
+}
+
+.hero-card-tag{
+    display:inline-flex;
+    align-items:center;
+    padding:10px 14px;
+    border-radius:999px;
+    background:rgba(255,255,255,.06);
+    border:1px solid rgba(255,255,255,.08);
+    color:#dce9f7;
+    font-size:13px;
+    font-weight:800;
+    letter-spacing:.04em;
 }
 
 .section{
@@ -345,6 +368,133 @@ body{
     color:#aebfd1;
     font-size:14px;
     line-height:1.75;
+}
+
+.media-carousel-section{
+    padding:28px 0 18px;
+}
+
+.media-carousel-head{
+    display:flex;
+    align-items:end;
+    justify-content:space-between;
+    gap:20px;
+    margin-bottom:24px;
+}
+
+.media-carousel-shell{
+    position:relative;
+}
+
+.media-carousel-window{
+    overflow:hidden;
+    border-radius:32px;
+}
+
+.media-carousel-track{
+    display:flex;
+    transition:transform .55s ease;
+    will-change:transform;
+}
+
+.media-slide{
+    min-width:100%;
+    display:grid;
+    grid-template-columns:1.15fr .85fr;
+    gap:22px;
+    padding:30px;
+    border-radius:32px;
+    background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+    border:1px solid rgba(255,255,255,.06);
+    box-shadow:0 18px 40px rgba(0,0,0,.22);
+}
+
+.media-slide-figure{
+    margin:0;
+}
+
+.media-slide img{
+    width:100%;
+    height:100%;
+    min-height:320px;
+    object-fit:cover;
+    border-radius:24px;
+    border:1px solid rgba(255,255,255,.06);
+    display:block;
+}
+
+.media-slide-copy{
+    display:grid;
+    align-content:center;
+    gap:14px;
+}
+
+.media-slide-copy h3{
+    font-size:30px;
+    line-height:1.15;
+}
+
+.media-slide-copy p{
+    color:#c9d8e6;
+    line-height:1.9;
+}
+
+.media-slide-copy small{
+    color:#86a0b7;
+    font-size:13px;
+}
+
+.media-badge{
+    display:inline-flex;
+    width:max-content;
+    padding:8px 12px;
+    border-radius:999px;
+    background:rgba(56,189,248,.1);
+    border:1px solid rgba(56,189,248,.22);
+    color:#c7efff;
+    font-size:12px;
+    font-weight:800;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+}
+
+.media-carousel-nav{
+    display:flex;
+    gap:10px;
+}
+
+.media-carousel-btn{
+    width:44px;
+    height:44px;
+    border-radius:50%;
+    display:grid;
+    place-items:center;
+    background:rgba(255,255,255,.05);
+    border:1px solid rgba(255,255,255,.08);
+    color:#dce6f2;
+    font-weight:900;
+    cursor:pointer;
+}
+
+.media-carousel-dots{
+    display:flex;
+    justify-content:center;
+    gap:8px;
+    margin-top:18px;
+}
+
+.media-carousel-dot{
+    width:10px;
+    height:10px;
+    border-radius:50%;
+    background:rgba(255,255,255,.22);
+    border:none;
+    cursor:pointer;
+}
+
+.media-carousel-dot.is-active{
+    background:#51b5ff;
+    box-shadow:0 0 0 6px rgba(81,181,255,.12);
 }
 
 .carousel-section{
@@ -628,6 +778,10 @@ body{
         grid-template-columns:repeat(2, minmax(0, 1fr));
     }
 
+    .media-slide{
+        grid-template-columns:1fr;
+    }
+
     .topbar-nav{
         display:none;
     }
@@ -672,6 +826,11 @@ body{
         grid-template-columns:1fr;
     }
 
+    .media-carousel-head{
+        flex-direction:column;
+        align-items:start;
+    }
+
     .carousel-head{
         flex-direction:column;
         align-items:start;
@@ -683,6 +842,14 @@ body{
     .spotlight-side,
     .cta-card{
         padding:26px 20px;
+    }
+
+    .media-slide{
+        padding:22px;
+    }
+
+    .media-slide img{
+        min-height:240px;
     }
 
     .video-frame{
@@ -724,6 +891,10 @@ body{
     .video-placeholder strong{
         font-size:24px;
     }
+
+    .media-slide-copy h3{
+        font-size:24px;
+    }
 }
 </style>
 </head>
@@ -756,8 +927,8 @@ body{
         <span class="hero-kicker">Pagina dedicada 99Food</span>
         <h1>Sobre 99Food</h1>
         <p>
-          Esta pagina foi separada para concentrar tudo o que a ALX quiser comunicar sobre a parceria com a 99Food:
-          operacao, contexto comercial, valor da relacao e espaco para evoluir a apresentacao com mais detalhes depois.
+          Pagina separada para apresentar a parceria da ALX com a 99Food com mais clareza,
+          mais peso visual e espaco proprio para materiais, informativos e reconhecimento.
         </p>
 
         <div class="hero-actions">
@@ -767,12 +938,15 @@ body{
       </div>
 
       <div class="hero-card">
-        <img src="/static/img/2evento.png" alt="Operacao ALX com 99Food">
-        <h3>Uma narrativa separada para a parceria</h3>
+        <img src="/static/img/ALXE99.png" alt="Areas de atuacao ALX com 99Food">
+        <h3>Areas de atuacao</h3>
         <p>
-          Agora a 99Food nao fica mais misturada no meio da home. Esta pagina cria um ambiente proprio
-          para contar a historia da parceria com mais clareza e mais peso comercial.
+          Base visual da parceria com destaque para a atuacao da ALX no Rio de Janeiro e em Sao Paulo.
         </p>
+        <div class="hero-card-tags">
+          <span class="hero-card-tag">Rio de Janeiro</span>
+          <span class="hero-card-tag">Sao Paulo</span>
+        </div>
       </div>
     </div>
   </section>
@@ -868,33 +1042,104 @@ body{
         <div class="video-placeholder">
           <div>
             <div class="play-badge">▶</div>
-            <strong>Espaço para vídeo de premiações</strong>
+            <strong>Alguns momentos ALX</strong>
             <span>
-              Este bloco já fica pronto para você colocar um vídeo destacando premiações,
-              reconhecimentos e momentos importantes da operação com a 99Food.
+              Este bloco fica reservado para um video com alguns momentos ALX,
+              registros da operacao e materiais institucionais da parceria.
             </span>
           </div>
         </div>
       </div>
 
       <aside class="video-copy">
-        <span class="hero-kicker">Premiações</span>
-        <h3>Uma área separada para vídeo institucional ou de reconhecimento</h3>
+        <span class="hero-kicker">Video ALX</span>
+        <h3>Uma area dedicada para video institucional e momentos da operacao</h3>
         <p>
-          Deixei um espaço grande e visual para você inserir depois um vídeo de premiações.
-          Assim a página da 99Food ganha um bloco mais forte de prova social e autoridade.
+          Deixei esse espaco mais neutro para receber depois um video principal da ALX,
+          com momentos da operacao, bastidores e materiais que reforcem a parceria com a 99Food.
         </p>
 
         <div class="video-note">
           <strong>Pronto para trocar</strong>
-          <span>Quando você tiver o vídeo, eu substituo esse placeholder por um embed ou player real.</span>
+          <span>Quando voce tiver o video, eu substituo esse placeholder por um player real ou embed.</span>
         </div>
 
         <div class="video-note">
-          <strong>Boa posição na página</strong>
-          <span>Esse espaço entra antes do CTA final e ajuda a sustentar melhor a narrativa da parceria.</span>
+          <strong>Boa posicao na pagina</strong>
+          <span>Esse bloco sustenta a narrativa visual da pagina antes dos carrosseis e do CTA final.</span>
         </div>
       </aside>
+    </div>
+  </section>
+
+  <section class="media-carousel-section">
+    <div class="container">
+      <div class="media-carousel-head">
+        <div>
+          <span class="section-kicker">Premiacoes</span>
+          <h2 class="section-heading">Carrossel de premiacoes</h2>
+          <p class="section-text">
+            Esta area ja fica pronta para voce alimentar a pasta de premiacoes com novas imagens.
+            O carrossel roda sozinho e tambem aceita navegacao manual.
+          </p>
+        </div>
+
+        <div class="media-carousel-nav">
+          <button class="media-carousel-btn" type="button" data-carousel-prev="premiacoes">←</button>
+          <button class="media-carousel-btn" type="button" data-carousel-next="premiacoes">→</button>
+        </div>
+      </div>
+
+      <div class="media-carousel-shell" data-carousel="premiacoes">
+        <div class="media-carousel-window">
+          <div class="media-carousel-track">
+            <article class="media-slide">
+              <figure class="media-slide-figure">
+                <img src="/static/img/99food-premiacoes/premio-01.png" alt="Premiacao ALX 01">
+              </figure>
+              <div class="media-slide-copy">
+                <span class="media-badge">Premiacao 01</span>
+                <h3>Espaco para trofeus, reconhecimentos e registros oficiais</h3>
+                <p>
+                  Aqui entram as imagens de premiacoes da ALX para reforcar autoridade, historico
+                  e momentos importantes ligados a performance da operacao.
+                </p>
+                <small>Pasta pronta: static/img/99food-premiacoes</small>
+              </div>
+            </article>
+
+            <article class="media-slide">
+              <figure class="media-slide-figure">
+                <img src="/static/img/99food-premiacoes/premio-02.png" alt="Premiacao ALX 02">
+              </figure>
+              <div class="media-slide-copy">
+                <span class="media-badge">Premiacao 02</span>
+                <h3>Mais espaco para valorizar conquistas da ALX</h3>
+                <p>
+                  O carrossel aceita novas imagens sem mexer na estrutura principal da pagina
+                  e ajuda a manter a leitura de prova social sempre em destaque.
+                </p>
+                <small>Troque ou acrescente os arquivos depois</small>
+              </div>
+            </article>
+
+            <article class="media-slide">
+              <figure class="media-slide-figure">
+                <img src="/static/img/99food-premiacoes/premio-03.png" alt="Premiacao ALX 03">
+              </figure>
+              <div class="media-slide-copy">
+                <span class="media-badge">Premiacao 03</span>
+                <h3>Bloco pensado para rodar imagens automaticamente</h3>
+                <p>
+                  Enquanto voce organiza a pasta definitiva, eu deixei imagens-base para o carrossel ja funcionar.
+                </p>
+                <small>Carrossel automatico com setas e indicadores</small>
+              </div>
+            </article>
+          </div>
+        </div>
+        <div class="media-carousel-dots" data-carousel-dots="premiacoes"></div>
+      </div>
     </div>
   </section>
 
@@ -903,46 +1148,67 @@ body{
       <div class="carousel-head">
         <div>
           <span class="section-kicker">Informativos</span>
-          <h2 class="section-heading">Espaço de carrossel para comunicados e destaques</h2>
+          <h2 class="section-heading">Carrossel de informativos 99</h2>
           <p class="section-text">
-            Também deixei a página preparada para receber cards horizontais com informativos,
-            avisos, atualizações, campanhas ou comunicados ligados à 99Food.
+            Aqui entram artes, comunicados e materiais de informativos 99 para rodar como carrossel.
           </p>
         </div>
 
-        <div class="carousel-actions" aria-hidden="true">
-          <div class="carousel-action">←</div>
-          <div class="carousel-action">→</div>
+        <div class="carousel-actions">
+          <button class="carousel-action" type="button" data-carousel-prev="informativos">←</button>
+          <button class="carousel-action" type="button" data-carousel-next="informativos">→</button>
         </div>
       </div>
 
-      <div class="info-carousel">
-        <article class="info-card">
-          <span class="info-badge">Informativo 01</span>
-          <h3>Espaço para comunicado operacional</h3>
-          <p>
-            Use este card para avisos sobre rotina, alinhamentos, campanhas, janelas de operação ou reforços importantes.
-          </p>
-          <small>Pronto para trocar pelo conteúdo real</small>
-        </article>
+      <div class="media-carousel-shell" data-carousel="informativos">
+        <div class="media-carousel-window">
+          <div class="media-carousel-track">
+            <article class="media-slide">
+              <figure class="media-slide-figure">
+                <img src="/static/img/99food-informativos/info-01.png" alt="Informativo 99 01">
+              </figure>
+              <div class="media-slide-copy">
+                <span class="media-badge">Informativo 01</span>
+                <h3>Espaco para comunicado principal da 99</h3>
+                <p>
+                  Este slide pode receber materiais mais institucionais, comunicados visuais
+                  ou artes de campanha ligadas a 99Food.
+                </p>
+                <small>Pasta pronta: static/img/99food-informativos</small>
+              </div>
+            </article>
 
-        <article class="info-card">
-          <span class="info-badge">Informativo 02</span>
-          <h3>Espaço para ação comercial</h3>
-          <p>
-            Aqui pode entrar um destaque de parceria, expansão, novidade ou apresentação institucional da operação.
-          </p>
-          <small>Formato bom para conteúdos curtos e recorrentes</small>
-        </article>
+            <article class="media-slide">
+              <figure class="media-slide-figure">
+                <img src="/static/img/99food-informativos/info-02.png" alt="Informativo 99 02">
+              </figure>
+              <div class="media-slide-copy">
+                <span class="media-badge">Informativo 02</span>
+                <h3>Espaco para materiais de rotina e alinhamento</h3>
+                <p>
+                  O segundo slide pode ser usado para avisos operacionais, novidades,
+                  janelas de atendimento e reforcos visuais da parceria.
+                </p>
+                <small>Troque pelas imagens oficiais quando quiser</small>
+              </div>
+            </article>
 
-        <article class="info-card">
-          <span class="info-badge">Informativo 03</span>
-          <h3>Espaço para campanha ou reconhecimento</h3>
-          <p>
-            Esse bloco pode receber cards com reconhecimento, metas batidas, premiações ou materiais visuais da parceria.
-          </p>
-          <small>Desenhado para virar um carrossel visual depois</small>
-        </article>
+            <article class="media-slide">
+              <figure class="media-slide-figure">
+                <img src="/static/img/99food-informativos/info-03.png" alt="Informativo 99 03">
+              </figure>
+              <div class="media-slide-copy">
+                <span class="media-badge">Informativo 03</span>
+                <h3>Carrossel pensado para informativos recorrentes</h3>
+                <p>
+                  Assim fica facil manter a pagina sempre viva com novas artes, informativos e comunicados.
+                </p>
+                <small>Carrossel automatico com navegacao manual</small>
+              </div>
+            </article>
+          </div>
+        </div>
+        <div class="media-carousel-dots" data-carousel-dots="informativos"></div>
       </div>
     </div>
   </section>
@@ -992,5 +1258,6 @@ body{
   </div>
 </footer>
 
+<script src="{{ url_for('static', filename='99food.js') }}"></script>
 </body>
 </html>
