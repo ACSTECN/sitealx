@@ -119,16 +119,14 @@ body{
 }
 
 .hero{
-    padding:22px 0 26px;
+    padding:18px 0 30px;
 }
 
 .hero-media{
     width:100%;
     overflow:hidden;
     position:relative;
-    background:#040914;
-    border-top:1px solid rgba(255,255,255,.04);
-    border-bottom:1px solid rgba(255,255,255,.04);
+    background:#06111d;
 }
 
 .hero-media img{
@@ -136,11 +134,20 @@ body{
     height:340px;
     display:block;
     object-fit:cover;
-    object-position:center 56%;
+    object-position:center 58%;
 }
 
 .hero-copy{
-    padding:30px 0 6px;
+    margin-top:-18px;
+    padding:0;
+}
+
+.hero-panel{
+    padding:32px 34px;
+    border-radius:30px;
+    background:linear-gradient(180deg, #0b1422 0%, #09111d 100%);
+    border:1px solid rgba(255,255,255,.06);
+    box-shadow:0 18px 40px rgba(0,0,0,.22);
 }
 
 .hero-text h1{
@@ -480,12 +487,14 @@ body{
 
 .media-slide{
     min-width:100%;
-    display:block;
-    padding:0;
+    display:grid;
+    grid-template-columns:1.15fr .85fr;
+    gap:22px;
+    padding:30px;
     border-radius:32px;
-    background:#0b1422;
-    border:1px solid rgba(255,255,255,.05);
-    box-shadow:0 18px 40px rgba(0,0,0,.18);
+    background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+    border:1px solid rgba(255,255,255,.06);
+    box-shadow:0 18px 40px rgba(0,0,0,.22);
 }
 
 .media-slide-figure{
@@ -494,11 +503,43 @@ body{
 
 .media-slide img{
     width:100%;
-    height:420px;
+    height:100%;
+    min-height:320px;
     object-fit:cover;
     object-position:center;
-    border-radius:32px;
+    border-radius:24px;
+    border:1px solid rgba(255,255,255,.06);
     display:block;
+}
+
+.media-slide-copy{
+    display:grid;
+    align-content:center;
+    gap:14px;
+}
+
+.media-slide-copy h3{
+    font-size:30px;
+    line-height:1.15;
+}
+
+.media-slide-copy p{
+    color:#c9d8e6;
+    line-height:1.9;
+}
+
+.media-badge{
+    display:inline-flex;
+    width:max-content;
+    padding:8px 12px;
+    border-radius:999px;
+    background:rgba(255,255,255,.06);
+    border:1px solid rgba(255,255,255,.08);
+    color:#e6eef8;
+    font-size:12px;
+    font-weight:800;
+    letter-spacing:.08em;
+    text-transform:uppercase;
 }
 
 .media-carousel-nav,
@@ -697,22 +738,19 @@ body{
 
     .hero-media img{
         height:270px;
-        object-position:center 56%;
+        object-position:center 58%;
     }
 
     .video-copy,
     .spotlight-main,
     .spotlight-side,
-    .cta-card{
+    .cta-card,
+    .hero-panel{
         padding:26px 20px;
     }
 
-    .media-slide{
-        padding:0;
-    }
-
     .media-slide img{
-        height:280px;
+        min-height:240px;
     }
 
     .video-frame{
@@ -754,6 +792,10 @@ body{
     .metric-card span{
         font-size:24px;
     }
+
+    .media-slide-copy h3{
+        font-size:24px;
+    }
 }
 </style>
 </head>
@@ -786,28 +828,30 @@ body{
     </div>
 
     <div class="container hero-copy">
-      <div class="hero-text">
-        <span class="section-kicker">Operacao 99Food</span>
-        <h1>Uma estrutura pronta para ampliar a presenca da ALX na 99Food</h1>
-        <p>
-          A ALX combina presenca local, suporte e organizacao para sustentar operacoes com mais
-          clareza, ritmo e forca comercial em Sao Paulo e no Rio de Janeiro.
-        </p>
+      <div class="hero-panel">
+        <div class="hero-text">
+          <span class="section-kicker">Operacao 99Food</span>
+          <h1>Uma estrutura pronta para ampliar a presenca da ALX na 99Food</h1>
+          <p>
+            A ALX combina presenca local, suporte e organizacao para sustentar operacoes com mais
+            clareza, ritmo e forca comercial em Sao Paulo e no Rio de Janeiro.
+          </p>
 
-        <div class="hero-actions">
-          <a class="primary" href="{{ url_for('parceiro_alx') }}#feedback-form">Seja Parceiro</a>
-          <a class="secondary" href="{{ url_for('home') }}">Voltar ao inicio</a>
-        </div>
+          <div class="hero-actions">
+            <a class="primary" href="{{ url_for('parceiro_alx') }}#feedback-form">Seja Parceiro</a>
+            <a class="secondary" href="{{ url_for('home') }}">Voltar ao inicio</a>
+          </div>
 
-        <div class="hero-tags">
-          <span class="hero-tag">Cobertura estrategica</span>
-          <span class="hero-tag">Sao Paulo</span>
-          <span class="hero-tag">Rio de Janeiro</span>
-        </div>
+          <div class="hero-tags">
+            <span class="hero-tag">Cobertura estrategica</span>
+            <span class="hero-tag">Sao Paulo</span>
+            <span class="hero-tag">Rio de Janeiro</span>
+          </div>
 
-        <div class="hero-support">
-          Canal oficial de suporte:
-          <a href="https://t.me/+5511968437483" target="_blank" rel="noopener">Telegram ALX</a>
+          <div class="hero-support">
+            Canal oficial de suporte:
+            <a href="https://t.me/+5511968437483" target="_blank" rel="noopener">Telegram ALX</a>
+          </div>
         </div>
       </div>
     </div>
@@ -999,24 +1043,40 @@ body{
               <figure class="media-slide-figure">
                 <img src="/static/img/99food-premiacoes/premio-01.jpg" alt="Premiacao ALX 01">
               </figure>
+              <div class="media-slide-copy">
+                <span class="media-badge">Premiacoes ALX</span>
+                <h3>Momentos de reconhecimento da operacao</h3>
+              </div>
             </article>
 
             <article class="media-slide">
               <figure class="media-slide-figure">
                 <img src="/static/img/99food-premiacoes/premio-02.jpg" alt="Premiacao ALX 02">
               </figure>
+              <div class="media-slide-copy">
+                <span class="media-badge">Premiacoes ALX</span>
+                <h3>Registros visuais que fortalecem a marca</h3>
+              </div>
             </article>
 
             <article class="media-slide">
               <figure class="media-slide-figure">
                 <img src="/static/img/99food-premiacoes/premio-03.jpg" alt="Premiacao ALX 03">
               </figure>
+              <div class="media-slide-copy">
+                <span class="media-badge">Premiacoes ALX</span>
+                <h3>Presenca, resultado e reconhecimento</h3>
+              </div>
             </article>
 
             <article class="media-slide">
               <figure class="media-slide-figure">
                 <img src="/static/img/99food-premiacoes/premio-04.jpg" alt="Premiacao ALX 04">
               </figure>
+              <div class="media-slide-copy">
+                <span class="media-badge">Premiacoes ALX</span>
+                <h3>Uma galeria com leitura mais premium</h3>
+              </div>
             </article>
           </div>
         </div>
@@ -1046,36 +1106,60 @@ body{
               <figure class="media-slide-figure">
                 <img src="/static/img/99food-informativos/info-01.png" alt="Informativo 99 01">
               </figure>
+              <div class="media-slide-copy">
+                <span class="media-badge">Informativos 99Food</span>
+                <h3>Comunicados visuais da operacao</h3>
+              </div>
             </article>
 
             <article class="media-slide">
               <figure class="media-slide-figure">
                 <img src="/static/img/99food-informativos/info-02.png" alt="Informativo 99 02">
               </figure>
+              <div class="media-slide-copy">
+                <span class="media-badge">Informativos 99Food</span>
+                <h3>Materiais com leitura mais organizada</h3>
+              </div>
             </article>
 
             <article class="media-slide">
               <figure class="media-slide-figure">
                 <img src="/static/img/99food-informativos/info-03.png" alt="Informativo 99 03">
               </figure>
+              <div class="media-slide-copy">
+                <span class="media-badge">Informativos 99Food</span>
+                <h3>Conteudos em destaque sem pesar o layout</h3>
+              </div>
             </article>
 
             <article class="media-slide">
               <figure class="media-slide-figure">
                 <img src="/static/img/99food-informativos/info-04.png" alt="Informativo 99 04">
               </figure>
+              <div class="media-slide-copy">
+                <span class="media-badge">Informativos 99Food</span>
+                <h3>Visual mais limpo para comunicados recorrentes</h3>
+              </div>
             </article>
 
             <article class="media-slide">
               <figure class="media-slide-figure">
                 <img src="/static/img/99food-informativos/info-05.png" alt="Informativo 99 05">
               </figure>
+              <div class="media-slide-copy">
+                <span class="media-badge">Informativos 99Food</span>
+                <h3>Apresentacao visual mais forte e equilibrada</h3>
+              </div>
             </article>
 
             <article class="media-slide">
               <figure class="media-slide-figure">
                 <img src="/static/img/99food-informativos/info-06.png" alt="Informativo 99 06">
               </figure>
+              <div class="media-slide-copy">
+                <span class="media-badge">Informativos 99Food</span>
+                <h3>Galeria pronta para seguir crescendo</h3>
+              </div>
             </article>
           </div>
         </div>
