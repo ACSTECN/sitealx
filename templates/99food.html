@@ -737,11 +737,11 @@ body{
 
     .topbar-inner{
         width:min(100%, 94%);
-        padding:12px 0 16px;
+        padding:10px 0 12px;
         min-height:auto;
         flex-direction:column;
         align-items:stretch;
-        gap:10px;
+        gap:8px;
     }
 
     .topbar-brand{
@@ -759,12 +759,12 @@ body{
         display:flex;
         align-items:center;
         justify-content:center;
-        min-height:42px;
-        padding:10px 12px;
+        min-height:38px;
+        padding:8px 10px;
         border-radius:12px;
         background:rgba(255,255,255,.04);
         border:1px solid rgba(255,255,255,.08);
-        font-size:13px;
+        font-size:12px;
     }
 
     .topbar-nav a.is-active,
@@ -785,6 +785,8 @@ body{
     .topbar-actions .secondary{
         width:100%;
         text-align:center;
+        min-height:42px;
+        padding:10px 12px;
     }
 
     .hero-text h1,
@@ -797,6 +799,10 @@ body{
 }
 
 @media(max-width:700px){
+    .logo{
+        height:36px;
+    }
+
     .topbar-actions{
         width:100%;
         max-width:none;
@@ -809,6 +815,8 @@ body{
     .topbar-actions .secondary{
         width:100%;
         text-align:center;
+        min-height:42px;
+        padding:10px 12px;
     }
 
     .metrics-grid,
@@ -860,7 +868,7 @@ body{
 
 @media(max-width:560px){
     .logo{
-        height:40px;
+        height:32px;
     }
 
     .topbar-nav{
@@ -868,8 +876,8 @@ body{
     }
 
     .topbar-nav a{
-        min-height:44px;
-        font-size:13px;
+        min-height:36px;
+        font-size:12px;
     }
 
     .topbar-actions{
@@ -878,9 +886,9 @@ body{
 
     .topbar-actions .primary,
     .topbar-actions .secondary{
-        font-size:13px;
-        min-height:46px;
-        padding:10px 12px;
+        font-size:12px;
+        min-height:40px;
+        padding:9px 10px;
     }
 
     .hero-text h1,
