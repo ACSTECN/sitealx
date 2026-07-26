@@ -62,6 +62,7 @@ body{
     color:#dce6f2;
     text-decoration:none;
     font-weight:700;
+    white-space:nowrap;
 }
 
 .topbar-nav a.is-active,
@@ -734,8 +735,56 @@ body{
         grid-template-columns:1fr;
     }
 
+    .topbar-inner{
+        width:min(100%, 94%);
+        padding:12px 0 16px;
+        min-height:auto;
+        flex-direction:column;
+        align-items:stretch;
+        gap:10px;
+    }
+
+    .topbar-brand{
+        justify-content:center;
+    }
+
     .topbar-nav{
-        display:none;
+        display:grid;
+        grid-template-columns:repeat(4, minmax(0, 1fr));
+        gap:8px;
+        width:100%;
+    }
+
+    .topbar-nav a{
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        min-height:42px;
+        padding:10px 12px;
+        border-radius:12px;
+        background:rgba(255,255,255,.04);
+        border:1px solid rgba(255,255,255,.08);
+        font-size:13px;
+    }
+
+    .topbar-nav a.is-active,
+    .topbar-nav a:hover{
+        color:#ffffff;
+        background:rgba(11,132,255,.14);
+        border-color:rgba(11,132,255,.24);
+    }
+
+    .topbar-actions{
+        width:100%;
+        display:grid;
+        grid-template-columns:repeat(2, minmax(0, 1fr));
+        gap:10px;
+    }
+
+    .topbar-actions .primary,
+    .topbar-actions .secondary{
+        width:100%;
+        text-align:center;
     }
 
     .hero-text h1,
@@ -748,18 +797,12 @@ body{
 }
 
 @media(max-width:700px){
-    .topbar-inner{
-        width:min(100%, 94%);
-        padding:12px 0 14px;
-        flex-direction:column;
-        gap:12px;
-    }
-
     .topbar-actions{
         width:100%;
-        max-width:420px;
+        max-width:none;
         display:grid;
         grid-template-columns:repeat(2, minmax(0, 1fr));
+        gap:10px;
     }
 
     .topbar-actions .primary,
@@ -786,6 +829,18 @@ body{
         object-position:center 60%;
     }
 
+    .hero-actions{
+        display:grid;
+        grid-template-columns:repeat(2, minmax(0, 1fr));
+        gap:10px;
+    }
+
+    .hero-actions .primary,
+    .hero-actions .secondary{
+        width:100%;
+        text-align:center;
+    }
+
     .video-copy,
     .spotlight-main,
     .spotlight-side,
@@ -808,8 +863,17 @@ body{
         height:40px;
     }
 
+    .topbar-nav{
+        grid-template-columns:repeat(2, minmax(0, 1fr));
+    }
+
+    .topbar-nav a{
+        min-height:44px;
+        font-size:13px;
+    }
+
     .topbar-actions{
-        max-width:310px;
+        max-width:none;
     }
 
     .topbar-actions .primary,
@@ -840,6 +904,10 @@ body{
 
     .media-slide-copy h3{
         font-size:24px;
+    }
+
+    .hero-actions{
+        grid-template-columns:1fr;
     }
 }
 </style>

@@ -72,6 +72,7 @@ body{
     text-decoration:none;
     font-weight:600;
     transition:.2s;
+    white-space:nowrap;
 }
 
 .topbar-nav a:hover{
@@ -1081,8 +1082,40 @@ body{
         grid-template-columns:1fr 1fr;
     }
 
+    .topbar-inner{
+        width:min(100%, 94%);
+        padding:14px 0 16px;
+        flex-direction:column;
+        align-items:stretch;
+        gap:10px;
+    }
+
+    .topbar-brand{
+        justify-content:center;
+    }
+
     .topbar-nav{
-        display:none;
+        display:grid;
+        grid-template-columns:repeat(4, minmax(0, 1fr));
+        gap:8px;
+        width:100%;
+    }
+
+    .topbar-nav a{
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        min-height:42px;
+        padding:10px 12px;
+        border-radius:12px;
+        background:rgba(255,255,255,.04);
+        border:1px solid rgba(255,255,255,.08);
+        font-size:13px;
+    }
+
+    .topbar-nav a:hover{
+        background:rgba(11,132,255,.14);
+        border-color:rgba(11,132,255,.24);
     }
 
     .showcase-wrapper{
@@ -1134,7 +1167,23 @@ body{
     }
 
     .topbar-actions{
+        width:100%;
         flex-wrap:wrap;
+        display:grid;
+        grid-template-columns:repeat(2, minmax(0, 1fr));
+        gap:10px;
+    }
+
+    .topbar-actions .primary,
+    .topbar-actions .ghost{
+        width:100%;
+        min-height:48px;
+        padding:12px 14px;
+        text-align:center;
+    }
+
+    main.container{
+        padding-top:166px;
     }
 
 }
@@ -1156,27 +1205,13 @@ body{
         background:rgba(6,17,29,.92);
     }
 
-    .topbar-inner{
-        width:min(100%, 94%);
-        padding:12px 0 14px;
-        flex-direction:column;
-        align-items:center;
-        justify-content:center;
-        gap:12px;
-    }
-
-    .topbar-brand{
-        width:100%;
-        justify-content:center;
-    }
-
     .logo{
         height:40px;
     }
 
     .topbar-actions{
         width:100%;
-        max-width:420px;
+        max-width:none;
         display:grid;
         grid-template-columns:repeat(2, minmax(0, 1fr));
         gap:10px;
@@ -1192,7 +1227,7 @@ body{
     }
 
     main.container{
-        padding-top:118px;
+        padding-top:178px;
     }
 
     .hero-slider{
@@ -1226,8 +1261,17 @@ body{
         height:36px;
     }
 
+    .topbar-nav{
+        grid-template-columns:repeat(2, minmax(0, 1fr));
+    }
+
+    .topbar-nav a{
+        min-height:44px;
+        font-size:13px;
+    }
+
     .topbar-actions{
-        max-width:300px;
+        max-width:none;
     }
 
     .topbar-actions .primary,
@@ -1238,7 +1282,7 @@ body{
     }
 
     main.container{
-        padding-top:108px;
+        padding-top:218px;
     }
 
     .hero-slider{
