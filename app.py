@@ -527,10 +527,6 @@ def parceiro_alx():
 def page_99food():
     return render_template("99food.html")
 
-@app.get("/sobre")
-def sobre_page():
-    return render_template("sobre.html")
-
 @app.get("/login")
 def login_page():
     return render_template("login.html")

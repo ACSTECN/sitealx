@@ -750,7 +750,7 @@ body{
 
     .topbar-nav{
         display:grid;
-        grid-template-columns:repeat(4, minmax(0, 1fr));
+        grid-template-columns:repeat(3, minmax(0, 1fr));
         gap:8px;
         width:100%;
     }
@@ -864,7 +864,7 @@ body{
     }
 
     .topbar-nav{
-        grid-template-columns:repeat(2, minmax(0, 1fr));
+        grid-template-columns:repeat(3, minmax(0, 1fr));
     }
 
     .topbar-nav a{
@@ -923,7 +923,6 @@ body{
     <nav class="topbar-nav">
       <a href="{{ url_for('home') }}">Inicio</a>
       <a href="{{ url_for('page_99food') }}" class="is-active">99Food</a>
-      <a href="{{ url_for('sobre_page') }}">Sobre</a>
       <a href="{{ url_for('fale_conosco') }}">Contato</a>
     </nav>
 
@@ -1317,7 +1316,6 @@ body{
       <h4>Navegacao</h4>
       <a class="footer-link" href="{{ url_for('home') }}">Inicio</a>
       <a class="footer-link" href="{{ url_for('page_99food') }}">99Food</a>
-      <a class="footer-link" href="{{ url_for('sobre_page') }}">Sobre</a>
       <a class="footer-link" href="{{ url_for('parceiro_alx') }}#feedback-form">Seja Parceiro</a>
     </div>
 
