@@ -782,12 +782,12 @@ body{
 }
 
 .partner-logo-box .partner-logo-mark{
-    background:linear-gradient(135deg, #87c44b, #4d8f1f);
-    color:#fff8d6;
+    background:linear-gradient(135deg, #ff6256, #c91d27);
+    color:#fff1ef;
 }
 
 .partner-logo-box .partner-logo-text strong{
-    color:#b7eb73;
+    color:#ff8f85;
     font-size:20px;
 }
 
@@ -917,8 +917,9 @@ body{
     overflow:hidden;
     min-height:480px;
     display:flex;
-    align-items:center;
-    justify-content:center;
+    align-items:flex-end;
+    justify-content:flex-start;
+    padding:36px;
 }
 
 .cta-bg{
@@ -927,44 +928,52 @@ body{
     width:100%;
     height:100%;
     object-fit:cover;
+    object-position:center top;
+    filter:saturate(1.04) brightness(.95);
 }
 
 .cta-negocio::after{
     content:"";
     position:absolute;
     inset:0;
-    background:linear-gradient(rgba(4,10,20,.7),rgba(4,10,20,.88));
+    background:
+        linear-gradient(90deg, rgba(4,10,20,.9) 0%, rgba(4,10,20,.66) 34%, rgba(4,10,20,.28) 66%, rgba(4,10,20,.14) 100%),
+        linear-gradient(180deg, rgba(4,10,20,.08), rgba(4,10,20,.42) 68%, rgba(4,10,20,.72));
 }
 
 .cta-overlay{
     position:relative;
     z-index:5;
-    text-align:center;
-    max-width:760px;
-    padding:40px;
-
-    background:rgba(0,0,0,.25);
-
-    backdrop-filter:blur(12px);
-
+    text-align:left;
+    width:min(100%, 560px);
+    padding:34px 34px 30px;
+    background:rgba(2,8,18,.4);
+    backdrop-filter:blur(8px);
     border-radius:28px;
-
     border:1px solid rgba(255,255,255,.08);
+    box-shadow:0 18px 36px rgba(0,0,0,.22);
 }
 
 .cta-overlay h2{
-    font-size:58px;
-    margin-bottom:22px;
+    font-size:50px;
+    line-height:1.06;
+    margin-bottom:18px;
+    text-shadow:0 10px 28px rgba(0,0,0,.36);
 }
 
 .cta-overlay p{
     color:#d4dfeb;
-    font-size:20px;
-    line-height:1.8;
-    margin-bottom:35px;
+    font-size:19px;
+    line-height:1.75;
+    max-width:30ch;
+    margin-bottom:28px;
+    text-shadow:0 8px 22px rgba(0,0,0,.3);
 }
 
 .grande{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
     padding:18px 34px;
     font-size:17px;
 }
@@ -1153,6 +1162,20 @@ body{
         font-size:38px;
     }
 
+    .cta-negocio{
+        min-height:430px;
+        padding:26px;
+    }
+
+    .cta-overlay{
+        width:min(100%, 500px);
+        padding:28px 28px 24px;
+    }
+
+    .cta-overlay p{
+        font-size:17px;
+    }
+
     .section-heading{
         font-size:34px;
     }
@@ -1249,6 +1272,32 @@ body{
         font-size:30px;
     }
 
+    .cta-negocio{
+        min-height:390px;
+        padding:20px;
+        align-items:flex-end;
+    }
+
+    .cta-overlay{
+        width:100%;
+        padding:24px 22px 22px;
+    }
+
+    .cta-overlay h2{
+        font-size:32px;
+        margin-bottom:14px;
+    }
+
+    .cta-overlay p{
+        font-size:15px;
+        max-width:none;
+        margin-bottom:22px;
+    }
+
+    .grande{
+        width:100%;
+    }
+
 }
 
 @media(max-width:560px){
@@ -1300,6 +1349,28 @@ body{
     .partner-spotlight-main h3{
         font-size:26px;
     }
+
+    .cta-negocio{
+        min-height:350px;
+        padding:16px;
+    }
+
+    .cta-bg{
+        object-position:center 18%;
+    }
+
+    .cta-overlay{
+        padding:20px 18px 18px;
+        border-radius:22px;
+    }
+
+    .cta-overlay h2{
+        font-size:28px;
+    }
+
+    .cta-overlay p{
+        font-size:14px;
+    }
 }
 
 </style>
@@ -1336,7 +1407,7 @@ body{
       <a class="primary"
          href="{{ url_for('fale_conosco') }}">
 
-        Fale Conosco
+        Fale Conosco Entregador
 
       </a>
 
