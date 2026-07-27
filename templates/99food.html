@@ -45,9 +45,22 @@ body{
     gap:22px;
 }
 
+.topbar-branding{
+    display:flex;
+    align-items:center;
+    gap:16px;
+}
+
 .topbar-brand{
     display:flex;
     align-items:center;
+}
+
+.topbar-menu{
+    display:flex;
+    align-items:center;
+    gap:24px;
+    margin-left:auto;
 }
 
 .logo{
@@ -75,6 +88,47 @@ body{
 .topbar-actions{
     display:flex;
     gap:14px;
+}
+
+.topbar-menu a,
+.topbar-toggle{
+    touch-action:manipulation;
+}
+
+.topbar-toggle{
+    display:none;
+    width:44px;
+    height:44px;
+    align-items:center;
+    justify-content:center;
+    flex-direction:column;
+    gap:4px;
+    border:none;
+    border-radius:14px;
+    background:rgba(255,255,255,.06);
+    border:1px solid rgba(255,255,255,.08);
+    cursor:pointer;
+    -webkit-tap-highlight-color:transparent;
+}
+
+.topbar-toggle span{
+    width:18px;
+    height:2px;
+    background:#fff;
+    border-radius:999px;
+    transition:transform .22s ease, opacity .22s ease;
+}
+
+.topbar.is-open .topbar-toggle span:nth-child(1){
+    transform:translateY(6px) rotate(45deg);
+}
+
+.topbar.is-open .topbar-toggle span:nth-child(2){
+    opacity:0;
+}
+
+.topbar.is-open .topbar-toggle span:nth-child(3){
+    transform:translateY(-6px) rotate(-45deg);
 }
 
 .primary,
@@ -741,13 +795,38 @@ body{
         width:min(100%, 94%);
         padding:10px 0 12px;
         min-height:auto;
-        flex-direction:column;
-        align-items:stretch;
-        gap:8px;
+        position:relative;
+        align-items:center;
     }
 
-    .topbar-brand{
-        justify-content:center;
+    .topbar-branding{
+        width:100%;
+        justify-content:space-between;
+    }
+
+    .topbar-toggle{
+        display:inline-flex;
+    }
+
+    .topbar-menu{
+        display:none;
+        position:absolute;
+        top:calc(100% + 8px);
+        left:0;
+        right:0;
+        z-index:1000;
+        margin-left:0;
+        padding:14px;
+        border-radius:22px;
+        background:rgba(6,17,29,.98);
+        border:1px solid rgba(255,255,255,.08);
+        box-shadow:0 24px 48px rgba(0,0,0,.32);
+        flex-direction:column;
+        gap:12px;
+    }
+
+    .topbar.is-open .topbar-menu{
+        display:flex;
     }
 
     .topbar-nav{
@@ -787,7 +866,7 @@ body{
     .topbar-actions .secondary{
         width:100%;
         text-align:center;
-        min-height:42px;
+        min-height:44px;
         padding:10px 12px;
     }
 
@@ -805,6 +884,10 @@ body{
         height:36px;
     }
 
+    .topbar-menu{
+        padding:12px;
+    }
+
     .topbar-actions{
         width:100%;
         max-width:none;
@@ -817,7 +900,7 @@ body{
     .topbar-actions .secondary{
         width:100%;
         text-align:center;
-        min-height:42px;
+        min-height:44px;
         padding:10px 12px;
     }
 
@@ -889,7 +972,7 @@ body{
     .topbar-actions .primary,
     .topbar-actions .secondary{
         font-size:12px;
-        min-height:40px;
+        min-height:44px;
         padding:9px 10px;
     }
 
@@ -924,21 +1007,36 @@ body{
 </head>
 <body>
 
-<header class="topbar">
+<header class="topbar" data-mobile-header>
   <div class="topbar-inner">
-    <div class="topbar-brand">
-      <img src="/static/img/logo.png" class="logo" alt="ALX">
+    <div class="topbar-branding">
+      <div class="topbar-brand">
+        <img src="/static/img/logo.png" class="logo" alt="ALX">
+      </div>
+
+      <button class="topbar-toggle"
+              type="button"
+              aria-label="Abrir menu"
+              aria-expanded="false"
+              aria-controls="food-mobile-menu"
+              data-menu-toggle>
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
     </div>
 
-    <nav class="topbar-nav">
-      <a href="{{ url_for('home') }}">Início</a>
-      <a href="{{ url_for('page_99food') }}" class="is-active">99Food</a>
-      <a href="{{ url_for('fale_conosco') }}">Contato</a>
-    </nav>
+    <div class="topbar-menu" id="food-mobile-menu" data-menu>
+      <nav class="topbar-nav">
+        <a href="{{ url_for('home') }}">Início</a>
+        <a href="{{ url_for('page_99food') }}" class="is-active">99Food</a>
+        <a href="{{ url_for('fale_conosco') }}">Contato</a>
+      </nav>
 
-    <div class="topbar-actions">
-      <a class="primary" href="{{ url_for('fale_conosco') }}">Fale Conosco Entregador</a>
-      <a class="secondary" href="{{ url_for('parceiro_alx') }}#feedback-form">Seja Parceiro</a>
+      <div class="topbar-actions">
+        <a class="primary" href="{{ url_for('fale_conosco') }}">Fale Conosco Entregador</a>
+        <a class="secondary" href="{{ url_for('parceiro_alx') }}#feedback-form">Seja Parceiro</a>
+      </div>
     </div>
   </div>
 </header>
@@ -1341,6 +1439,57 @@ body{
   </div>
 </footer>
 
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const header = document.querySelector("[data-mobile-header]");
+  if (!header) return;
+
+  const toggle = header.querySelector("[data-menu-toggle]");
+  const menu = header.querySelector("[data-menu]");
+  if (!toggle || !menu) return;
+
+  const closeMenu = () => {
+    header.classList.remove("is-open");
+    toggle.setAttribute("aria-expanded", "false");
+  };
+
+  const toggleMenu = () => {
+    const willOpen = !header.classList.contains("is-open");
+    header.classList.toggle("is-open", willOpen);
+    toggle.setAttribute("aria-expanded", willOpen ? "true" : "false");
+  };
+
+  toggle.addEventListener("click", (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    toggleMenu();
+  });
+
+  menu.querySelectorAll("a").forEach((link) => {
+    link.addEventListener("click", () => {
+      closeMenu();
+    });
+  });
+
+  document.addEventListener("click", (event) => {
+    if (!header.contains(event.target)) {
+      closeMenu();
+    }
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      closeMenu();
+    }
+  });
+
+  window.addEventListener("resize", () => {
+    if (window.innerWidth > 1000) {
+      closeMenu();
+    }
+  });
+});
+</script>
 <script src="{{ url_for('static', filename='99food.js') }}"></script>
 </body>
 </html>
