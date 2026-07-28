@@ -217,6 +217,68 @@ label{
     margin-bottom:28px;
 }
 
+.field{
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+    font-size:14px;
+    color:#dce7f3;
+    margin-bottom:28px;
+}
+
+.field-label{
+    display:block;
+}
+
+.type-toggle{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(0, 1fr));
+    gap:14px;
+}
+
+.type-item{
+    display:block;
+    margin:0;
+    cursor:pointer;
+}
+
+.type-item input{
+    position:absolute;
+    opacity:0;
+    pointer-events:none;
+}
+
+.type-item span{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    width:100%;
+    min-height:56px;
+    border-radius:14px;
+    background:#101d31;
+    border:1px solid rgba(255,255,255,.06);
+    transition:.2s;
+    font-weight:800;
+    letter-spacing:.02em;
+}
+
+.type-item:hover span{
+    background:rgba(11,132,255,.14);
+    border-color:rgba(11,132,255,.24);
+}
+
+.type-item input:focus + span{
+    box-shadow:0 0 0 4px rgba(11,132,255,.12);
+    border-color:#0b84ff;
+}
+
+.type-item input:checked + span{
+    background:#0b84ff;
+    border-color:#0b84ff;
+    color:#fff;
+    box-shadow:0 0 0 4px rgba(11,132,255,.12);
+}
+
 input,
 select,
 textarea{
@@ -895,8 +957,7 @@ textarea:focus{
                 </h2>
                 <p>
                     {% if partner_mode %}
-                    Preencha as informações abaixo com tranquilidade. O mesmo banco e fluxo de leitura continuam sendo usados,
-                    mas aqui não pedimos hotzone, porque o foco é a experiência do parceiro com a ALX.
+                    Preencha as informações abaixo com tranquilidade. Aqui não pedimos hotzone, porque o foco é a experiência do parceiro com a ALX.
                     {% else %}
                     Preencha as informações abaixo com calma. Quanto mais completo o seu relato, melhor a nossa leitura
                     sobre o que precisa ser ajustado, reforçado ou melhorado na operação.
@@ -946,14 +1007,23 @@ textarea:focus{
                         <input type="email" id="email" name="email" required>
                     </label>
 
-                    <label>
-                        Tipo
-                        <select id="tipo" name="tipo" required>
-                            <option value="sugestao">Sugestão</option>
-                            <option value="reclamacao">Reclamação</option>
-                            <option value="outro">Outros</option>
-                        </select>
-                    </label>
+                    <div class="field">
+                        <span class="field-label">Classificação</span>
+                        <div class="type-toggle" role="radiogroup" aria-label="Classificação">
+                            <label class="type-item">
+                                <input type="radio" name="tipo" value="sugestao" required checked>
+                                <span>Sugestão</span>
+                            </label>
+                            <label class="type-item">
+                                <input type="radio" name="tipo" value="reclamacao">
+                                <span>Reclamação</span>
+                            </label>
+                            <label class="type-item">
+                                <input type="radio" name="tipo" value="outro">
+                                <span>Outros</span>
+                            </label>
+                        </div>
+                    </div>
                 </div>
 
                 <label>
