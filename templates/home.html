@@ -754,7 +754,7 @@ body{
 
 .partner-brand-grid{
     display:grid;
-    grid-template-columns:repeat(4, minmax(0, 1fr));
+    grid-template-columns:repeat(5, minmax(0, 1fr));
     gap:18px;
     margin-top:30px;
 }
@@ -853,6 +853,11 @@ body{
 
 .partner-logo-box .partner-logo-text strong{
     color:#ff8f85;
+    font-size:20px;
+}
+
+.partner-logo-hospital .partner-logo-text strong{
+    color:#e9eef6;
     font-size:20px;
 }
 
@@ -1638,6 +1643,19 @@ body{
             </div>
             <p>Parceria com operação próxima do negócio, alinhamento de rotina e atenção à experiência.</p>
         </div>
+
+        <div class="partner-brand-card partner-logo-hospital">
+            <div class="partner-logo">
+                <div class="partner-logo-mark">
+                    <img src="/static/img/logos/logohospital.png" alt="Hospital da Face">
+                </div>
+                <div class="partner-logo-text">
+                    <strong>Hospital da Face</strong>
+                    <span>Saúde</span>
+                </div>
+            </div>
+            <p>Operação com foco em atendimento, padrão e consistência para manter a experiência no centro da rotina.</p>
+        </div>
     </div>
 
 </section>
@@ -1980,8 +1998,8 @@ body{
         </div>
 
         <div class="timeline-content">
-          Fundação da ALX em 2011, iniciando a trajetória
-          no mercado logístico com foco em estrutura e crescimento.
+          Fundação da ALX: início no Hospital da Face, estruturando
+          a operação com foco em qualidade e consistência.
         </div>
 
       </div>
@@ -2093,7 +2111,7 @@ body{
       </p>
 
       <a class="primary grande"
-         href="{{ url_for('site_public') }}">
+         href="{{ url_for('parceiro_alx') }}#feedback-form">
 
         Quero ser cliente
 
@@ -2154,7 +2172,7 @@ body{
           <path d="M21 15a4 4 0 0 1-4 4H8l-5 4V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z"/>
         </svg>
         <span>
-          Suporte (até 00:00): +55 11 96843-7483
+          Suporte (10h às 00h): +55 11 96843-7483
           <span style="color:#93a4ba">• WhatsApp e Telegram</span>
         </span>
       </a>
