@@ -1088,7 +1088,7 @@ def supa_list_feedbacks(
     elif attachment_mode == "without":
         params.append(("mensagem", "not.ilike.*ALX_ATTACHMENT*"))
     r = requests.get(url, headers=headers, params=params)
-    if r.status_code != 200:
+    if r.status_code not in (200, 206):
         raise Exception(r.text)
     total = None
     cr = r.headers.get("content-range") or ""
