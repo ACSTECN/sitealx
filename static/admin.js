@@ -139,6 +139,24 @@ function renderHeader() {
   `;
 }
 
+function renderTypeBadge(tipo) {
+  const t = String(tipo || "outro").trim().toLowerCase().replace(/[ãç]/g, (c) => c === "ã" ? "a" : "c");
+  const label = formatFeedbackTypeLabel(tipo || "outro");
+  return `<span class="type-badge ${t}">${escapeHtml(label)}</span>`;
+}
+
+function renderSatisfactionStars(value) {
+  const v = parseInt(String(value || "0"), 10);
+  if (!v || isNaN(v)) return '<span style="opacity:.55;color:#7f92a6">—</span>';
+  let stars = "";
+  for (let i = 1; i <= 5; i++) {
+    stars += i <= v
+      ? '<span class="star-filled">★</span>'
+      : '<span class="star-empty">☆</span>';
+  }
+  return `<div class="satisfaction"><span class="satisfaction-num">${v}</span><div class="satisfaction-stars">${stars}</div></div>`;
+}
+
 function renderAttachmentCell(row) {
   if (!row.tem_anexo || !row.anexo_url) {
     return '<span style="color:#7f92a6">Sem anexo</span>';
@@ -148,7 +166,7 @@ function renderAttachmentCell(row) {
     <a class="feedback-attachment" href="${escapeHtml(row.anexo_url)}" target="_blank" rel="noopener">
       Abrir anexo
     </a>
-    <div style="margin-top:8px;color:#94a3b8;font-size:12px;line-height:1.6;">
+    <div class="attachment-meta">
       ${escapeHtml(meta || "Arquivo disponível")}
     </div>
   `;
@@ -163,12 +181,13 @@ function renderTable(rows) {
   }
   rows.forEach((row) => {
     const tr = document.createElement("tr");
+    const hotzoneTag = row.hotzone ? `<span class="hotzone-tag">📍 ${escapeHtml(row.hotzone)}</span>` : "";
     tr.innerHTML = `
       <td data-label="Data">${escapeHtml(formatDate(row.created_at))}</td>
       <td data-label="Tipo / Hotzone">
         <div class="feedback-meta">
-          <strong>${escapeHtml(formatFeedbackTypeLabel(row.tipo))}</strong>
-          <span>${escapeHtml(row.hotzone || "-")}</span>
+          ${renderTypeBadge(row.tipo)}
+          ${hotzoneTag}
         </div>
       </td>
       <td data-label="Nome">
@@ -183,7 +202,7 @@ function renderTable(rows) {
           <span>${escapeHtml(formatPhone(row.telefone || "-"))}</span>
         </div>
       </td>
-      <td data-label="Satisfação">${escapeHtml(String(row.satisfacao ?? "-"))}</td>
+      <td data-label="Satisfação">${renderSatisfactionStars(row.satisfacao)}</td>
       <td data-label="Anexo">${renderAttachmentCell(row)}</td>
       <td data-label="Mensagem"><div class="feedback-message">${escapeHtml(row.mensagem || "-")}</div></td>
     `;
@@ -222,6 +241,37 @@ function renderChart(rows) {
   });
 }
 
+function populateKpis(rows) {
+  const totalEl = document.getElementById("kpi-total");
+  const satEl = document.getElementById("kpi-satisfacao");
+  const anexoEl = document.getElementById("kpi-anexos");
+  const recEl = document.getElementById("kpi-reclamacoes");
+
+  const data = Array.isArray(rows) ? rows : [];
+  const total = data.length;
+
+  let sumSat = 0;
+  let countSat = 0;
+  let anexos = 0;
+  let reclamacoes = 0;
+
+  data.forEach((r) => {
+    const v = parseInt(String(r.satisfacao || "0"), 10);
+    if (v && !isNaN(v) && v >= 1 && v <= 5) {
+      sumSat += v;
+      countSat += 1;
+    }
+    if (r.tem_anexo || r.anexo_url || r.anexo_nome) anexos += 1;
+    const t = String(r.tipo || "").trim().toLowerCase();
+    if (t === "reclamacao" || t === "reclamação") reclamacoes += 1;
+  });
+
+  if (totalEl) totalEl.textContent = total.toLocaleString("pt-BR");
+  if (satEl) satEl.textContent = countSat ? (sumSat / countSat).toFixed(1).replace(".", ",") + "/5" : "—";
+  if (anexoEl) anexoEl.textContent = anexos.toLocaleString("pt-BR");
+  if (recEl) recEl.textContent = reclamacoes.toLocaleString("pt-BR");
+}
+
 async function loadData() {
   if (!tabela) return;
   renderHeader();
@@ -249,10 +299,13 @@ async function loadData() {
     const total = Number(payload.total ?? rows.length);
     totalPages = Math.max(1, Math.ceil(total / Number(filters.page_size || 10)));
     if (pageInfo) pageInfo.textContent = `Página ${page} de ${totalPages}`;
+    if (prevBtn) prevBtn.disabled = page <= 1;
+    if (nextBtn) nextBtn.disabled = page >= totalPages;
     currentRows = rows;
     renderTable(rows);
     renderChart(rows);
     setFeedbackSummary(total);
+    populateKpis(rows);
   } catch (error) {
     tabela.innerHTML = '<tr><td colspan="7" class="table-empty">Erro de rede ao carregar feedbacks.</td></tr>';
     if (feedbackSummary) feedbackSummary.textContent = "Erro de rede.";
@@ -264,21 +317,25 @@ function exportFeedbacksCsv() {
   const lines = [headers.join(";")].concat(
     currentRows.map((row) => [
       formatDate(row.created_at).replace(/;/g, ","),
-      String(row.tipo || "").replace(/;/g, ","),
+      formatFeedbackTypeLabel(row.tipo).replace(/;/g, ","),
       String(row.hotzone || "").replace(/;/g, ","),
       String(row.nome_completo || "").replace(/;/g, ","),
-      String(row.cpf || "").replace(/;/g, ","),
-      String(row.telefone || "").replace(/;/g, ","),
+      formatCPF(row.cpf).replace(/;/g, ","),
+      formatPhone(row.telefone).replace(/;/g, ","),
       String(row.email || "").replace(/;/g, ","),
       String(row.satisfacao || "").replace(/;/g, ","),
       String(row.anexo_url || row.anexo_nome || "").replace(/;/g, ","),
       String(row.mensagem || "").replace(/\n/g, " ").replace(/;/g, ","),
     ].join(";"))
   );
-  const blob = new Blob([lines.join("\n")], { type: "text/csv;charset=utf-8;" });
+  const csvContent = lines.join("\n");
+  const BOM = "\uFEFF";
+  const blob = new Blob([BOM + csvContent], { type: "text/csv;charset=utf-8;" });
   const anchor = document.createElement("a");
   anchor.href = URL.createObjectURL(blob);
-  anchor.download = "feedbacks.csv";
+  const now = new Date();
+  const stamp = now.toISOString().slice(0, 10).replace(/-/g, "") + "_" + now.toTimeString().slice(0, 5).replace(/:/g, "");
+  anchor.download = `feedbacks_${stamp}.csv`;
   document.body.appendChild(anchor);
   anchor.click();
   anchor.remove();

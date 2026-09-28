@@ -1,8 +1,12 @@
 import json
 import os
 import uuid
+import smtplib
 from datetime import datetime
 from urllib.parse import quote
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from email.header import Header
 
 from flask import Flask, render_template, request, jsonify, session, redirect, url_for
 import requests
@@ -93,6 +97,140 @@ ATTACHMENT_MARKER_START = "[[ALX_ATTACHMENT]]"
 ATTACHMENT_MARKER_END = "[[/ALX_ATTACHMENT]]"
 TYPE_MARKER_START = "[[ALX_FEEDBACK_TYPE]]"
 TYPE_MARKER_END = "[[/ALX_FEEDBACK_TYPE]]"
+
+NOTIFICATION_EMAILS = [
+    "alessandrochristossimonis1@gmail.com",
+    "alxexpresstransporte@gmail.com",
+    "contato@alxentregas.com.br",
+]
+
+SMTP_HOST = normalize_env_value(os.environ.get("SMTP_HOST")) or "smtp.gmail.com"
+SMTP_PORT = int(normalize_env_value(os.environ.get("SMTP_PORT")) or "587")
+SMTP_USER = normalize_env_value(os.environ.get("SMTP_USER")) or ""
+SMTP_PASSWORD = normalize_env_value(os.environ.get("SMTP_PASSWORD")) or ""
+SMTP_FROM = normalize_env_value(os.environ.get("SMTP_FROM")) or SMTP_USER or "noreply@alxentregas.com.br"
+SMTP_USE_TLS = normalize_bool(os.environ.get("SMTP_USE_TLS")) if os.environ.get("SMTP_USE_TLS") is not None else True
+
+
+def send_feedback_notification(feedback_data, attachment_meta=None):
+    if not SMTP_USER or not SMTP_PASSWORD or not NOTIFICATION_EMAILS:
+        return False
+
+    nome = feedback_data.get("nome_completo") or "-"
+    cpf = feedback_data.get("cpf") or "-"
+    hotzone = feedback_data.get("hotzone") or "-"
+    telefone = feedback_data.get("telefone") or "-"
+    email = feedback_data.get("email") or "-"
+    tipo_raw = feedback_data.get("tipo") or "-"
+    satisfacao = feedback_data.get("satisfacao") or "-"
+    mensagem = feedback_data.get("mensagem") or "-"
+
+    tipo_label = {
+        "sugestao": "Sugestão",
+        "reclamacao": "Reclamação",
+        "parceiro": "Ser Parceiro",
+        "outro": "Outros",
+        "outros": "Outros",
+    }.get(str(tipo_raw).strip().lower(), tipo_raw)
+
+    if str(hotzone).strip().upper() == "PARCEIRO ALX" and tipo_label == "Sugestão":
+        tipo_label = "Ser Parceiro"
+
+    subject = f"[ALX] Nova mensagem - {tipo_label} - {hotzone} - {nome}"
+
+    html_body = f"""
+    <div style="font-family:Arial,Helvetica,sans-serif;line-height:1.7;color:#1f2937;max-width:720px;margin:0 auto">
+        <div style="background:linear-gradient(135deg,#0b1728,#1e3a8a);padding:28px 32px;border-radius:12px 12px 0 0;color:#fff">
+            <h2 style="margin:0;font-size:20px">Nova mensagem recebida no site ALX</h2>
+            <p style="margin:8px 0 0;opacity:.85;font-size:14px">{datetime.now().strftime('%d/%m/%Y %H:%M')}</p>
+        </div>
+        <div style="padding:28px 32px;background:#fff;border:1px solid #e5e7eb;border-top:none;border-radius:0 0 12px 12px">
+            <table style="width:100%;border-collapse:collapse;font-size:14px">
+                <tr>
+                    <td style="padding:10px 12px;border-bottom:1px solid #f3f4f6;width:150px;font-weight:700;color:#374151">Tipo</td>
+                    <td style="padding:10px 12px;border-bottom:1px solid #f3f4f6;color:#111827">{tipo_label}</td>
+                </tr>
+                <tr>
+                    <td style="padding:10px 12px;border-bottom:1px solid #f3f4f6;font-weight:700;color:#374151">Hotzone</td>
+                    <td style="padding:10px 12px;border-bottom:1px solid #f3f4f6;color:#111827">{hotzone}</td>
+                </tr>
+                <tr>
+                    <td style="padding:10px 12px;border-bottom:1px solid #f3f4f6;font-weight:700;color:#374151">Satisfação</td>
+                    <td style="padding:10px 12px;border-bottom:1px solid #f3f4f6;color:#111827">{satisfacao} / 5</td>
+                </tr>
+                <tr>
+                    <td style="padding:10px 12px;border-bottom:1px solid #f3f4f6;font-weight:700;color:#374151">Nome</td>
+                    <td style="padding:10px 12px;border-bottom:1px solid #f3f4f6;color:#111827">{nome}</td>
+                </tr>
+                <tr>
+                    <td style="padding:10px 12px;border-bottom:1px solid #f3f4f6;font-weight:700;color:#374151">CPF</td>
+                    <td style="padding:10px 12px;border-bottom:1px solid #f3f4f6;color:#111827">{cpf}</td>
+                </tr>
+                <tr>
+                    <td style="padding:10px 12px;border-bottom:1px solid #f3f4f6;font-weight:700;color:#374151">Telefone</td>
+                    <td style="padding:10px 12px;border-bottom:1px solid #f3f4f6;color:#111827">{telefone}</td>
+                </tr>
+                <tr>
+                    <td style="padding:10px 12px;border-bottom:1px solid #f3f4f6;font-weight:700;color:#374151">Email</td>
+                    <td style="padding:10px 12px;border-bottom:1px solid #f3f4f6;color:#111827">{email}</td>
+                </tr>
+                <tr>
+                    <td style="padding:10px 12px;border-bottom:1px solid #f3f4f6;font-weight:700;color:#374151">Anexo</td>
+                    <td style="padding:10px 12px;border-bottom:1px solid #f3f4f6;color:#111827">{
+                        (attachment_meta.get('name') + ' (' + str(round((attachment_meta.get('size') or 0) / 1024, 1)) + ' KB)')
+                        if attachment_meta else 'Sem anexo'
+                    }</td>
+                </tr>
+            </table>
+            <div style="margin-top:24px">
+                <h3 style="margin:0 0 12px;font-size:15px;color:#374151">Mensagem:</h3>
+                <div style="background:#f9fafb;padding:18px 20px;border-radius:10px;border:1px solid #e5e7eb;color:#111827;white-space:pre-wrap">{mensagem}</div>
+            </div>
+        </div>
+        <p style="text-align:center;margin-top:20px;font-size:12px;color:#9ca3af">Esta é uma notificação automática do site ALX Entregas.</p>
+    </div>
+    """
+
+    plain_body = (
+        f"NOVA MENSAGEM RECEBIDA NO SITE ALX\n"
+        f"Data: {datetime.now().strftime('%d/%m/%Y %H:%M')}\n"
+        f"====================================\n"
+        f"Tipo: {tipo_label}\n"
+        f"Hotzone: {hotzone}\n"
+        f"Satisfação: {satisfacao} / 5\n"
+        f"Nome: {nome}\n"
+        f"CPF: {cpf}\n"
+        f"Telefone: {telefone}\n"
+        f"Email: {email}\n"
+        f"Anexo: {(attachment_meta.get('name') + ' (' + str(round((attachment_meta.get('size') or 0) / 1024, 1)) + ' KB)') if attachment_meta else 'Sem anexo'}\n"
+        f"====================================\n"
+        f"MENSAGEM:\n{mensagem}\n"
+    )
+
+    try:
+        if SMTP_USE_TLS:
+            server = smtplib.SMTP(SMTP_HOST, SMTP_PORT, timeout=30)
+            server.starttls()
+        else:
+            server = smtplib.SMTP_SSL(SMTP_HOST, SMTP_PORT, timeout=30)
+
+        server.login(SMTP_USER, SMTP_PASSWORD)
+
+        for recipient in NOTIFICATION_EMAILS:
+            msg = MIMEMultipart("alternative")
+            msg["From"] = str(Header("ALX Entregas", "utf-8")) + f" <{SMTP_FROM}>"
+            msg["To"] = recipient
+            msg["Subject"] = Header(subject, "utf-8")
+            msg.attach(MIMEText(plain_body, "plain", "utf-8"))
+            msg.attach(MIMEText(html_body, "html", "utf-8"))
+            server.sendmail(SMTP_FROM, recipient, msg.as_string())
+
+        server.quit()
+        return True
+    except Exception as e:
+        print(f"[EMAIL_NOTIFICATION_ERROR] {str(e)}")
+        return False
+
 
 def require_supabase_key():
     if not SUPABASE_KEY:
@@ -956,6 +1094,14 @@ def api_feedback():
             "satisfacao": satisfacao_db
         }
         created = supa_insert_feedback(payload, attachment_meta=attachment_meta)
+
+        notification_payload = dict(payload)
+        notification_payload["satisfacao"] = satisfacao_db
+        try:
+            send_feedback_notification(notification_payload, attachment_meta=attachment_meta)
+        except Exception as ne:
+            print(f"[EMAIL_NOTIFICATION_EXCEPTION] {str(ne)}")
+
         if expects_json_response():
             return jsonify({"ok": True, "message": "Sugestão enviada com sucesso", "data": created})
         return redirect(url_for("home") + "?sent=1")
