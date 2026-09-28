@@ -59,6 +59,18 @@ def simplify_text(value):
         .replace("ú", "u")
     )
 
+def normalize_bool(v):
+    if isinstance(v, bool):
+        return v
+    if isinstance(v, (int, float)):
+        return bool(v)
+    s = ("" if v is None else str(v)).strip().lower()
+    if s in ("true", "1", "t", "yes", "y", "sim", "verdadeiro"):
+        return True
+    if s in ("false", "0", "f", "no", "n", "nao", "não", "falso"):
+        return False
+    return None
+
 def normalize_feedback_type(value, default="sugestao"):
     raw = (value or "").strip().lower()
     if not raw:
@@ -111,14 +123,31 @@ SMTP_PASSWORD = normalize_env_value(os.environ.get("SMTP_PASSWORD")) or ""
 SMTP_FROM = normalize_env_value(os.environ.get("SMTP_FROM")) or SMTP_USER or "noreply@alxentregas.com.br"
 SMTP_USE_TLS = normalize_bool(os.environ.get("SMTP_USE_TLS")) if os.environ.get("SMTP_USE_TLS") is not None else True
 
+EMAIL_NOTIFICATIONS_ENABLED = bool(SMTP_USER and SMTP_PASSWORD and NOTIFICATION_EMAILS)
+print("[EMAIL_CONFIG] ============================")
+print(f"[EMAIL_CONFIG] ENV_SOURCE = {ENV_SOURCE}")
+print(f"[EMAIL_CONFIG] HOST: {SMTP_HOST}:{SMTP_PORT} TLS={SMTP_USE_TLS}")
+print(f"[EMAIL_CONFIG] SMTP_USER: {'[CONFIGURADO] ' + SMTP_USER if SMTP_USER else '[VAZIO - NOTIFICAÇÕES DESABILITADAS]'}")
+print(f"[EMAIL_CONFIG] SMTP_PASSWORD: {'[CONFIGURADO]' if SMTP_PASSWORD else '[VAZIO - NOTIFICAÇÕES DESABILITADAS]'}")
+print(f"[EMAIL_CONFIG] SMTP_FROM: {SMTP_FROM}")
+print(f"[EMAIL_CONFIG] NOTIFICATION_EMAILS ({len(NOTIFICATION_EMAILS)} destinos): {NOTIFICATION_EMAILS}")
+print(f"[EMAIL_CONFIG] NOTIFICAÇÕES ATIVAS: {'SIM' if EMAIL_NOTIFICATIONS_ENABLED else 'NÃO (configure SMTP_USER e SMTP_PASSWORD no .env)'}")
+print("[EMAIL_CONFIG] ============================")
 
-def send_feedback_notification(feedback_data, attachment_meta=None):
+
+def send_feedback_notification(feedback_data, attachment_meta=None, _force_print=False):
+    tipo_norm = normalize_feedback_type(feedback_data.get("tipo"), default="sugestao")
+    nome = feedback_data.get("nome_completo") or "-"
+    hotzone = feedback_data.get("hotzone") or "-"
+    print(f"[EMAIL_NOTIFICATION] Tentando envio: tipo_norm={tipo_norm} nome={nome} hotzone={hotzone}")
+    if not EMAIL_NOTIFICATIONS_ENABLED:
+        print("[EMAIL_NOTIFICATION] ABORTADO: EMAIL_NOTIFICATIONS_ENABLED=False. Configure SMTP_USER e SMTP_PASSWORD no .env.")
+        return False
     if not SMTP_USER or not SMTP_PASSWORD or not NOTIFICATION_EMAILS:
+        print("[EMAIL_NOTIFICATION] ABORTADO: SMTP_USER/SMTP_PASSWORD/NOTIFICATION_EMAILS vazios.")
         return False
 
-    nome = feedback_data.get("nome_completo") or "-"
     cpf = feedback_data.get("cpf") or "-"
-    hotzone = feedback_data.get("hotzone") or "-"
     telefone = feedback_data.get("telefone") or "-"
     email = feedback_data.get("email") or "-"
     tipo_raw = feedback_data.get("tipo") or "-"
@@ -137,6 +166,12 @@ def send_feedback_notification(feedback_data, attachment_meta=None):
         tipo_label = "Ser Parceiro"
 
     subject = f"[ALX] Nova mensagem - {tipo_label} - {hotzone} - {nome}"
+    attachment_label = "Sem anexo"
+    if attachment_meta:
+        try:
+            attachment_label = f"{attachment_meta.get('name')} ({round((attachment_meta.get('size') or 0) / 1024, 1)} KB)"
+        except Exception:
+            attachment_label = str(attachment_meta.get("name") or "Com anexo")
 
     html_body = f"""
     <div style="font-family:Arial,Helvetica,sans-serif;line-height:1.7;color:#1f2937;max-width:720px;margin:0 auto">
@@ -176,10 +211,7 @@ def send_feedback_notification(feedback_data, attachment_meta=None):
                 </tr>
                 <tr>
                     <td style="padding:10px 12px;border-bottom:1px solid #f3f4f6;font-weight:700;color:#374151">Anexo</td>
-                    <td style="padding:10px 12px;border-bottom:1px solid #f3f4f6;color:#111827">{
-                        (attachment_meta.get('name') + ' (' + str(round((attachment_meta.get('size') or 0) / 1024, 1)) + ' KB)')
-                        if attachment_meta else 'Sem anexo'
-                    }</td>
+                    <td style="padding:10px 12px;border-bottom:1px solid #f3f4f6;color:#111827">{attachment_label}</td>
                 </tr>
             </table>
             <div style="margin-top:24px">
@@ -202,51 +234,57 @@ def send_feedback_notification(feedback_data, attachment_meta=None):
         f"CPF: {cpf}\n"
         f"Telefone: {telefone}\n"
         f"Email: {email}\n"
-        f"Anexo: {(attachment_meta.get('name') + ' (' + str(round((attachment_meta.get('size') or 0) / 1024, 1)) + ' KB)') if attachment_meta else 'Sem anexo'}\n"
+        f"Anexo: {attachment_label}\n"
         f"====================================\n"
         f"MENSAGEM:\n{mensagem}\n"
     )
 
+    server = None
     try:
+        print(f"[EMAIL_NOTIFICATION] Conectando SMTP {SMTP_HOST}:{SMTP_PORT} (TLS={SMTP_USE_TLS}) como {SMTP_USER}...")
         if SMTP_USE_TLS:
             server = smtplib.SMTP(SMTP_HOST, SMTP_PORT, timeout=30)
+            server.ehlo()
             server.starttls()
+            server.ehlo()
         else:
             server = smtplib.SMTP_SSL(SMTP_HOST, SMTP_PORT, timeout=30)
+            server.ehlo()
 
+        print("[EMAIL_NOTIFICATION] Autenticando...")
         server.login(SMTP_USER, SMTP_PASSWORD)
+        print("[EMAIL_NOTIFICATION] Autenticação OK.")
 
         for recipient in NOTIFICATION_EMAILS:
             msg = MIMEMultipart("alternative")
-            msg["From"] = str(Header("ALX Entregas", "utf-8")) + f" <{SMTP_FROM}>"
+            from_display = str(Header("ALX Entregas", "utf-8")) + f" <{SMTP_FROM}>"
+            msg["From"] = from_display
             msg["To"] = recipient
             msg["Subject"] = Header(subject, "utf-8")
             msg.attach(MIMEText(plain_body, "plain", "utf-8"))
             msg.attach(MIMEText(html_body, "html", "utf-8"))
-            server.sendmail(SMTP_FROM, recipient, msg.as_string())
+            print(f"[EMAIL_NOTIFICATION] Enviando para: {recipient} ...")
+            server.sendmail(SMTP_FROM, [recipient], msg.as_string())
+            print(f"[EMAIL_NOTIFICATION] OK: {recipient}")
 
         server.quit()
+        print(f"[EMAIL_NOTIFICATION] SUCESSO: {len(NOTIFICATION_EMAILS)} email(s) enviado(s).")
         return True
     except Exception as e:
-        print(f"[EMAIL_NOTIFICATION_ERROR] {str(e)}")
+        err_type = type(e).__name__
+        err_msg = str(e)
+        print(f"[EMAIL_NOTIFICATION_ERROR] {err_type}: {err_msg}")
+        try:
+            if server:
+                server.close()
+        except Exception:
+            pass
         return False
 
 
 def require_supabase_key():
     if not SUPABASE_KEY:
         raise Exception("SUPABASE_SERVICE_ROLE_KEY (ou SUPABASE_KEY) não configurada nas variáveis de ambiente")
-
-def normalize_bool(v):
-    if isinstance(v, bool):
-        return v
-    if isinstance(v, (int, float)):
-        return bool(v)
-    s = ("" if v is None else str(v)).strip().lower()
-    if s in ("true", "1", "t", "yes", "y", "sim", "verdadeiro"):
-        return True
-    if s in ("false", "0", "f", "no", "n", "nao", "não", "falso"):
-        return False
-    return None
 
 def _supa_try_get_admin(table, email, email_field):
     url = f"{SUPABASE_URL}/rest/v1/{table}"
@@ -1128,6 +1166,66 @@ def api_feedback_demo():
     except Exception as e:
         print("api_feedback_demo_error", str(e))
         return jsonify({"ok": False, "error": str(e)}), 500
+
+@app.get("/api/email/teste")
+def api_email_teste():
+    """Endpoint para validar configuração SMTP e envio de notificação.
+    Acesso: apenas admin logado na sessão.
+    Parâmetro opcional ?to=email@exemplo.com para enviar somente para um destinatário.
+    """
+    if not session.get("user"):
+        return jsonify({"ok": False, "error": "Not authorized. Faça login no admin primeiro."}), 403
+
+    single_to = (request.args.get("to") or "").strip()
+    teste_payload = {
+        "nome_completo": "Teste SMTP ALX",
+        "cpf": "000.000.000-00",
+        "hotzone": "BANGU",
+        "telefone": "(21) 99999-9999",
+        "email": "teste@alxentregas.com.br",
+        "tipo": "sugestao",
+        "satisfacao": 4,
+        "mensagem": "Este é um email de teste para validar se as notificações estão sendo entregues corretamente.\n\nSe você recebeu este email, a configuração SMTP está funcionando! 🎉",
+    }
+    original_recipients = list(NOTIFICATION_EMAILS)
+    recipients_used = original_recipients
+    try:
+        if single_to:
+            import smtplib as _s
+            from email.mime.multipart import MIMEMultipart as _mm
+            from email.mime.text import MIMEText as _mt
+            from email.header import Header as _h
+            globals()["NOTIFICATION_EMAILS"] = [single_to]
+            recipients_used = [single_to]
+            result = send_feedback_notification(teste_payload)
+            globals()["NOTIFICATION_EMAILS"] = original_recipients
+        else:
+            result = send_feedback_notification(teste_payload)
+
+        info = {
+            "ok": bool(result),
+            "smtp_host": f"{SMTP_HOST}:{SMTP_PORT}",
+            "smtp_tls": SMTP_USE_TLS,
+            "smtp_user_configurado": bool(SMTP_USER),
+            "smtp_user": SMTP_USER[:3] + "***" + (SMTP_USER.split("@")[-1] if "@" in SMTP_USER else ""),
+            "smtp_password_configurado": bool(SMTP_PASSWORD),
+            "from": SMTP_FROM,
+            "destinatarios": recipients_used,
+            "notificacoes_ativas": EMAIL_NOTIFICATIONS_ENABLED,
+            "proximo_passo": (
+                "Configurar SMTP_USER e SMTP_PASSWORD no .env"
+                if not EMAIL_NOTIFICATIONS_ENABLED else
+                "Se não chegou, verifique Spam/ Promoções e libere remetente"
+            )
+        }
+        status = 200 if result else 500
+        if not result and not EMAIL_NOTIFICATIONS_ENABLED:
+            info["erro"] = "SMTP não configurado. Veja o terminal para log completo [EMAIL_CONFIG]"
+        return jsonify(info), status
+    except Exception as e:
+        globals()["NOTIFICATION_EMAILS"] = original_recipients
+        err_type = type(e).__name__
+        return jsonify({"ok": False, "error": f"{err_type}: {str(e)}"}), 500
 
 @app.get("/api/admin/feedbacks")
 def api_admin_feedbacks():
