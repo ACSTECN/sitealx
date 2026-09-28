@@ -2,7 +2,7 @@ import json
 import os
 import uuid
 import smtplib
-from datetime import datetime
+from datetime import datetime, timedelta
 from urllib.parse import quote
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
@@ -69,6 +69,24 @@ def normalize_bool(v):
         return True
     if s in ("false", "0", "f", "no", "n", "nao", "não", "falso"):
         return False
+    return None
+
+def normalize_date_to_iso(value):
+    v = (value or "").strip()
+    if not v:
+        return None
+    if len(v) == 10 and v[4] == "-" and v[7] == "-":
+        try:
+            datetime.strptime(v, "%Y-%m-%d")
+            return v
+        except ValueError:
+            pass
+    if len(v) == 10 and v[2] == "/" and v[5] == "/":
+        try:
+            d = datetime.strptime(v, "%d/%m/%Y")
+            return d.strftime("%Y-%m-%d")
+        except ValueError:
+            pass
     return None
 
 def normalize_feedback_type(value, default="sugestao"):
@@ -1059,7 +1077,12 @@ def supa_list_feedbacks(
     if data_inicial:
         params.append(("created_at", f"gte.{data_inicial}T00:00:00"))
     if data_final:
-        params.append(("created_at", f"lte.{data_final}T23:59:59"))
+        try:
+            d = datetime.strptime(data_final, "%Y-%m-%d")
+            next_day = (d + timedelta(days=1)).strftime("%Y-%m-%d")
+            params.append(("created_at", f"lt.{next_day}T00:00:00"))
+        except Exception:
+            params.append(("created_at", f"lte.{data_final}T23:59:59"))
     if attachment_mode == "with":
         params.append(("mensagem", "ilike.*ALX_ATTACHMENT*"))
     elif attachment_mode == "without":
@@ -1236,8 +1259,8 @@ def api_admin_feedbacks():
     busca = (request.args.get("busca") or "").strip()
     attachment_mode = (request.args.get("attachment_mode") or "").strip()
     sort = (request.args.get("sort") or "created_at.desc").strip() or "created_at.desc"
-    data_inicial = (request.args.get("data_inicial") or "").strip()
-    data_final = (request.args.get("data_final") or "").strip()
+    data_inicial = normalize_date_to_iso(request.args.get("data_inicial"))
+    data_final = normalize_date_to_iso(request.args.get("data_final"))
     try:
         page = int(request.args.get("page") or "1")
         page_size = int(request.args.get("page_size") or "10")

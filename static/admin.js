@@ -83,6 +83,15 @@ function formatFeedbackTypeLabel(value) {
   return value || "-";
 }
 
+function dateInputToIso(inputEl) {
+  const raw = inputEl?.value || "";
+  if (!raw) return "";
+  if (/^\d{4}-\d{2}-\d{2}$/.test(raw)) return raw;
+  const br = /^(\d{2})\/(\d{2})\/(\d{4})$/.exec(raw);
+  if (br) return `${br[3]}-${br[2]}-${br[1]}`;
+  return raw;
+}
+
 function getFilters() {
   return {
     hotzone: filtroHotzone?.value || "",
@@ -91,8 +100,8 @@ function getFilters() {
     attachment_mode: filtroAnexo?.value || "",
     satisfacao_min: filtroSatisfacaoMin?.value || "",
     satisfacao_max: filtroSatisfacaoMax?.value || "",
-    data_inicial: filtroDataInicial?.value || "",
-    data_final: filtroDataFinal?.value || "",
+    data_inicial: dateInputToIso(filtroDataInicial),
+    data_final: dateInputToIso(filtroDataFinal),
     sort: filtroOrdenacao?.value || "created_at.desc",
     page_size: pageSizeSel?.value || "10",
   };
